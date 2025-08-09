@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Transcripts - Professional Transcription Services</title>
+    <meta name="description" content="Secure, fast, and trusted transcription services for legal, medical, and business needs. Professional audio to text conversion.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="config.js"></script>
+    <script src="mock-server.js"></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo" onclick="location.reload()">
+                    JD
+                </div>
+                <div>
+                    <div class="logo-text">JD Legal</div>
+                    <div class="logo-text">Transcripts</div>
+                </div>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="#home" class="nav-link active">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+        <a href="#services" class="nav-link">Services <i class="fas fa-caret-down"></i></a>
+        <ul class="dropdown-menu">
+            <li><a href="#services" class="dropdown-link">All Services</a></li>
+            <li><a href="#services" class="dropdown-link">Legal Transcription</a></li>
+            <li><a href="#services" class="dropdown-link">Medical Transcription</a></li>
+            <li><a href="#services" class="dropdown-link">Zoom Meeting Transcription</a></li>
+            <li><a href="#services" class="dropdown-link">Academic & Interview</a></li>
+        </ul>
+    </li>
+                <li class="nav-item">
+                    <a href="#order" class="nav-link">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-cta">
+                <a href="#order" class="btn btn-primary">Order Now</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="hero">
+    <div class="hero-container">
+        <div class="hero-content">
+            <h1 class="hero-title">Precision Transcription for Law, Medicine, and Meetings</h1>
+            <p class="hero-subtitle">
+                Secure, fast, and trusted transcription services that transform your audio into accurate, professional text.
+            </p>
+            <div class="hero-buttons">
+                <a href="#order" class="btn btn-primary btn-large">Order Now</a>
+                <a href="#services" class="btn btn-secondary btn-large">Explore Services</a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-graphic">
+                <div class="graphic-item">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>Audio Input</span>
+                </div>
+                <i class="fas fa-arrow-right"></i>
+                <div class="graphic-item">
+                    <i class="fas fa-file-contract"></i>
+                    <span>Professional Transcript</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Features Section -->
+        <section class="features">
+            <div class="container">
+                <h2 class="section-title">Why Choose JD Transcripts?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Secure & Confidential</h3>
+                        <p>HIPAA compliant with strict confidentiality agreements and secure file handling.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Fast Turnaround</h3>
+                        <p>Same-day to 3-5 day delivery options to meet your urgent deadlines.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>99%+ Accuracy</h3>
+                        <p>Professional transcriptionists with expertise in legal and medical terminology.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Expert Team</h3>
+                        <p>Certified transcriptionists with years of experience in specialized fields.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <h2 class="section-title">Our Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <h3>Legal Transcription</h3>
+                        <p>Court proceedings, depositions, legal briefs, and all legal documentation needs.</p>
+                        <ul class="service-features">
+                            <li>Court hearings and trials</li>
+                            <li>Depositions and witness statements</li>
+                            <li>Legal briefs and documents</li>
+                            <li>Attorney-client meetings</li>
+                        </ul>
+                        <div class="service-meta">
+                            <span><strong>Turnaround:</strong> 24-48 hours</span>
+                            <span><strong>Pricing:</strong> From $1.50/min</span>
+                        </div>
+                        <a href="#order" class="btn btn-primary">Place Order</a>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-user-md"></i>
+                        </div>
+                        <h3>Medical Transcription</h3>
+                        <p>HIPAA-compliant medical transcription services for healthcare professionals.</p>
+                        <ul class="service-features">
+                            <li>Doctor-patient consultations</li>
+                            <li>Medical dictations</li>
+                            <li>Clinical notes and reports</li>
+                            <li>Surgical reports</li>
+                        </ul>
+                        <div class="service-meta">
+                            <span><strong>Turnaround:</strong> 24-72 hours</span>
+                            <span><strong>Pricing:</strong> From $1.75/min</span>
+                        </div>
+                        <a href="#order" class="btn btn-primary">Place Order</a>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <h3>Zoom Meeting Transcription</h3>
+                        <p>Accurate transcription of virtual meetings, webinars, and online conferences.</p>
+                        <ul class="service-features">
+                            <li>Business meetings</li>
+                            <li>Webinars and presentations</li>
+                            <li>Job interviews</li>
+                            <li>Virtual conferences</li>
+                        </ul>
+                        <div class="service-meta">
+                            <span><strong>Turnaround:</strong> 24 hours</span>
+                            <span><strong>Pricing:</strong> From $1.25/min</span>
+                        </div>
+                        <a href="#order" class="btn btn-primary">Place Order</a>
+                    </div>
+
+                    <div class="service-card">
+                        <div class="service-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Academic & Interview</h3>
+                        <p>Specialized transcription services for academic research and interviews.</p>
+                        <ul class="service-features">
+                            <li>Research interviews</li>
+                            <li>Academic lectures</li>
+                            <li>Focus group discussions</li>
+                            <li>Oral histories</li>
+                        </ul>
+                        <div class="service-meta">
+                            <span><strong>Turnaround:</strong> 3-5 days</span>
+                            <span><strong>Pricing:</strong> From $1.25/min</span>
+                        </div>
+                        <a href="#order" class="btn btn-primary">Place Order</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Order Section -->
+        <section id="order" class="order">
+            <div class="container">
+                <h2 class="section-title">Order Transcription</h2>
+                <form id="order-form" class="order-form" enctype="multipart/form-data">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="service">Service Type *</label>
+                            <select id="service" name="service" required>
+                                <option value="">Select a service</option>
+                                <option value="legal">Legal Transcription</option>
+                                <option value="medical">Medical Transcription</option>
+                                <option value="zoom">Zoom Meeting Transcription</option>
+                                <option value="academic">Academic & Interview</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="turnaround">Turnaround Time *</label>
+                            <select id="turnaround" name="turnaround" required>
+                                <option value="">Select turnaround</option>
+                                <option value="same-day">Same Day (+50%)</option>
+                                <option value="24h">24 Hours (+25%)</option>
+                                <option value="48h">48 Hours (+10%)</option>
+                                <option value="3-5">3-5 Days (Standard)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="file">Upload Audio/Video File (Optional for testing)</label>
+                        <div class="file-upload" id="file-upload">
+                            <input type="file" id="file" name="file" accept="audio/*,video/*">
+                            <div class="file-upload-content">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop files here or click to browse</p>
+                                <span class="file-info">Max file size: 100MB. Accepted: MP3, WAV, MP4, MOV</span>
+                            </div>
+                        </div>
+                        <div id="file-list" class="file-list"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Estimated Audio Duration (minutes) *</label>
+                        <input type="number" id="duration" name="duration" min="1" max="1000" placeholder="e.g., 30" required>
+                        <small>This helps us calculate pricing and timeline</small>
+                    </div>
+
+                    <!-- Payment Options -->
+                    <div id="payment-options" class="payment-options" style="display: none;">
+                        <div class="payment-method" data-method="mpesa">
+                            <input type="radio" name="payment" value="mpesa" id="payment-mpesa">
+                            <label for="payment-mpesa">
+                                <i class="fas fa-mobile-alt"></i>
+                                Pay with M-Pesa
+                            </label>
+                        </div>
+                        <div class="payment-method" data-method="invoice">
+                            <input type="radio" name="payment" value="pay-later" id="payment-invoice">
+                            <label for="payment-invoice">
+                                <i class="fas fa-file-invoice"></i>
+                                Invoice Me Later
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="mpesa-details" class="form-group" style="display: none;">
+                        <label for="mpesa-phone">M-Pesa Phone Number *</label>
+                        <input type="tel" id="mpesa-phone" name="mpesa-phone" placeholder="254712345678" pattern="254[0-9]{9}">
+                        <small style="color: var(--text-secondary); font-size: 0.9rem;">
+                            Format: 254XXXXXXXXX (Kenyan mobile number)
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="Any special instructions or requirements..."></textarea>
+                    </div>
+
+                    <!-- Pricing Display -->
+                    <div class="pricing-display" id="pricing-display" style="display:none;">
+                        <div class="pricing-card">
+                            <h4>Order Summary</h4>
+                            <div class="pricing-details">
+                                <div class="pricing-row">
+                                    <span>Service:</span>
+                                    <span id="selected-service">-</span>
+                                </div>
+                                <div class="pricing-row">
+                                    <span>Duration:</span>
+                                    <span id="selected-duration">-</span>
+                                </div>
+                                <div class="pricing-row">
+                                    <span>Rate:</span>
+                                    <span id="selected-rate">-</span>
+                                </div>
+                                <div class="pricing-row">
+                                    <span>Turnaround:</span>
+                                    <span id="selected-turnaround">-</span>
+                                </div>
+                                <div class="pricing-row total">
+                                    <span><strong>Total Estimate:</strong></span>
+                                    <span id="total-price"><strong>$0.00</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Options -->
+                    <div class="payment-options" id="payment-options" style="display:block;">
+                        <h4>Payment Method</h4>
+                        <div class="payment-methods">
+                            <label class="payment-method">
+                                <input type="radio" name="payment" value="mpesa" checked>
+                                <div class="payment-option">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>Pay with M-Pesa</span>
+                                    <small>Secure mobile money payment</small>
+                                </div>
+                            </label>
+                            <label class="payment-method">
+                                <input type="radio" name="payment" value="pay-later">
+                                <div class="payment-option">
+                                    <i class="fas fa-file-invoice"></i>
+                                    <span>Invoice Me Later</span>
+                                    <small>We'll send an invoice via email</small>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- M-Pesa Phone Number Input -->
+                    <div class="mpesa-details" id="mpesa-details" style="display:block;">
+                        <div class="form-group">
+                            <label for="mpesa-phone">M-Pesa Phone Number *</label>
+                            <input type="tel" id="mpesa-phone" name="mpesa-phone" placeholder="254712345678" pattern="254[0-9]{9}">
+                            <small>Enter your M-Pesa registered phone number (format: 254XXXXXXXXX)</small>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-large" id="submit-btn">Get Quote & Submit Order</button>
+                    <div id="order-status" class="form-status"></div>
+                </form>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <h2 class="section-title">About JD Legal Transcripts</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <h3>Our Mission</h3>
+                        <p>JD Legal Transcripts is dedicated to providing fast, accurate, and confidential transcription services for legal, medical, and professional clients. Our mission is to empower professionals with reliable documentation, delivered securely and on time.</p>
+                        
+                        <h3>Our Vision</h3>
+                        <p>To be the most trusted transcription partner for attorneys, doctors, and organizations worldwide.</p>
+                        
+                        <h3>What Sets Us Apart</h3>
+                        <ul class="about-features">
+                            <li><i class="fas fa-certificate"></i> HIPAA Compliant</li>
+                            <li><i class="fas fa-user-shield"></i> NDA & Confidentiality Agreements</li>
+                            <li><i class="fas fa-user-tie"></i> Certified Transcriptionists</li>
+                            <li><i class="fas fa-clock"></i> Fast Turnaround Times</li>
+                        </ul>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=facearea&w=400&q=80" alt="JD Transcripts Team">
+                        <div class="founder-bio">
+                            <h4>Meet the Founder</h4>
+                            <p>Jane Doe, M.A. in Linguistics, 15+ years in legal and medical transcription.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2 class="section-title">Contact Us</h2>
+                <div class="contact-content">
+                    <form id="contact-form" class="contact-form">
+                        <div class="form-group">
+                            <label for="contact-name">Name *</label>
+                            <input type="text" id="contact-name" name="contactName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-email">Email *</label>
+                            <input type="email" id="contact-email" name="contactEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact-message">Message *</label>
+                            <textarea id="contact-message" name="contactMessage" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                        <div id="contact-status" class="form-status"></div>
+                    </form>
+                    <div class="contact-info">
+                        <h3>Get in Touch</h3>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <strong>Email</strong>
+                                <p>benjaminranu21@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Phone</strong>
+                                <p>(+254)7 465 462 05 </p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Business Hours</strong>
+                                <p>Mon-Fri: 9AM-6PM EST</p>
+                            </div>
+                        </div>
+                        <div class="contact-social">
+                            <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="mailto:info@jdtranscripts.com" aria-label="Email">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            <a href="https://wa.me/1234567890" target="_blank" aria-label="WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>JD Transcripts</h3>
+                    <p>Professional transcription services for legal, medical, and business needs.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#order">Order</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li>Legal Transcription</li>
+                        <li>Medical Transcription</li>
+                        <li>Zoom Meeting Transcription</li>
+                        <li>Academic & Interview</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <p><i class="fas fa-envelope"></i> info@jdtranscripts.com</p>
+                    <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                    <p><i class="fas fa-clock"></i> Mon-Fri: 9AM-6PM EST</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 JD Transcripts. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

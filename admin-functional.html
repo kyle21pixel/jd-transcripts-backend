@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - JD Legal Transcripts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(26, 54, 93, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a365d 0%, #d69e2e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(26, 54, 93, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a365d 0%, #d69e2e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .orders-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(26, 54, 93, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 25px 35px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin: 0;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #1a365d;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+        }
+
+        .orders-table td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.3);
+        }
+
+        .orders-table tr:hover {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(237, 137, 54, 0.1);
+            color: #ed8936;
+            border: 1px solid rgba(237, 137, 54, 0.2);
+        }
+
+        .status-assigned {
+            background: rgba(56, 178, 172, 0.1);
+            color: #38b2ac;
+            border: 1px solid rgba(56, 178, 172, 0.2);
+        }
+
+        .status-in_progress {
+            background: rgba(66, 153, 225, 0.1);
+            color: #4299e1;
+            border: 1px solid rgba(66, 153, 225, 0.2);
+        }
+
+        .status-completed {
+            background: rgba(72, 187, 120, 0.1);
+            color: #48bb78;
+            border: 1px solid rgba(72, 187, 120, 0.2);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(26, 54, 93, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4a5568 0%, #718096 100%);
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #4a5568;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e53e3e;
+            background: rgba(254, 178, 178, 0.1);
+            border-radius: 10px;
+            margin: 20px;
+        }
+
+        .assign-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1a365d;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">🚀 FUNCTIONAL ADMIN DASHBOARD</h1>
+            <p class="dashboard-subtitle">✅ Connected to MySQL Database - Real Orders Display Here!</p>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <span id="user-info" style="color: #4a5568; font-weight: 600;"></span>
+                <a href="order-functional.html" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Test Order Form
+                </a>
+                <a href="http://localhost/phpmyadmin" target="_blank" class="btn btn-secondary">
+                    <i class="fas fa-database"></i> View Database
+                </a>
+                <button onclick="logout()" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-spinner fa-spin"></i></div>
+                <div class="stat-number">Loading...</div>
+                <div class="stat-label">Loading Statistics</div>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div class="orders-section">
+            <div class="section-header">
+                <h2 class="section-title">📋 Live Orders from Database</h2>
+                <div>
+                    <button onclick="refreshOrders()" class="btn btn-primary">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            
+            <div id="orders-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>Loading orders from database...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div id="assign-modal" class="assign-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeAssignModal()">&times;</button>
+            <h3 class="modal-header">Assign Order to Transcriber</h3>
+            <form id="assign-form">
+                <input type="hidden" id="assign-order-id">
+                <div class="form-group">
+                    <label for="transcriber-select">Select Transcriber:</label>
+                    <select id="transcriber-select" required>
+                        <option value="">Loading transcribers...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="assign-notes">Assignment Notes:</label>
+                    <textarea id="assign-notes" rows="3" placeholder="Any special instructions for the transcriber..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="closeAssignModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let orders = [];
+        let transcribers = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadOrders();
+            loadTranscribers();
+        });
+
+        function checkAuth() {
+            // Check if user is logged in
+            const userStr = sessionStorage.getItem('user');
+            if (userStr) {
+                currentUser = JSON.parse(userStr);
+                document.getElementById('user-info').textContent = `Welcome, ${currentUser.first_name} ${currentUser.last_name} (${currentUser.role})`;
+            } else {
+                // Redirect to login if not authenticated
+                window.location.href = 'admin-login.html';
+                return;
+            }
+        }
+
+        function loadOrders() {
+            fetch('api/get_orders.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        orders = data.orders;
+                        displayOrders(orders);
+                        displayStatistics(data.statistics);
+                    } else {
+                        throw new Error(data.error || 'Failed to load orders');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading orders:', error);
+                    document.getElementById('orders-container').innerHTML = `
+                        <div class="error">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                            <p>Error loading orders: ${error.message}</p>
+                            <button onclick="loadOrders()" class="btn btn-primary">Try Again</button>
+                        </div>
+                    `;
+                });
+        }
+
+        function displayStatistics(stats) {
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="stat-number">${stats.total_orders || 0}</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-number">${stats.pending_orders || 0}</div>
+                    <div class="stat-label">Pending Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+                    <div class="stat-number">${stats.assigned_orders || 0}</div>
+                    <div class="stat-label">Assigned Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-number">${stats.completed_orders || 0}</div>
+                    <div class="stat-label">Completed Orders</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-dollar-sign"></i></div>
+                    <div class="stat-number">$${parseFloat(stats.total_revenue || 0).toFixed(2)}</div>
+                    <div class="stat-label">Total Revenue</div>
+                </div>
+            `;
+        }
+
+        function displayOrders(orders) {
+            const container = document.getElementById('orders-container');
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #4a5568;">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <h3>No Orders Yet</h3>
+                        <p>Orders will appear here when submitted through the order form.</p>
+                        <a href="order-functional.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Submit Test Order
+                        </a>
+                    </div>
+                `;
+                return;
+            }
+
+            const tableHTML = `
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Assigned To</th>
+                            <th>Deadline</th>
+                            <th>Cost</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(order => `
+                            <tr>
+                                <td><strong>${order.order_number}</strong></td>
+                                <td>
+                                    <div style="font-weight: 600;">${order.client_name}</div>
+                                    <small style="color: #718096;">${order.client_email}</small>
+                                </td>
+                                <td>${formatServiceType(order.service_type)}</td>
+                                <td><span class="status-badge status-${order.status}">${formatStatus(order.status)}</span></td>
+                                <td>${order.assigned_to_full_name || '<em style="color: #a0aec0;">Unassigned</em>'}</td>
+                                <td>
+                                    ${order.deadline ? new Date(order.deadline).toLocaleDateString() : 'N/A'}
+                                    ${order.is_overdue ? '<br><small style="color: #e53e3e;">OVERDUE</small>' : ''}
+                                </td>
+                                <td>$${parseFloat(order.estimated_cost || 0).toFixed(2)}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        ${order.status === 'pending' ? 
+                                            `<button onclick="openAssignModal(${order.id})" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-user-plus"></i> Assign
+                                            </button>` : ''
+                                        }
+                                        <select onchange="updateOrderStatus(${order.id}, this.value)" class="status-select">
+                                            <option value="">Update Status</option>
+                                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>Pending</option>
+                                            <option value="assigned" ${order.status === 'assigned' ? 'selected' : ''}>Assigned</option>
+                                            <option value="in_progress" ${order.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                                            <option value="completed" ${order.status === 'completed' ? 'selected' : ''}>Completed</option>
+                                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>Delivered</option>
+                                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                        </select>
+                                        <button onclick="viewOrderDetails(${order.id})" class="btn btn-outline btn-sm">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        function formatServiceType(type) {
+            const types = {
+                'legal': 'Legal Transcription',
+                'medical': 'Medical Transcription',
+                'zoom': 'Zoom Meeting',
+                'academic': 'Academic & Interview'
+            };
+            return types[type] || type;
+        }
+
+        function formatStatus(status) {
+            return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+
+        function loadTranscribers() {
+            fetch('api/get_transcribers.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        transcribers = data.transcribers;
+                        updateTranscriberSelect();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading transcribers:', error);
+                });
+        }
+
+        function updateTranscriberSelect() {
+            const select = document.getElementById('transcriber-select');
+            select.innerHTML = '<option value="">Select a transcriber...</option>' +
+                transcribers.map(t => 
+                    `<option value="${t.id}">${t.full_name} (${t.workload_status} - ${t.active_orders} active orders)</option>`
+                ).join('');
+        }
+
+        function openAssignModal(orderId) {
+            document.getElementById('assign-order-id').value = orderId;
+            document.getElementById('assign-modal').style.display = 'block';
+        }
+
+        function closeAssignModal() {
+            document.getElementById('assign-modal').style.display = 'none';
+            document.getElementById('assign-form').reset();
+        }
+
+        document.getElementById('assign-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const orderId = document.getElementById('assign-order-id').value;
+            const transcriberId = document.getElementById('transcriber-select').value;
+            const notes = document.getElementById('assign-notes').value;
+            
+            if (!transcriberId) {
+                alert('Please select a transcriber');
+                return;
+            }
+            
+            fetch('api/assign_order.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    transcriber_id: transcriberId,
+                    notes: notes
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Order assigned successfully to ${data.transcriber}!`);
+                    closeAssignModal();
+                    loadOrders(); // Refresh the orders list
+                } else {
+                    throw new Error(data.error || 'Failed to assign order');
+                }
+            })
+            .catch(error => {
+                console.error('Error assigning order:', error);
+                alert('Error assigning order: ' + error.message);
+            });
+        });
+
+        function refreshOrders() {
+            loadOrders();
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            if (!newStatus) return;
+            
+            const notes = prompt('Add notes for this status change (optional):');
+            if (notes === null) return; // User cancelled
+            
+            fetch('api/update_order_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    new_status: newStatus,
+                    notes: notes
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Order status updated to '${newStatus}' successfully!`);
+                    loadOrders(); // Refresh the orders list
+                } else {
+                    throw new Error(data.error || 'Failed to update status');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                alert('Error updating status: ' + error.message);
+                loadOrders(); // Refresh to reset the select
+            });
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = orders.find(o => o.id == orderId);
+            if (!order) return;
+            
+            const detailsHTML = `
+                <div class="order-details-modal">
+                    <h3>Order Details - ${order.order_number}</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <strong>Client:</strong> ${order.client_name}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Email:</strong> ${order.client_email}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Phone:</strong> ${order.client_phone || 'N/A'}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Service:</strong> ${formatServiceType(order.service_type)}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Turnaround:</strong> ${order.turnaround}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Status:</strong> <span class="status-badge status-${order.status}">${formatStatus(order.status)}</span>
+                        </div>
+                        <div class="detail-item">
+                            <strong>File:</strong> ${order.file_name}
+                        </div>
+                        <div class="detail-item">
+                            <strong>File Size:</strong> ${formatFileSize(order.file_size)}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Duration:</strong> ${order.duration_minutes} minutes
+                        </div>
+                        <div class="detail-item">
+                            <strong>Cost:</strong> $${parseFloat(order.estimated_cost || 0).toFixed(2)}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Deadline:</strong> ${order.deadline ? new Date(order.deadline).toLocaleString() : 'N/A'}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Assigned To:</strong> ${order.assigned_to_full_name || 'Unassigned'}
+                        </div>
+                        <div class="detail-item full-width">
+                            <strong>Special Instructions:</strong><br>
+                            ${order.special_instructions || 'None'}
+                        </div>
+                        <div class="detail-item full-width">
+                            <strong>Created:</strong> ${new Date(order.created_at).toLocaleString()}
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button onclick="closeDetailsModal()" class="btn btn-secondary">Close</button>
+                        ${order.file_path ? `<a href="${order.file_path}" download class="btn btn-primary">Download File</a>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            // Create and show modal
+            const modal = document.createElement('div');
+            modal.id = 'details-modal';
+            modal.className = 'modal';
+            modal.innerHTML = `<div class="modal-content">${detailsHTML}</div>`;
+            document.body.appendChild(modal);
+            modal.style.display = 'block';
+        }
+
+        function closeDetailsModal() {
+            const modal = document.getElementById('details-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (!bytes) return 'N/A';
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear session storage
+                sessionStorage.removeItem('user');
+                
+                // Try to logout via API
+                fetch('api/logout.php', { method: 'POST' })
+                    .catch(error => console.log('Logout API call failed:', error))
+                    .finally(() => {
+                        window.location.href = 'admin-login.html';
+                    });
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('assign-modal');
+            if (event.target === modal) {
+                closeAssignModal();
+            }
+        }
+    </script>
+</body>
+</html>

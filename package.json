@@ -1,0 +1,17 @@
+{
+  "name": "fullstack-app",
+  "version": "1.0.0",
+  "description": "Full-stack web application with React frontend and Node.js backend",
+  "scripts": {
+    "install-server": "cd server && npm install",
+    "install-client": "cd client && npm install",
+    "install-all": "npm run install-server && npm run install-client",
+    "dev-server": "cd server && npm run dev",
+    "dev-client": "cd client && npm start",
+    "build-client": "cd client && npm run build",
+    "start-server": "cd server && npm start"
+  },
+  "keywords": ["react", "nodejs", "express", "mongodb", "fullstack"],
+  "author": "",
+  "license": "ISC"
+}

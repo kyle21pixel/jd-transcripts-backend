@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Transcription - JD Legal Transcripts</title>
+    <meta name="description" content="Order professional transcription services. Upload your audio files and receive accurate transcripts quickly.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <img src="logo-placeholder.svg" alt="JD Transcripts" class="logo">
+                </a>
+                <span class="logo-text">JD Legal</span>
+                <span class="logo-text">Transcripts</span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="order-functional.html" class="nav-link active">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="careers.html" class="nav-link">Careers</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-cta">
+                <a href="order-functional.html" class="btn btn-primary">Order Now</a>
+                <a href="admin-login.html" class="btn btn-outline" style="margin-left: 10px;">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Order Hero -->
+    <section class="order-hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>🚀 FUNCTIONAL ORDER SYSTEM - DATABASE CONNECTED!</h1>
+                <p>✅ This form saves orders to your MySQL database and shows in manager dashboard!</p>
+            </div>
+
+            <div class="order-container">
+                <div class="order-form-container">
+                    <form id="order-form" class="order-form" enctype="multipart/form-data">
+                        <h2><i class="fas fa-database"></i> Database-Connected Order Form</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name *</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                            <div class="form-group">
+                                <label for="service">Service Type *</label>
+                                <select id="service" name="service" required>
+                                    <option value="">Select a service</option>
+                                    <option value="legal">Legal Transcription ($1.50/min)</option>
+                                    <option value="medical">Medical Transcription ($1.75/min)</option>
+                                    <option value="zoom">Zoom Meeting Transcription ($1.25/min)</option>
+                                    <option value="academic">Academic & Interview ($1.25/min)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="turnaround">Turnaround Time *</label>
+                                <select id="turnaround" name="turnaround" required>
+                                    <option value="">Select turnaround</option>
+                                    <option value="same-day">Same Day (+50%)</option>
+                                    <option value="24h">24 Hours (+25%)</option>
+                                    <option value="48h">48 Hours (+10%)</option>
+                                    <option value="3-5">3-5 Days (Standard)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="file">Upload Audio/Video File *</label>
+                            <div class="file-upload" id="file-upload">
+                                <input type="file" id="file" name="file" accept="audio/*,video/*" required>
+                                <div class="file-upload-content">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Drag & drop files here or click to browse</p>
+                                    <span class="file-info">Max file size: 100MB. Accepted: MP3, WAV, MP4, MOV</span>
+                                </div>
+                            </div>
+                            <div id="file-list" class="file-list"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Additional Notes</label>
+                            <textarea id="notes" name="notes" rows="4" placeholder="Any special instructions or requirements..."></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="btn btn-primary btn-large">
+                            <i class="fas fa-paper-plane"></i> Submit Order to Database
+                        </button>
+                        <div id="order-status" class="form-status"></div>
+                    </form>
+                </div>
+
+                <div class="order-info">
+                    <div class="info-card">
+                        <h3>🎯 What Happens Next?</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Order saved to MySQL database</li>
+                            <li><i class="fas fa-check"></i> Manager receives notification</li>
+                            <li><i class="fas fa-check"></i> Order appears in admin dashboard</li>
+                            <li><i class="fas fa-check"></i> Manager assigns to transcriber</li>
+                            <li><i class="fas fa-check"></i> You receive completed transcript</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>📊 Test the System</h3>
+                        <p>After submitting an order:</p>
+                        <ul>
+                            <li><i class="fas fa-arrow-right"></i> Go to <a href="admin-login.html">Admin Login</a></li>
+                            <li><i class="fas fa-arrow-right"></i> Login as: <strong>manager</strong> / <strong>password123</strong></li>
+                            <li><i class="fas fa-arrow-right"></i> See your order in the dashboard!</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🗄️ Database Access</h3>
+                        <p>View your database:</p>
+                        <ul>
+                            <li><i class="fas fa-arrow-right"></i> Go to <a href="http://localhost/phpmyadmin" target="_blank">phpMyAdmin</a></li>
+                            <li><i class="fas fa-arrow-right"></i> Database: <strong>jd_transcripts</strong></li>
+                            <li><i class="fas fa-arrow-right"></i> Table: <strong>orders</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>JD Legal Transcripts</h3>
+                    <p>Professional transcription services with full database integration.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Admin Access</h4>
+                    <ul>
+                        <li><a href="admin-login.html">Admin Login</a></li>
+                        <li><a href="http://localhost/phpmyadmin" target="_blank">Database (phpMyAdmin)</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 JD Legal Transcripts. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('order-form');
+            const fileUpload = document.getElementById('file-upload');
+            const fileInput = document.getElementById('file');
+            const fileList = document.getElementById('file-list');
+            const statusDiv = document.getElementById('order-status');
+            
+            // File upload drag and drop
+            fileUpload.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                fileUpload.classList.add('dragover');
+            });
+            
+            fileUpload.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                fileUpload.classList.remove('dragover');
+            });
+            
+            fileUpload.addEventListener('drop', function(e) {
+                e.preventDefault();
+                fileUpload.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    fileInput.files = files;
+                    displayFiles(files);
+                }
+            });
+            
+            fileInput.addEventListener('change', function() {
+                displayFiles(this.files);
+            });
+            
+            function displayFiles(files) {
+                fileList.innerHTML = '';
+                
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    const fileName = document.createElement('span');
+                    fileName.className = 'file-name';
+                    fileName.textContent = file.name;
+                    
+                    const fileSize = document.createElement('span');
+                    fileSize.className = 'file-size';
+                    fileSize.textContent = formatFileSize(file.size);
+                    
+                    fileItem.appendChild(fileName);
+                    fileItem.appendChild(fileSize);
+                    fileList.appendChild(fileItem);
+                }
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            // Form submission - CONNECTS TO DATABASE!
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const submitBtn = document.getElementById('submit-btn');
+                const originalText = submitBtn.innerHTML;
+                
+                // Show loading state
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving to Database...';
+                submitBtn.disabled = true;
+                
+                statusDiv.className = 'form-status loading';
+                statusDiv.textContent = 'Submitting order to database...';
+                
+                // Submit to API
+                fetch('api/submit_order.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        statusDiv.className = 'form-status success';
+                        statusDiv.innerHTML = `
+                            <h3>✅ Order Submitted Successfully!</h3>
+                            <p><strong>Order Number:</strong> ${data.order_number}</p>
+                            <p><strong>Estimated Cost:</strong> $${data.estimated_cost}</p>
+                            <p><strong>Deadline:</strong> ${new Date(data.deadline).toLocaleString()}</p>
+                            <p>🎯 <strong>Next Steps:</strong></p>
+                            <ul>
+                                <li>✅ Order saved to database</li>
+                                <li>📧 Manager notified</li>
+                                <li>👀 <a href="admin-login.html">Login as manager</a> to see this order!</li>
+                                <li>🗄️ <a href="http://localhost/phpmyadmin" target="_blank">View in database</a></li>
+                            </ul>
+                        `;
+                        
+                        submitBtn.innerHTML = '✅ Order Submitted!';
+                        
+                        // Reset form after 5 seconds
+                        setTimeout(() => {
+                            form.reset();
+                            fileList.innerHTML = '';
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                            statusDiv.textContent = '';
+                            statusDiv.className = 'form-status';
+                        }, 10000);
+                    } else {
+                        throw new Error(data.error || 'Failed to submit order');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    statusDiv.className = 'form-status error';
+                    statusDiv.textContent = 'Error: ' + error.message;
+                    
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+
+            // Mobile menu toggle
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('nav-menu');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>

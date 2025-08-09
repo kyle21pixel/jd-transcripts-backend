@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test - M-Pesa Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { background: #28a745; color: white; padding: 15px 30px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .status { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .debug { background: #f8f9fa; border: 1px solid #dee2e6; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .payment-methods { display: flex; gap: 10px; margin: 10px 0; }
+        .payment-method { flex: 1; border: 1px solid #ddd; padding: 10px; border-radius: 5px; cursor: pointer; }
+        .payment-method input { width: auto; margin-right: 10px; }
+        .payment-method.selected { border-color: #28a745; background: #f8fff9; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Debug Test - M-Pesa Form Submission</h1>
+    <p>This will test the exact same form logic as the main website.</p>
+    
+    <form id="debug-form" novalidate>
+        <div class="form-group">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" value="Test Customer" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input type="email" id="email" value="test@example.com" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="service">Service *</label>
+            <select id="service" required>
+                <option value="">Select service</option>
+                <option value="legal" selected>Legal Transcription</option>
+                <option value="medical">Medical Transcription</option>
+                <option value="zoom">Zoom Meeting</option>
+                <option value="academic">Academic</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="turnaround">Turnaround *</label>
+            <select id="turnaround" required>
+                <option value="">Select turnaround</option>
+                <option value="same-day">Same Day (+50%)</option>
+                <option value="24h" selected>24 Hours (+25%)</option>
+                <option value="48h">48 Hours (+10%)</option>
+                <option value="3-5">3-5 Days (Standard)</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="duration">Duration (minutes) *</label>
+            <input type="number" id="duration" value="30" min="1" max="1000" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Payment Method *</label>
+            <div class="payment-methods">
+                <label class="payment-method selected">
+                    <input type="radio" name="payment" value="mpesa" checked>
+                    📱 Pay with M-Pesa
+                </label>
+                <label class="payment-method">
+                    <input type="radio" name="payment" value="pay-later">
+                    📄 Invoice Me Later
+                </label>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="mpesa-phone">M-Pesa Phone Number *</label>
+            <input type="tel" id="mpesa-phone" value="254712345678" placeholder="254712345678">
+        </div>
+        
+        <div class="form-group">
+            <label for="notes">Additional Notes</label>
+            <textarea id="notes" rows="3" placeholder="Optional notes..."></textarea>
+        </div>
+        
+        <button type="submit">🚀 Test M-Pesa Submission</button>
+    </form>
+    
+    <div id="debug-output" class="debug">
+        <h3>Debug Output:</h3>
+        <div id="debug-log">Ready to test...</div>
+    </div>
+    
+    <div id="status-output"></div>
+    
+    <script>
+        // Copy the exact validation logic from main site
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('status-output');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+        
+        function debugLog(message) {
+            const debugDiv = document.getElementById('debug-log');
+            debugDiv.innerHTML += '<br>' + new Date().toLocaleTimeString() + ': ' + message;
+        }
+        
+        function validateMpesaPhone(phone) {
+            const phoneRegex = /^254[0-9]{9}$/;
+            return phoneRegex.test(phone);
+        }
+        
+        function calculateTotalPrice(service, turnaround, duration) {
+            let basePrice = 0;
+            switch(service) {
+                case 'legal': basePrice = 1.50; break;
+                case 'medical': basePrice = 1.75; break;
+                case 'zoom': basePrice = 1.25; break;
+                case 'academic': basePrice = 1.25; break;
+            }
+            
+            let multiplier = 1;
+            switch(turnaround) {
+                case 'same-day': multiplier = 1.5; break;
+                case '24h': multiplier = 1.25; break;
+                case '48h': multiplier = 1.1; break;
+                case '3-5': multiplier = 1; break;
+            }
+            
+            return (basePrice * multiplier * parseInt(duration)).toFixed(2);
+        }
+        
+        function simulateMpesaPayment(orderData) {
+            debugLog('🔄 Starting M-Pesa simulation...');
+            showStatus('M-Pesa payment request sent to your phone. Please check your phone and enter your M-Pesa PIN.', '');
+            
+            // Create modal simulation
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.5); display: flex; align-items: center; 
+                justify-content: center; z-index: 1000;
+            `;
+            
+            const kesAmount = Math.round(parseFloat(orderData.totalPrice) * 130);
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 10px; max-width: 400px; text-align: center;">
+                    <h3 style="color: #28a745; margin-bottom: 20px;">📱 M-Pesa Payment</h3>
+                    <p><strong>Amount:</strong> KES ${kesAmount}</p>
+                    <p><strong>Phone:</strong> ${orderData.mpesaPhone}</p>
+                    <p><strong>Reference:</strong> ${orderData.accountReference}</p>
+                    <div style="margin: 20px 0;">
+                        <div style="border: 2px solid #28a745; border-radius: 50%; width: 40px; height: 40px; 
+                                    margin: 0 auto; animation: spin 1s linear infinite;"></div>
+                        <p style="margin-top: 10px;">Check your phone and enter M-Pesa PIN...</p>
+                    </div>
+                </div>
+                <style>
+                    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                </style>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                
+                // 80% success rate
+                const success = Math.random() > 0.2;
+                
+                if (success) {
+                    debugLog('✅ M-Pesa payment successful!');
+                    showStatus('Payment successful! ✅ Order confirmed. You will receive an email confirmation shortly.', 'success');
+                    
+                    // Send email notification
+                    debugLog('📧 Sending email notification...');
+                    sendEmailNotification(orderData);
+                    
+                } else {
+                    debugLog('❌ M-Pesa payment failed');
+                    showStatus('Payment failed or cancelled ❌. Please try again or choose "Invoice Me Later".', 'error');
+                }
+            }, 15000); // 15 second simulation
+        }
+        
+        function sendEmailNotification(orderData) {
+            // Simulate email sending
+            fetch('https://formspree.io/f/benjaminoxy21@gmail.com', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    _subject: `🔔 NEW ORDER: ${orderData.service} - ${orderData.name} - $${orderData.totalPrice}`,
+                    'Customer Name': orderData.name,
+                    'Email': orderData.email,
+                    'Service Type': orderData.service,
+                    'Duration': `${orderData.duration} minutes`,
+                    'Turnaround Time': orderData.turnaround,
+                    'Total Price': `$${orderData.totalPrice}`,
+                    'Payment Method': `📱 M-Pesa (${orderData.mpesaPhone})`,
+                    'Additional Notes': orderData.notes || 'None',
+                    'Order Date': orderData.timestamp
+                })
+            })
+            .then(() => {
+                debugLog('✅ Email sent successfully to benjaminoxy21@gmail.com');
+            })
+            .catch(error => {
+                debugLog('❌ Email sending failed: ' + error.message);
+            });
+        }
+        
+        // Form submission handler
+        document.getElementById('debug-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            debugLog('🚀 Form submission started');
+            
+            // Get form values
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const service = document.getElementById('service').value;
+            const turnaround = document.getElementById('turnaround').value;
+            const duration = document.getElementById('duration').value;
+            const paymentMethod = document.querySelector('input[name="payment"]:checked')?.value;
+            const mpesaPhone = document.getElementById('mpesa-phone').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+            
+            debugLog(`Form data: name="${name}", email="${email}", service="${service}", turnaround="${turnaround}", duration="${duration}", payment="${paymentMethod}", phone="${mpesaPhone}"`);
+            
+            // Validation
+            if (!name) {
+                debugLog('❌ Validation failed: Missing name');
+                showStatus('Please enter your full name.', 'error');
+                return;
+            }
+            
+            if (!email) {
+                debugLog('❌ Validation failed: Missing email');
+                showStatus('Please enter your email address.', 'error');
+                return;
+            }
+            
+            if (!service) {
+                debugLog('❌ Validation failed: Missing service');
+                showStatus('Please select a service type.', 'error');
+                return;
+            }
+            
+            if (!turnaround) {
+                debugLog('❌ Validation failed: Missing turnaround');
+                showStatus('Please select a turnaround time.', 'error');
+                return;
+            }
+            
+            if (!duration) {
+                debugLog('❌ Validation failed: Missing duration');
+                showStatus('Please enter the audio duration in minutes.', 'error');
+                return;
+            }
+            
+            if (!paymentMethod) {
+                debugLog('❌ Validation failed: Missing payment method');
+                showStatus('Please select a payment method.', 'error');
+                return;
+            }
+            
+            if (paymentMethod === 'mpesa') {
+                if (!mpesaPhone) {
+                    debugLog('❌ Validation failed: Missing M-Pesa phone');
+                    showStatus('Please enter your M-Pesa phone number.', 'error');
+                    return;
+                }
+                
+                if (!validateMpesaPhone(mpesaPhone)) {
+                    debugLog('❌ Validation failed: Invalid M-Pesa phone format');
+                    showStatus('Please enter a valid M-Pesa phone number (format: 254XXXXXXXXX).', 'error');
+                    return;
+                }
+            }
+            
+            debugLog('✅ All validation passed');
+            
+            // Calculate pricing
+            const totalPrice = calculateTotalPrice(service, turnaround, duration);
+            debugLog(`💰 Calculated price: $${totalPrice}`);
+            
+            // Prepare order data
+            const orderData = {
+                name: name,
+                email: email,
+                service: service,
+                turnaround: turnaround,
+                duration: duration,
+                paymentMethod: paymentMethod,
+                mpesaPhone: mpesaPhone,
+                notes: notes,
+                totalPrice: totalPrice,
+                accountReference: `JD-${Date.now()}`,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            debugLog('📦 Order data prepared');
+            
+            // Process payment
+            if (paymentMethod === 'mpesa') {
+                debugLog('🔄 Processing M-Pesa payment...');
+                simulateMpesaPayment(orderData);
+            } else {
+                debugLog('📄 Processing invoice request...');
+                showStatus('Order submitted successfully! We will send you an invoice within 2 hours.', 'success');
+                sendEmailNotification(orderData);
+            }
+        });
+        
+        // Initialize
+        debugLog('🎯 Debug test page loaded and ready');
+    </script>
+</body>
+</html>

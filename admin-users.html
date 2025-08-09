@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - JD Transcripts</title>
+    <meta name="description" content="User Management Dashboard for JD Transcripts">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <button class="logo-refresh" onclick="location.href='index.html'" style="background:none;border:none;padding:0;cursor:pointer;">
+                    <img src="logo-placeholder.svg" alt="JD Transcripts" class="logo">
+                </button>
+                <span class="logo-text">JD Legal</span>
+                <span class="logo-text">Transcripts</span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin.html" class="nav-link">Admin Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin-manager.html" class="nav-link">Admin Manager</a>
+                </li>
+                <li class="nav-item">
+                    <a href="admin-users.html" class="nav-link active">User Management</a>
+                </li>
+            </ul>
+            <div class="nav-cta">
+                <a href="admin.html" class="btn btn-primary">Back to Dashboard</a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- User Management Dashboard -->
+    <section class="admin-dashboard">
+        <div class="dashboard-container">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <div class="header-content">
+                    <h1><i class="fas fa-users-cog"></i> User Management</h1>
+                    <p>Add, edit, and manage all team members and their roles</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" onclick="showAddUserModal()">
+                        <i class="fas fa-user-plus"></i> Add New User
+                    </button>
+                    <a href="admin-manager.html" class="btn btn-secondary">
+                        <i class="fas fa-crown"></i> Admin Manager
+                    </a>
+                    <a href="admin.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+            </div>
+
+            <!-- User Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">12</div>
+                        <div class="stat-label">Total Users</div>
+                        <div class="stat-change positive">+2 this month</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Administrators</div>
+                        <div class="stat-change">Active</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">8</div>
+                        <div class="stat-label">Team Members</div>
+                        <div class="stat-change positive">Available</div>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-number">9</div>
+                        <div class="stat-label">Online Now</div>
+                        <div class="stat-change positive">75% active</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Table -->
+            <div class="dashboard-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-table"></i> All Users</h2>
+                    <div class="section-actions">
+                        <select class="filter-select">
+                            <option value="all">All Roles</option>
+                            <option value="admin">Administrators</option>
+                            <option value="transcriptionist">Transcriptionists</option>
+                            <option value="editor">Editors</option>
+                            <option value="manager">Managers</option>
+                        </select>
+                        <button class="btn btn-sm btn-secondary" onclick="exportUsers()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="users-table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">JS</div>
+                                        <div>
+                                            <div class="user-name">John Smith</div>
+                                            <div class="user-id">ID: ADM001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge admin">Administrator</span></td>
+                                <td>john.smith@jdtranscripts.com</td>
+                                <td><span class="status-badge online">Online</span></td>
+                                <td>2023-06-15</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewUser('ADM001')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" onclick="editUser('ADM001')" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteUser('ADM001')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">MJ</div>
+                                        <div>
+                                            <div class="user-name">Maria Johnson</div>
+                                            <div class="user-id">ID: ADM002</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge admin">Admin Supervisor</span></td>
+                                <td>maria.johnson@jdtranscripts.com</td>
+                                <td><span class="status-badge online">Online</span></td>
+                                <td>2023-05-20</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewUser('ADM002')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" onclick="editUser('ADM002')" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteUser('ADM002')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">SJ</div>
+                                        <div>
+                                            <div class="user-name">Sarah Johnson</div>
+                                            <div class="user-id">ID: TRS001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge transcriptionist">Legal Specialist</span></td>
+                                <td>sarah.johnson@jdtranscripts.com</td>
+                                <td><span class="status-badge online">Online</span></td>
+                                <td>2023-07-10</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewUser('TRS001')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" onclick="editUser('TRS001')" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteUser('TRS001')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="user-info">
+                                        <div class="user-avatar">MC</div>
+                                        <div>
+                                            <div class="user-name">Mike Chen</div>
+                                            <div class="user-id">ID: TRS002</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="role-badge transcriptionist">Medical Specialist</span></td>
+                                <td>mike.chen@jdtranscripts.com</td>
+                                <td><span class="status-badge busy">Busy</span></td>
+                                <td>2023-06-25</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-icon" onclick="viewUser('TRS002')" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn-icon" onclick="editUser('TRS002')" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-icon danger" onclick="deleteUser('TRS002')" title="Delete">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add User Modal -->
+    <div id="add-user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Add New User</h3>
+                <button class="modal-close" onclick="closeAddUserModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="add-user-form">
+                    <div class="form-group">
+                        <label for="full-name">Full Name *</label>
+                        <input type="text" id="full-name" name="fullName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role">Role *</label>
+                        <select id="role" name="role" required>
+                            <option value="">Select Role</option>
+                            <option value="administrator">Administrator</option>
+                            <option value="legal-specialist">Legal Specialist</option>
+                            <option value="medical-specialist">Medical Specialist</option>
+                            <option value="transcriptionist">Transcriptionist</option>
+                            <option value="qa-editor">QA Editor</option>
+                            <option value="manager">Manager</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" id="specialization" name="specialization" placeholder="e.g., Legal Transcription, Medical Records">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeAddUserModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        function showAddUserModal() {
+            document.getElementById('add-user-modal').style.display = 'flex';
+        }
+
+        function closeAddUserModal() {
+            document.getElementById('add-user-modal').style.display = 'none';
+            document.getElementById('add-user-form').reset();
+        }
+
+        function viewUser(userId) {
+            alert(`Viewing details for user: ${userId}`);
+        }
+
+        function editUser(userId) {
+            alert(`Editing user: ${userId}`);
+        }
+
+        function deleteUser(userId) {
+            if (confirm(`Are you sure you want to delete user ${userId}? This action cannot be undone.`)) {
+                alert(`User ${userId} deleted successfully`);
+            }
+        }
+
+        function exportUsers() {
+            alert("Exporting user data to CSV...");
+        }
+
+        // Handle form submission
+        document.getElementById('add-user-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const userData = Object.fromEntries(formData);
+            
+            console.log('New user data:', userData);
+            alert(`User ${userData.fullName} added successfully!`);
+            
+            closeAddUserModal();
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.style.display = 'none';
+            }
+        });
+
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+    </script>
+
+    <style>
+        /* User Management Specific Styles */
+        .users-table-container {
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+
+        .users-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .users-table th,
+        .users-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .users-table th {
+            background: rgba(255,255,255,0.05);
+            font-weight: 600;
+            color: var(--gold);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .user-name {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .user-id {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        .role-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .role-badge.admin {
+            background: rgba(239,68,68,0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.3);
+        }
+
+        .role-badge.transcriptionist {
+            background: rgba(59,130,246,0.2);
+            color: #3b82f6;
+            border: 1px solid rgba(59,130,246,0.3);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.online {
+            background: rgba(74,222,128,0.2);
+            color: #4ade80;
+            border: 1px solid rgba(74,222,128,0.3);
+        }
+
+        .status-badge.busy {
+            background: rgba(251,191,36,0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(251,191,36,0.3);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-icon:hover {
+            background: var(--gold);
+            color: var(--dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-icon.danger:hover {
+            background: #ef4444;
+            color: white;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(212,175,55,0.2);
+        }
+
+        .form-group select option {
+            background: var(--dark);
+            color: white;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .users-table-container {
+                overflow-x: scroll;
+            }
+            
+            .users-table {
+                min-width: 800px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</body>
+</html>

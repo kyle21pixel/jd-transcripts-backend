@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Legal Transcripts - Professional Transcription Services</title>
+    <meta name="description" content="Professional transcription services for legal, medical, and business needs. Fast, accurate, and secure.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .logo-icon {
+            margin-right: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #2563eb;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            margin-top: 80px;
+        }
+
+        .hero-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Services Section */
+        .services {
+            padding: 6rem 0;
+            background: #f8fafc;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-icon i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .service-card p {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            color: #64748b;
+        }
+
+        .service-features i {
+            color: #10b981;
+            margin-right: 0.5rem;
+        }
+
+        .service-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .turnaround {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        /* Order Section */
+        .order {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .order-form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #f8fafc;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn-full {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 6rem 0;
+            background: #1e293b;
+            color: white;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .contact-item {
+            text-align: center;
+        }
+
+        .contact-icon {
+            width: 60px;
+            height: 60px;
+            background: #2563eb;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .contact-icon i {
+            font-size: 1.5rem;
+        }
+
+        .contact-item h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-item p {
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f172a;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .hero-actions {
+                justify-content: center;
+            }
+        }
+
+        /* Success Message */
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-microphone-alt logo-icon"></i>
+                <span>JD Legal Transcripts</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#order" class="nav-link">Order</a></li>
+                <li><a href="careers.html" class="nav-link">Careers</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#order" class="btn btn-primary">Order Now</a>
+                <a href="admin-login.html" class="btn btn-outline" style="margin-left: 0.5rem;">
+                    <i class="fas fa-shield-alt"></i> Admin
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-container">
+                <div class="hero-content">
+                    <h1 class="hero-title">Professional Transcription Services</h1>
+                    <p class="hero-subtitle">
+                        Transform your audio into accurate, professional text with our secure and fast transcription services for legal, medical, and business needs.
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number">99%+</span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">24hr</span>
+                            <span class="stat-label">Turnaround</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">100%</span>
+                            <span class="stat-label">Secure</span>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <a href="#order" class="btn btn-primary btn-large">
+                            <i class="fas fa-upload"></i> Order Now
+                        </a>
+                        <a href="#services" class="btn btn-secondary btn-large">
+                            <i class="fas fa-info-circle"></i> Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Services</h2>
+                <p class="section-subtitle">Professional transcription services tailored to your industry needs</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h3>Legal Transcription</h3>
+                    <p>Court proceedings, depositions, legal briefs, and attorney-client meetings with specialized legal terminology.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Court hearings & trials</li>
+                        <li><i class="fas fa-check"></i> Depositions & statements</li>
+                        <li><i class="fas fa-check"></i> Legal documentation</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price">From $1.50/min</span>
+                        <span class="turnaround">24-48 hours</span>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <h3>Medical Transcription</h3>
+                    <p>HIPAA-compliant medical transcription for healthcare professionals with medical terminology expertise.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Patient consultations</li>
+                        <li><i class="fas fa-check"></i> Medical dictations</li>
+                        <li><i class="fas fa-check"></i> Clinical reports</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price">From $1.75/min</span>
+                        <span class="turnaround">24-72 hours</span>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>Business Meetings</h3>
+                    <p>Virtual meetings, webinars, conferences, and business communications with speaker identification.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Zoom meetings</li>
+                        <li><i class="fas fa-check"></i> Webinars & presentations</li>
+                        <li><i class="fas fa-check"></i> Conference calls</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price">From $1.25/min</span>
+                        <span class="turnaround">24 hours</span>
+                    </div>
+                </div>
+
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Academic & Research</h3>
+                    <p>Research interviews, academic lectures, focus groups, and educational content transcription.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-check"></i> Research interviews</li>
+                        <li><i class="fas fa-check"></i> Academic lectures</li>
+                        <li><i class="fas fa-check"></i> Focus groups</li>
+                    </ul>
+                    <div class="service-pricing">
+                        <span class="price">From $1.25/min</span>
+                        <span class="turnaround">3-5 days</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Section -->
+    <section id="order" class="order">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Place Your Order</h2>
+                <p class="section-subtitle">Get started with professional transcription in minutes</p>
+            </div>
+            <form id="order-form" class="order-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="service">Service Type *</label>
+                        <select id="service" name="service" required>
+                            <option value="">Select service</option>
+                            <option value="legal">Legal Transcription</option>
+                            <option value="medical">Medical Transcription</option>
+                            <option value="business">Business Meetings</option>
+                            <option value="academic">Academic & Research</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="turnaround">Turnaround Time *</label>
+                        <select id="turnaround" name="turnaround" required>
+                            <option value="">Select turnaround</option>
+                            <option value="same-day">Same Day (+50%)</option>
+                            <option value="24h">24 Hours (+25%)</option>
+                            <option value="48h">48 Hours (+10%)</option>
+                            <option value="standard">3-5 Days (Standard)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="estimated-cost">Estimated Cost</label>
+                        <input type="text" id="estimated-cost" readonly placeholder="Select service and turnaround">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="instructions">Special Instructions</label>
+                    <textarea id="instructions" name="instructions" rows="4" placeholder="Any special requirements or notes..."></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-large btn-full">
+                    <i class="fas fa-paper-plane"></i> Submit Order
+                </button>
+                
+                <div id="success-message" class="success-message">
+                    <i class="fas fa-check-circle"></i> Thank you! Your order has been submitted successfully. We'll contact you within 24 hours.
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Contact Us</h2>
+                <p class="section-subtitle">Get in touch for any questions or custom requirements</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>Email</h3>
+                    <p>info@jdlegaltranscripts.com</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <h3>Phone</h3>
+                    <p>+1 (555) 123-4567</p>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Business Hours</h3>
+                    <p>Mon-Fri: 9AM-6PM EST</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 JD Legal Transcripts. All rights reserved. | Professional transcription services you can trust.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('order-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                orderId: 'ORD-' + Date.now(),
+                clientName: document.getElementById('name').value,
+                clientEmail: document.getElementById('email').value,
+                clientPhone: document.getElementById('phone').value,
+                serviceType: document.getElementById('service').options[document.getElementById('service').selectedIndex].text,
+                turnaround: document.getElementById('turnaround').options[document.getElementById('turnaround').selectedIndex].text,
+                estimatedCost: document.getElementById('estimated-cost').value,
+                instructions: document.getElementById('instructions').value,
+                orderDate: new Date().toISOString(),
+                status: 'pending'
+            };
+
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Order...';
+            submitBtn.disabled = true;
+
+            // Simulate API call to send email notification
+            setTimeout(() => {
+                // In production, this would make an actual API call
+                // fetch('/api/orders', { method: 'POST', body: JSON.stringify(formData) })
+                
+                // Store order in localStorage for demo
+                const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push(formData);
+                localStorage.setItem('orders', JSON.stringify(orders));
+
+                // Send email notification (simulated)
+                console.log('Email notification sent to admin:', formData);
+                
+                // Show success message
+                const successMessage = document.getElementById('success-message');
+                successMessage.innerHTML = `
+                    <i class="fas fa-check-circle"></i> 
+                    Order submitted successfully! Order ID: ${formData.orderId}
+                    <br><small>You will receive a confirmation email shortly.</small>
+                `;
+                successMessage.classList.add('show');
+                
+                // Reset form
+                this.reset();
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Hide success message after 8 seconds
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 8000);
+            }, 2000);
+        });
+
+        // Cost estimation
+        function updateCost() {
+            const service = document.getElementById('service').value;
+            const turnaround = document.getElementById('turnaround').value;
+            const costField = document.getElementById('estimated-cost');
+            
+            if (service && turnaround) {
+                let baseRate = 1.25; // Default rate
+                
+                switch(service) {
+                    case 'legal': baseRate = 1.50; break;
+                    case 'medical': baseRate = 1.75; break;
+                    case 'business': baseRate = 1.25; break;
+                    case 'academic': baseRate = 1.25; break;
+                }
+                
+                let multiplier = 1;
+                switch(turnaround) {
+                    case 'same-day': multiplier = 1.5; break;
+                    case '24h': multiplier = 1.25; break;
+                    case '48h': multiplier = 1.1; break;
+                    case 'standard': multiplier = 1; break;
+                }
+                
+                const finalRate = (baseRate * multiplier).toFixed(2);
+                costField.value = `$${finalRate}/minute (estimated)`;
+            } else {
+                costField.value = '';
+            }
+        }
+
+        document.getElementById('service').addEventListener('change', updateCost);
+        document.getElementById('turnaround').addEventListener('change', updateCost);
+
+        // Active navigation link
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 200)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
