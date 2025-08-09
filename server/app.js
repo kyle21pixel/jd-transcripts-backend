@@ -30,21 +30,45 @@ app.use(fileUpload({
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jd-transcripts', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('✅ Connected to MongoDB'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// Database connection (optional for basic functionality)
+if (process.env.MONGODB_URI) {
+    mongoose.connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch(err => console.error('❌ MongoDB connection error:', err));
+} else {
+    console.log('⚠️ No MongoDB URI provided, running without database');
+}
+
+// Root route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'JD Legal Transcripts API is running!',
+        status: 'success',
+        timestamp: new Date().toISOString(),
+        endpoints: [
+            'GET /api/health - Health check',
+            'POST /api/orders - Create order',
+            'POST /api/email/contact - Contact form',
+            'POST /api/auth/login - Admin login',
+            'GET /api/careers/positions - Job positions'
+        ]
+    });
+});
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/orders', require('./routes/orders'));
-app.use('/api/transcribers', require('./routes/transcribers'));
-app.use('/api/admin', require('./routes/admin'));
-app.use('/api/careers', require('./routes/careers'));
-app.use('/api/email', require('./routes/email'));
+try {
+    app.use('/api/auth', require('./routes/auth'));
+    app.use('/api/orders', require('./routes/order')); // Using the simpler order.js file
+    app.use('/api/transcribers', require('./routes/transcribers'));
+    app.use('/api/admin', require('./routes/admin'));
+    app.use('/api/careers', require('./routes/careers'));
+    app.use('/api/email', require('./routes/email'));
+} catch (error) {
+    console.error('Error loading routes:', error);
+}
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

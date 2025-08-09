@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: jd-transcripts-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        value: mongodb+srv://jdtranscripts:JDTranscripts2025@cluster0.mongodb.net/jd-transcripts?retryWrites=true&w=majority
+      - key: JWT_SECRET
+        value: jd-legal-transcripts-super-secret-jwt-key-2025-production-secure
+      - key: EMAIL_SERVICE
+        value: gmail
+      - key: EMAIL_USER
+        value: admin@jdlegaltranscripts.com
+      - key: EMAIL_PASS
+        value: jdtranscripts2025app
+      - key: ADMIN_EMAIL
+        value: admin@jdlegaltranscripts.com
+      - key: FRONTEND_URL
+        value: https://sensational-tartufo-6888eb.netlify.app
+      - key: CORS_ORIGIN
+        value: https://sensational-tartufo-6888eb.netlify.app
+      - key: PORT
+        value: 5000
