@@ -42,12 +42,15 @@ app.use(fileUpload({
 }));
 
 // Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/jd-transcripts', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('✅ Connected to MongoDB'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+if (process.env.MONGODB_URI) {
+    console.log('🔗 Attempting MongoDB connection...');
+    console.log('🔗 MongoDB URI:', process.env.MONGODB_URI.replace(/\/\/.*:.*@/, '//***:***@'));
+    mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ MongoDB connected successfully'))
+    .catch(err => console.error('❌ MongoDB connection error:', err));
+} else {
+    console.log('⚠️ No MongoDB URI provided, running without database');
+}
 
 // Authentication middleware
 const authenticateToken = (req, res, next) => {
