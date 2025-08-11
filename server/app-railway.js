@@ -41,7 +41,8 @@ app.use(fileUpload({
     tempFileDir: '/tmp/'
 }));
 
-// Database connection
+// Database connection - Updated 2024-12-19
+console.log('🚀 JD Transcripts API Starting - Build 2024-12-19');
 if (process.env.MONGODB_URI) {
     console.log('🔗 Attempting MongoDB connection...');
     console.log('🔗 MongoDB URI:', process.env.MONGODB_URI.replace(/\/\/.*:.*@/, '//***:***@'));
