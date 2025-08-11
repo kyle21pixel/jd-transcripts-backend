@@ -32,6 +32,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection (optional for basic functionality)
 if (process.env.MONGODB_URI) {
+    console.log('🔗 Attempting MongoDB connection...');
+    console.log('🔗 MongoDB URI:', process.env.MONGODB_URI.replace(/\/\/.*:.*@/, '//***:***@'));
     mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('✅ MongoDB connected successfully'))
     .catch(err => console.error('❌ MongoDB connection error:', err));
