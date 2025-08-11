@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers - Join Our Team | JD Legal Transcripts</title>
+    <meta name="description" content="Join JD Legal Transcripts team. Remote transcription jobs available. Competitive pay, flexible hours, work from home opportunities.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            margin-right: 0.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: #2563eb;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #2563eb;
+            border: 2px solid #2563eb;
+        }
+
+        .btn-outline:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            margin-top: 80px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Why Join Section */
+        .why-join {
+            padding: 6rem 0;
+            background: #f8fafc;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-align: center;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .benefit-card p {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Positions Section */
+        .positions {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .positions-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .position-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .position-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+        }
+
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .position-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .position-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .position-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .position-salary {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .position-description {
+            color: #64748b;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .position-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .detail-section li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .detail-section li i {
+            color: #10b981;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
+        }
+
+        .position-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .btn-sm {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        /* Application Form */
+        .application-form {
+            padding: 6rem 0;
+            background: #f8fafc;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .form-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin: 0 0.5rem;
+        }
+
+        .step.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .step.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .step.inactive {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            transition: border-color 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #2563eb;
+        }
+
+        .file-upload.dragover {
+            border-color: #2563eb;
+            background: #f0f9ff;
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .success-message {
+            background: #10b981;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            display: none;
+            text-align: center;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .position-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .position-actions {
+                justify-content: flex-start;
+            }
+
+            .form-container {
+                padding: 2rem 1rem;
+            }
+
+            .form-steps {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            display: inline-block;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-microphone-alt logo-icon"></i>
+                <span>JD Legal Transcripts</span>
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="index.html#services" class="nav-link">Services</a></li>
+                <li><a href="index.html#order" class="nav-link">Order</a></li>
+                <li><a href="careers.html" class="nav-link active">Careers</a></li>
+                <li><a href="index.html#contact" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="index.html#order" class="btn btn-primary">Order Now</a>
+                <a href="admin-login.html" class="btn btn-outline" style="margin-left: 0.5rem;">
+                    <i class="fas fa-shield-alt"></i> Admin
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="hero-title">Join Our Remote Team</h1>
+            <p class="hero-subtitle">
+                Work from anywhere as a professional transcriber. Flexible hours, competitive pay, and the opportunity to make a difference in legal, medical, and business communications.
+            </p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Remote Work</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">$15-35</span>
+                    <span class="stat-label">Per Hour</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Flexible Hours</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Join Section -->
+    <section class="why-join">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Why Join JD Legal Transcripts?</h2>
+                <p class="section-subtitle">
+                    We offer more than just a job - we provide a career opportunity with growth, flexibility, and meaningful work.
+                </p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Work From Home</h3>
+                    <p>Enjoy the comfort and flexibility of working from your own space. No commute, no office politics - just you and your work.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Flexible Schedule</h3>
+                    <p>Choose your own hours and work when it suits you best. Perfect for parents, students, or anyone seeking work-life balance.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h3>Competitive Pay</h3>
+                    <p>Earn $15-35 per hour based on your experience and specialization. Weekly payments and performance bonuses available.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>Professional Growth</h3>
+                    <p>Continuous training opportunities, skill development programs, and career advancement paths within our growing company.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Supportive Team</h3>
+                    <p>Join a collaborative team of professionals who support each other. Regular team meetings and mentorship programs.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Job Security</h3>
+                    <p>Stable work with consistent projects. We're a growing company with long-term client relationships and steady demand.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Positions -->
+    <section class="positions">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Open Positions</h2>
+                <p class="section-subtitle">
+                    Find the perfect role that matches your skills and interests. All positions are remote with flexible scheduling.
+                </p>
+            </div>
+
+            <div class="positions-grid" id="positionsGrid">
+                <!-- Positions will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Application Form -->
+    <section class="application-form" id="applicationSection" style="display: none;">
+        <div class="container">
+            <div class="form-container">
+                <div class="section-header">
+                    <h2 class="section-title">Apply Now</h2>
+                    <p class="section-subtitle">
+                        Complete the application form below. The process takes about 10-15 minutes.
+                    </p>
+                </div>
+
+                <div class="form-steps">
+                    <div class="step active" data-step="1">
+                        <i class="fas fa-user"></i>
+                        <span>Personal Info</span>
+                    </div>
+                    <div class="step inactive" data-step="2">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Experience</span>
+                    </div>
+                    <div class="step inactive" data-step="3">
+                        <i class="fas fa-cogs"></i>
+                        <span>Skills</span>
+                    </div>
+                    <div class="step inactive" data-step="4">
+                        <i class="fas fa-calendar"></i>
+                        <span>Availability</span>
+                    </div>
+                    <div class="step inactive" data-step="5">
+                        <i class="fas fa-upload"></i>
+                        <span>Documents</span>
+                    </div>
+                </div>
+
+                <form id="applicationForm">
+                    <!-- Step 1: Personal Information -->
+                    <div class="form-step active" data-step="1">
+                        <h3 style="margin-bottom: 1.5rem; color: #1e293b;">Personal Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="firstName">First Name *</label>
+                                <input type="text" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name *</label>
+                                <input type="text" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="city">City</label>
+                                <input type="text" id="city" name="city">
+                            </div>
+                            <div class="form-group">
+                                <label for="state">State/Province</label>
+                                <input type="text" id="state" name="state">
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <select id="country" name="country">
+                                    <option value="United States">United States</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="United Kingdom">United Kingdom</option>
+                                    <option value="Australia">Australia</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="timeZone">Time Zone</label>
+                                <select id="timeZone" name="timeZone">
+                                    <option value="EST">Eastern (EST)</option>
+                                    <option value="CST">Central (CST)</option>
+                                    <option value="MST">Mountain (MST)</option>
+                                    <option value="PST">Pacific (PST)</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Experience -->
+                    <div class="form-step" data-step="2">
+                        <h3 style="margin-bottom: 1.5rem; color: #1e293b;">Experience & Background</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="yearsExperience">Years of Work Experience *</label>
+                                <select id="yearsExperience" name="yearsExperience" required>
+                                    <option value="">Select...</option>
+                                    <option value="0">Less than 1 year</option>
+                                    <option value="1">1-2 years</option>
+                                    <option value="3">3-5 years</option>
+                                    <option value="6">6-10 years</option>
+                                    <option value="11">10+ years</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="transcriptionExperience">Transcription Experience *</label>
+                                <select id="transcriptionExperience" name="transcriptionExperience" required>
+                                    <option value="">Select...</option>
+                                    <option value="0">No experience</option>
+                                    <option value="1">Less than 1 year</option>
+                                    <option value="2">1-2 years</option>
+                                    <option value="3">3-5 years</option>
+                                    <option value="5">5+ years</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="typingSpeed">Typing Speed (WPM)</label>
+                                <input type="number" id="typingSpeed" name="typingSpeed" min="30" max="200" placeholder="e.g., 75">
+                            </div>
+                            <div class="form-group">
+                                <label for="typingAccuracy">Typing Accuracy (%)</label>
+                                <input type="number" id="typingAccuracy" name="typingAccuracy" min="80" max="100" placeholder="e.g., 98">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="relevantExperience">Relevant Experience</label>
+                            <textarea id="relevantExperience" name="relevantExperience" rows="4" placeholder="Describe your relevant work experience, especially any transcription, typing, or administrative work..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Skills -->
+                    <div class="form-step" data-step="3">
+                        <h3 style="margin-bottom: 1.5rem; color: #1e293b;">Skills & Specializations</h3>
+                        <div class="form-group">
+                            <label>Specializations (Select all that apply) *</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="legal" name="specializations" value="Legal">
+                                    <label for="legal">Legal</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="medical" name="specializations" value="Medical">
+                                    <label for="medical">Medical</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="business" name="specializations" value="Business">
+                                    <label for="business">Business</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="academic" name="specializations" value="Academic">
+                                    <label for="academic">Academic</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="general" name="specializations" value="General">
+                                    <label for="general">General</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Transcription Types (Select all that apply)</label>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="verbatim" name="transcriptionTypes" value="Verbatim">
+                                    <label for="verbatim">Verbatim</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="cleanRead" name="transcriptionTypes" value="Clean Read">
+                                    <label for="cleanRead">Clean Read</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="timeCoded" name="transcriptionTypes" value="Time Coded">
+                                    <label for="timeCoded">Time Coded</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="speakerID" name="transcriptionTypes" value="Speaker Identification">
+                                    <label for="speakerID">Speaker Identification</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rushOrders" name="transcriptionTypes" value="Rush Orders">
+                                    <label for="rushOrders">Rush Orders</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="languages">Languages (besides English)</label>
+                            <input type="text" id="languages" name="languages" placeholder="e.g., Spanish (Fluent), French (Intermediate)">
+                        </div>
+                        <div class="form-group">
+                            <label for="certifications">Certifications</label>
+                            <textarea id="certifications" name="certifications" rows="3" placeholder="List any relevant certifications, training, or credentials..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Availability -->
+                    <div class="form-step" data-step="4">
+                        <h3 style="margin-bottom: 1.5rem; color: #1e293b;">Availability & Preferences</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="workType">Work Type *</label>
+                                <select id="workType" name="workType" required>
+                                    <option value="">Select...</option>
+                                    <option value="full-time">Full-time</option>
+                                    <option value="part-time">Part-time</option>
+                                    <option value="contract">Contract</option>
+                                    <option value="freelance">Freelance</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hoursPerWeek">Hours per Week</label>
+                                <select id="hoursPerWeek" name="hoursPerWeek">
+                                    <option value="">Select...</option>
+                                    <option value="10">5-10 hours</option>
+                                    <option value="20">10-20 hours</option>
+                                    <option value="30">20-30 hours</option>
+                                    <option value="40">30-40 hours</option>
+                                    <option value="50">40+ hours</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="preferredSchedule">Preferred Schedule</label>
+                                <select id="preferredSchedule" name="preferredSchedule">
+                                    <option value="flexible">Flexible</option>
+                                    <option value="morning">Morning (6AM-12PM)</option>
+                                    <option value="afternoon">Afternoon (12PM-6PM)</option>
+                                    <option value="evening">Evening (6PM-12AM)</option>
+                                    <option value="night">Night (12AM-6AM)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="expectedRate">Expected Hourly Rate ($)</label>
+                                <input type="number" id="expectedRate" name="expectedRate" min="10" max="50" placeholder="e.g., 20">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Earliest Start Date</label>
+                            <input type="date" id="startDate" name="startDate">
+                        </div>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="weekends" name="canWorkWeekends">
+                                <label for="weekends">Available to work weekends</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="holidays" name="canWorkHolidays">
+                                <label for="holidays">Available to work holidays</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Documents & Equipment -->
+                    <div class="form-step" data-step="5">
+                        <h3 style="margin-bottom: 1.5rem; color: #1e293b;">Equipment & Documents</h3>
+                        
+                        <div class="form-group">
+                            <h4 style="margin-bottom: 1rem; color: #374151;">Equipment Check *</h4>
+                            <div class="checkbox-group">
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasComputer" name="hasComputer" required>
+                                    <label for="hasComputer">I have a reliable computer/laptop</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasHeadphones" name="hasHeadphones" required>
+                                    <label for="hasHeadphones">I have quality headphones</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasInternet" name="hasInternet" required>
+                                    <label for="hasInternet">I have reliable high-speed internet</label>
+                                </div>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="hasWorkspace" name="hasWorkspace" required>
+                                    <label for="hasWorkspace">I have a quiet workspace</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="equipmentDetails">Equipment Details</label>
+                            <textarea id="equipmentDetails" name="equipmentDetails" rows="3" placeholder="Describe your computer specs, headphone type, internet speed, etc..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Upload Documents</label>
+                            <div class="file-upload" id="fileUpload">
+                                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #64748b; margin-bottom: 1rem;"></i>
+                                <p style="margin-bottom: 0.5rem; font-weight: 600;">Drag and drop files here or click to browse</p>
+                                <p style="font-size: 0.875rem; color: #64748b;">Upload your resume, cover letter, portfolio, or certificates</p>
+                                <p style="font-size: 0.75rem; color: #64748b; margin-top: 0.5rem;">Supported formats: PDF, DOC, DOCX, JPG, PNG (Max 10MB each)</p>
+                                <input type="file" id="documents" name="documents" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+                            </div>
+                            <div id="fileList" style="margin-top: 1rem;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <h4 style="margin-bottom: 1rem; color: #374151;">Quick Questions</h4>
+                            <div class="form-group">
+                                <label for="whyInterested">Why are you interested in this position?</label>
+                                <textarea id="whyInterested" name="whyInterested" rows="3" placeholder="Tell us what interests you about transcription work..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="strengths">What are your key strengths?</label>
+                                <textarea id="strengths" name="strengths" rows="2" placeholder="e.g., Attention to detail, fast typing, medical terminology knowledge..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" id="prevBtn" class="btn btn-outline" style="display: none;">
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="button" id="nextBtn" class="btn btn-primary">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-primary" style="display: none;">
+                            <i class="fas fa-paper-plane"></i> Submit Application
+                        </button>
+                    </div>
+                </form>
+
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <strong>Application Submitted Successfully!</strong>
+                    <p>Thank you for your interest in joining our team. We'll review your application and get back to you within 2-3 business days.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="careers.js"></script>
+</body>
+</html>

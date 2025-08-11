@@ -31,21 +31,33 @@ app.use(fileUpload({
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection (optional for basic functionality)
+// Connect to MongoDB asynchronously without blocking server startup
 if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log('✅ Connected to MongoDB'))
-    .catch(err => console.error('❌ MongoDB connection error:', err));
+    setTimeout(() => {
+        mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        })
+        .then(() => console.log('✅ Connected to MongoDB'))
+        .catch(err => console.error('❌ MongoDB connection error:', err));
+    }, 1000); // Delay connection to not block startup
 } else {
     console.log('⚠️ No MongoDB URI provided, running without database');
 }
 
-// Root route
+// Root route - Simple and fast for Railway health checks
 app.get('/', (req, res) => {
-    res.json({
+    res.status(200).json({
+        status: 'OK',
         message: 'JD Legal Transcripts API is running!',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Detailed API info route
+app.get('/info', (req, res) => {
+    res.json({
+        message: 'JD Legal Transcripts API',
         status: 'success',
         timestamp: new Date().toISOString(),
         endpoints: [
@@ -70,13 +82,19 @@ try {
     console.error('Error loading routes:', error);
 }
 
-// Health check endpoint
+// Health check endpoint - Fast response
 app.get('/api/health', (req, res) => {
+    res.status(200).json({ status: 'OK' });
+});
+
+// Detailed health check
+app.get('/api/health/detailed', (req, res) => {
     res.json({
         status: 'OK',
         message: 'JD Legal Transcripts API is running',
         timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
+        uptime: process.uptime()
     });
 });
 

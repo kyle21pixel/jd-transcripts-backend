@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Transcription - JD Transcripts</title>
+    <meta name="description" content="Order professional transcription services. Fast, accurate, and secure audio-to-text conversion.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="index.html" style="background:none;border:none;padding:0;cursor:pointer;text-decoration:none;">
+                    <img src="logo-placeholder.svg" alt="JD Transcripts" class="logo">
+                </a>
+                <span class="logo-text">JD Legal</span>
+                <span class="logo-text">Transcripts</span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="services.html" class="nav-link">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a href="order.html" class="nav-link active">Order</a>
+                </li>
+                <li class="nav-item">
+                    <a href="about.html" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </li>
+            </ul>
+            <div class="nav-cta">
+                <a href="order.html" class="btn btn-primary">Order Now</a>
+                <a href="admin-login.html" class="btn btn-outline" style="margin-left: 10px;">
+                    <i class="fas fa-user-shield"></i> Admin
+                </a>
+            </div>
+            <div class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Order Section -->
+    <section class="order">
+        <div class="container">
+            <div class="order-header">
+                <h1>Order Professional Transcription</h1>
+                <p>Upload your audio files and receive accurate transcripts in as little as 24 hours</p>
+            </div>
+
+            <div class="order-container">
+                <div class="order-form-container">
+                    <form id="order-form" class="order-form" enctype="multipart/form-data">
+                        <div class="form-step active" id="step-1">
+                            <h2><i class="fas fa-user"></i> Contact Information</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="name">Full Name *</label>
+                                    <input type="text" id="name" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address *</label>
+                                    <input type="email" id="email" name="email" required>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone">
+                                </div>
+                                <div class="form-group">
+                                    <label for="company">Company/Organization</label>
+                                    <input type="text" id="company" name="company">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" id="step-2">
+                            <h2><i class="fas fa-cog"></i> Service Details</h2>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="service">Service Type *</label>
+                                    <select id="service" name="service" required>
+                                        <option value="">Select a service</option>
+                                        <option value="legal">Legal Transcription ($1.50/min)</option>
+                                        <option value="medical">Medical Transcription ($1.75/min)</option>
+                                        <option value="zoom">Zoom Meeting Transcription ($1.25/min)</option>
+                                        <option value="academic">Academic & Interview ($1.25/min)</option>
+                                        <option value="business">Business Transcription ($1.35/min)</option>
+                                        <option value="general">General Transcription ($1.00/min)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="turnaround">Turnaround Time *</label>
+                                    <select id="turnaround" name="turnaround" required>
+                                        <option value="">Select turnaround</option>
+                                        <option value="same-day">Same Day (+50%)</option>
+                                        <option value="24h">24 Hours (+25%)</option>
+                                        <option value="48h">48 Hours (+10%)</option>
+                                        <option value="3-5">3-5 Days (Standard)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="speakers">Number of Speakers</label>
+                                    <select id="speakers" name="speakers">
+                                        <option value="1">1 Speaker</option>
+                                        <option value="2">2 Speakers</option>
+                                        <option value="3-5">3-5 Speakers</option>
+                                        <option value="6+">6+ Speakers</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="format">Output Format</label>
+                                    <select id="format" name="format">
+                                        <option value="word">Microsoft Word (.docx)</option>
+                                        <option value="pdf">PDF Document</option>
+                                        <option value="txt">Plain Text (.txt)</option>
+                                        <option value="srt">Subtitle File (.srt)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-step" id="step-3">
+                            <h2><i class="fas fa-upload"></i> File Upload</h2>
+                            <div class="form-group">
+                                <label for="file">Upload Audio/Video File *</label>
+                                <div class="file-upload" id="file-upload">
+                                    <input type="file" id="file" name="file" accept="audio/*,video/*" required multiple>
+                                    <div class="file-upload-content">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Drag & drop files here or click to browse</p>
+                                        <span class="file-info">Max file size: 100MB per file. Accepted: MP3, WAV, MP4, MOV, M4A</span>
+                                    </div>
+                                </div>
+                                <div id="file-list" class="file-list"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="notes">Additional Notes</label>
+                                <textarea id="notes" name="notes" rows="4" placeholder="Any special instructions, speaker names, technical terms, or requirements..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-step" id="step-4">
+                            <h2><i class="fas fa-credit-card"></i> Order Summary & Payment</h2>
+                            <div class="order-summary">
+                                <div class="summary-item">
+                                    <span>Service:</span>
+                                    <span id="summary-service">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Turnaround:</span>
+                                    <span id="summary-turnaround">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Estimated Duration:</span>
+                                    <span id="summary-duration">-</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Base Price:</span>
+                                    <span id="summary-base-price">$0.00</span>
+                                </div>
+                                <div class="summary-item">
+                                    <span>Rush Fee:</span>
+                                    <span id="summary-rush-fee">$0.00</span>
+                                </div>
+                                <div class="summary-item total">
+                                    <span>Total Estimated Cost:</span>
+                                    <span id="summary-total">$0.00</span>
+                                </div>
+                            </div>
+                            <div class="payment-methods">
+                                <h3>Payment Method</h3>
+                                <div class="payment-options">
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment" value="mpesa" checked>
+                                        <div class="payment-card">
+                                            <i class="fas fa-mobile-alt"></i>
+                                            <span>M-Pesa</span>
+                                        </div>
+                                    </label>
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment" value="card">
+                                        <div class="payment-card">
+                                            <i class="fas fa-credit-card"></i>
+                                            <span>Credit Card</span>
+                                        </div>
+                                    </label>
+                                    <label class="payment-option">
+                                        <input type="radio" name="payment" value="paypal">
+                                        <div class="payment-card">
+                                            <i class="fab fa-paypal"></i>
+                                            <span>PayPal</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-navigation">
+                            <button type="button" id="prev-btn" class="btn btn-outline" style="display: none;">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                            <button type="button" id="next-btn" class="btn btn-primary">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button type="submit" id="submit-btn" class="btn btn-primary btn-large" style="display: none;">
+                                <i class="fas fa-check"></i> Place Order
+                            </button>
+                        </div>
+
+                        <div class="form-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progress-fill"></div>
+                            </div>
+                            <div class="progress-steps">
+                                <div class="progress-step active">1</div>
+                                <div class="progress-step">2</div>
+                                <div class="progress-step">3</div>
+                                <div class="progress-step">4</div>
+                            </div>
+                        </div>
+
+                        <div id="order-status" class="form-status"></div>
+                    </form>
+                </div>
+
+                <div class="order-sidebar">
+                    <div class="pricing-info">
+                        <h3>Pricing Information</h3>
+                        <div class="pricing-list">
+                            <div class="pricing-item">
+                                <span>Legal Transcription</span>
+                                <span>$1.50/min</span>
+                            </div>
+                            <div class="pricing-item">
+                                <span>Medical Transcription</span>
+                                <span>$1.75/min</span>
+                            </div>
+                            <div class="pricing-item">
+                                <span>Business/Zoom</span>
+                                <span>$1.25-$1.35/min</span>
+                            </div>
+                            <div class="pricing-item">
+                                <span>General/Academic</span>
+                                <span>$1.00-$1.25/min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="features-info">
+                        <h3>What You Get</h3>
+                        <ul>
+                            <li><i class="fas fa-check"></i> 99%+ Accuracy Guarantee</li>
+                            <li><i class="fas fa-check"></i> Professional Formatting</li>
+                            <li><i class="fas fa-check"></i> Speaker Identification</li>
+                            <li><i class="fas fa-check"></i> Timestamps (if requested)</li>
+                            <li><i class="fas fa-check"></i> Multiple Format Options</li>
+                            <li><i class="fas fa-check"></i> Secure File Handling</li>
+                            <li><i class="fas fa-check"></i> 24/7 Customer Support</li>
+                        </ul>
+                    </div>
+
+                    <div class="contact-info">
+                        <h3>Need Help?</h3>
+                        <p>Contact our support team:</p>
+                        <div class="contact-details">
+                            <p><i class="fas fa-phone"></i> +254 712 345 678</p>
+                            <p><i class="fas fa-envelope"></i> support@jdtranscripts.com</p>
+                            <p><i class="fas fa-clock"></i> 24/7 Support Available</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>JD Legal Transcripts</h3>
+                    <p>Professional transcription services for legal, medical, and business needs.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Services</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Info</h4>
+                    <div class="contact-info">
+                        <p><i class="fas fa-phone"></i> +254 712 345 678</p>
+                        <p><i class="fas fa-envelope"></i> info@jdtranscripts.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</p>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 JD Legal Transcripts. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Multi-step form functionality
+        let currentStep = 1;
+        const totalSteps = 4;
+
+        function showStep(step) {
+            // Hide all steps
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.progress-step').forEach(s => s.classList.remove('active'));
+            
+            // Show current step
+            document.getElementById(`step-${step}`).classList.add('active');
+            document.querySelectorAll('.progress-step')[step - 1].classList.add('active');
+            
+            // Update progress bar
+            const progressFill = document.getElementById('progress-fill');
+            progressFill.style.width = `${(step / totalSteps) * 100}%`;
+            
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            prevBtn.style.display = step === 1 ? 'none' : 'inline-block';
+            nextBtn.style.display = step === totalSteps ? 'none' : 'inline-block';
+            submitBtn.style.display = step === totalSteps ? 'inline-block' : 'none';
+        }
+
+        function validateStep(step) {
+            const stepElement = document.getElementById(`step-${step}`);
+            const requiredFields = stepElement.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value.trim()) {
+                    field.focus();
+                    alert(`Please fill in the ${field.labels[0].textContent.replace(' *', '')} field.`);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        // Navigation event listeners
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    showStep(currentStep);
+                    if (currentStep === 4) {
+                        updateOrderSummary();
+                    }
+                }
+            }
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (currentStep > 1) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        // File upload handling
+        const fileInput = document.getElementById('file');
+        const fileUpload = document.getElementById('file-upload');
+        const fileList = document.getElementById('file-list');
+
+        fileUpload.addEventListener('click', () => fileInput.click());
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            fileInput.files = e.dataTransfer.files;
+            displayFiles();
+        });
+
+        fileInput.addEventListener('change', displayFiles);
+
+        function displayFiles() {
+            fileList.innerHTML = '';
+            for (let file of fileInput.files) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <i class="fas fa-file-audio"></i>
+                    <span>${file.name}</span>
+                    <span>${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                `;
+                fileList.appendChild(fileItem);
+            }
+        }
+
+        // Order summary update
+        function updateOrderSummary() {
+            const service = document.getElementById('service').value;
+            const turnaround = document.getElementById('turnaround').value;
+            
+            const servicePrices = {
+                'legal': 1.50,
+                'medical': 1.75,
+                'zoom': 1.25,
+                'academic': 1.25,
+                'business': 1.35,
+                'general': 1.00
+            };
+
+            const rushMultipliers = {
+                'same-day': 1.5,
+                '24h': 1.25,
+                '48h': 1.1,
+                '3-5': 1.0
+            };
+
+            const serviceNames = {
+                'legal': 'Legal Transcription',
+                'medical': 'Medical Transcription',
+                'zoom': 'Zoom Meeting Transcription',
+                'academic': 'Academic & Interview',
+                'business': 'Business Transcription',
+                'general': 'General Transcription'
+            };
+
+            const turnaroundNames = {
+                'same-day': 'Same Day (+50%)',
+                '24h': '24 Hours (+25%)',
+                '48h': '48 Hours (+10%)',
+                '3-5': '3-5 Days (Standard)'
+            };
+
+            // Update summary
+            document.getElementById('summary-service').textContent = serviceNames[service] || '-';
+            document.getElementById('summary-turnaround').textContent = turnaroundNames[turnaround] || '-';
+            
+            // Estimate duration (placeholder - would be calculated from actual file)
+            const estimatedMinutes = 30; // This would be calculated from uploaded files
+            document.getElementById('summary-duration').textContent = `${estimatedMinutes} minutes`;
+            
+            if (service && turnaround) {
+                const basePrice = servicePrices[service] * estimatedMinutes;
+                const rushMultiplier = rushMultipliers[turnaround];
+                const rushFee = basePrice * (rushMultiplier - 1);
+                const total = basePrice * rushMultiplier;
+                
+                document.getElementById('summary-base-price').textContent = `$${basePrice.toFixed(2)}`;
+                document.getElementById('summary-rush-fee').textContent = `$${rushFee.toFixed(2)}`;
+                document.getElementById('summary-total').textContent = `$${total.toFixed(2)}`;
+            }
+        }
+
+        // Form submission
+        document.getElementById('order-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Show loading state
+            const submitBtn = document.getElementById('submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing Order...';
+            submitBtn.disabled = true;
+            
+            // Submit to API
+            fetch('api/submit_order.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    alert(`Order submitted successfully!\n\nOrder Number: ${data.order_number}\nEstimated Cost: $${data.estimated_cost}\n\nYou will receive a confirmation email shortly.`);
+                    
+                    // Reset form
+                    this.reset();
+                    currentStep = 1;
+                    showStep(currentStep);
+                    updateProgressBar();
+                    
+                    // Reset button
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                } else {
+                    throw new Error(data.error || 'Failed to submit order');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error submitting order: ' + error.message);
+                
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        // Auto-fill service from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const serviceParam = urlParams.get('service');
+        if (serviceParam) {
+            document.getElementById('service').value = serviceParam;
+        }
+
+        // Mobile menu toggle
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+    </script>
+</body>
+</html>

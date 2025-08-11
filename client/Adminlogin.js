@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 function AdminLogin() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
@@ -13,7 +13,7 @@ function AdminLogin() {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ username, password })
       });
       const data = await res.json();
       if (res.ok) {
@@ -32,10 +32,10 @@ function AdminLogin() {
       <h2>Admin Login</h2>
       <form onSubmit={handleSubmit}>
         <input
-          type="email"
-          placeholder="Admin Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={e => setUsername(e.target.value)}
           required
         /><br />
         <input

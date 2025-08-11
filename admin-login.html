@@ -260,12 +260,7 @@
     </div>
 
     <script>
-        // Demo credentials (in production, this would be handled by backend)
-        const ADMIN_CREDENTIALS = {
-            'admin': 'admin123',
-            'manager': 'manager123',
-            'supervisor': 'super123'
-        };
+        // Admin credentials are now handled by the backend API
 
         function togglePassword() {
             const passwordInput = document.getElementById('password');
@@ -314,7 +309,7 @@
             alert('Please contact the system administrator to reset your password.\nEmail: admin@jdlegaltranscripts.com\nPhone: +1 (555) 123-4567');
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
@@ -322,24 +317,44 @@
             
             showLoading(true);
             
-            // Simulate API call delay
-            setTimeout(() => {
-                if (ADMIN_CREDENTIALS[username] && ADMIN_CREDENTIALS[username] === password) {
-                    // Store login session
+            try {
+                // Call the backend API
+                const API_BASE_URL = 'http://localhost:5000';
+                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Store authentication token and user info
+                    localStorage.setItem('adminToken', result.data.token);
                     localStorage.setItem('adminLoggedIn', 'true');
-                    localStorage.setItem('adminUsername', username);
+                    localStorage.setItem('adminUsername', result.data.user.username);
+                    localStorage.setItem('adminRole', result.data.user.role);
                     localStorage.setItem('adminLoginTime', new Date().toISOString());
                     
                     // Redirect to dashboard
                     window.location.href = 'admin-dashboard.html';
                 } else {
                     showLoading(false);
-                    showError('Invalid username or password. Please try again.');
+                    showError(result.message || 'Invalid username or password. Please try again.');
                     
                     // Clear form
                     document.getElementById('password').value = '';
                 }
-            }, 1500);
+            } catch (error) {
+                console.error('Login error:', error);
+                showLoading(false);
+                showError('Login failed. Please check your connection and try again.');
+                
+                // Clear form
+                document.getElementById('password').value = '';
+            }
         });
 
         // Check if already logged in

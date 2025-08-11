@@ -194,8 +194,8 @@ function initOrderForm() {
         showOrderStatus('Submitting your order...', 'loading');
 
         try {
-            // Simulate API call
-            await simulateOrderSubmission(formData);
+            // Real API call to Railway backend
+            await submitOrderToAPI(formData);
             
             showOrderStatus('Order submitted successfully! You will receive a confirmation email shortly.', 'success');
             orderForm.reset();
@@ -236,23 +236,37 @@ function initOrderForm() {
         return isValid;
     }
 
-    async function simulateOrderSubmission(formData) {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
+    async function submitOrderToAPI(formData) {
+        const API_BASE_URL = 'https://jd-transcripts-backend-production.up.railway.app';
         
         const orderData = {
-            orderNumber: 'JD' + Date.now(),
             name: formData.get('name'),
             email: formData.get('email'),
             service: formData.get('service'),
             turnaround: formData.get('turnaround'),
-            estimatedCost: document.getElementById('estimated-cost').value
+            estimatedCost: document.getElementById('estimated-cost').value,
+            phone: formData.get('phone') || '',
+            notes: formData.get('notes') || ''
         };
         
-        // Store for success page
-        sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
+        const response = await fetch(`${API_BASE_URL}/api/orders`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData)
+        });
         
-        return orderData;
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        
+        // Store for success page
+        sessionStorage.setItem('lastOrder', JSON.stringify(result));
+        
+        return result;
     }
 
     function showOrderStatus(message, type) {
@@ -298,9 +312,26 @@ function initContactForm() {
         showContactStatus('Sending your message...', 'loading');
         
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            // Real API call to Railway backend
+            const API_BASE_URL = 'https://jd-transcripts-backend-production.up.railway.app';
             
+            const response = await fetch(`${API_BASE_URL}/api/email/contact`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    message: message
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
+            const result = await response.json();
             showContactStatus('Message sent successfully! We will get back to you within 24 hours.', 'success');
             contactForm.reset();
             

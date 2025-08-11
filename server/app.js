@@ -32,11 +32,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection (optional for basic functionality)
 if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log('✅ Connected to MongoDB'))
+    mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('✅ MongoDB connected successfully'))
     .catch(err => console.error('❌ MongoDB connection error:', err));
 } else {
     console.log('⚠️ No MongoDB URI provided, running without database');

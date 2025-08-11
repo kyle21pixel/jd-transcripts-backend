@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - JD Legal Transcripts</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>JD Legal Transcripts - Admin Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -16,207 +13,94 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f8fafc;
-            color: #1e293b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            color: #333;
         }
 
-        .dashboard-container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px;
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 0;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            transition: transform 0.3s ease;
-            z-index: 1000;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .sidebar.mobile-hidden {
-            transform: translateX(-100%);
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
         }
 
-        .sidebar-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+        .header p {
+            opacity: 0.9;
         }
 
-        .sidebar-header h2 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        .sidebar-header p {
-            font-size: 0.875rem;
-            opacity: 0.7;
-            margin-top: 0.25rem;
+        .login-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 2rem auto;
         }
 
-        .sidebar-nav {
-            padding: 1rem 0;
-        }
-
-        .nav-item {
-            margin: 0.25rem 0;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.875rem 1.5rem;
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border-left-color: #3b82f6;
-        }
-
-        .nav-link i {
-            width: 20px;
+        .login-form h2 {
             text-align: center;
+            margin-bottom: 1.5rem;
+            color: #1e3c72;
         }
 
-        .sidebar-footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 1rem 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
+        .form-group {
             margin-bottom: 1rem;
         }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: #3b82f6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 600;
         }
 
-        .logout-btn {
+        .form-group input {
             width: 100%;
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
         }
 
-        .logout-btn:hover {
-            background: rgba(239, 68, 68, 0.3);
+        .form-group input:focus {
+            outline: none;
+            border-color: #1e3c72;
         }
 
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 0;
-            transition: margin-left 0.3s ease;
-        }
-
-        .main-content.sidebar-collapsed {
-            margin-left: 0;
-        }
-
-        .top-bar {
-            background: white;
-            padding: 1rem 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: #64748b;
-            cursor: pointer;
-        }
-
-        .page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .top-bar-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .notification-btn {
-            position: relative;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            color: #64748b;
-            cursor: pointer;
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            transition: background 0.3s;
-        }
-
-        .notification-btn:hover {
-            background: #f1f5f9;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: 0.25rem;
-            right: 0.25rem;
-            background: #ef4444;
+        .btn {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            font-size: 0.75rem;
-            padding: 0.125rem 0.375rem;
-            border-radius: 9999px;
-            min-width: 1.25rem;
-            text-align: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
         }
 
-        .content-area {
-            padding: 2rem;
+        .btn:hover {
+            transform: translateY(-2px);
         }
 
-        /* Dashboard Cards */
+        .btn-full {
+            width: 100%;
+        }
+
+        .dashboard {
+            display: none;
+        }
+
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -227,848 +111,436 @@
         .stat-card {
             background: white;
             padding: 1.5rem;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 4px solid #3b82f6;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
-        .stat-card.orders { border-left-color: #3b82f6; }
-        .stat-card.pending { border-left-color: #f59e0b; }
-        .stat-card.completed { border-left-color: #10b981; }
-        .stat-card.transcribers { border-left-color: #8b5cf6; }
-
-        .stat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-title {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .stat-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 0.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.25rem;
-        }
-
-        .stat-card.orders .stat-icon { background: #dbeafe; color: #3b82f6; }
-        .stat-card.pending .stat-icon { background: #fef3c7; color: #f59e0b; }
-        .stat-card.completed .stat-icon { background: #d1fae5; color: #10b981; }
-        .stat-card.transcribers .stat-icon { background: #ede9fe; color: #8b5cf6; }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #1e293b;
-            margin-bottom: 0.25rem;
-        }
-
-        .stat-change {
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .stat-change.positive { color: #10b981; }
-        .stat-change.negative { color: #ef4444; }
-
-        /* Content Sections */
-        .content-section {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-        }
-
-        .section-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #1e293b;
-        }
-
-        .section-content {
-            padding: 1.5rem;
-        }
-
-        /* Tables */
-        .table-container {
-            overflow-x: auto;
-        }
-
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .data-table th,
-        .data-table td {
-            padding: 0.75rem;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .data-table th {
-            background: #f8fafc;
-            font-weight: 600;
-            color: #374151;
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .data-table tr:hover {
-            background: #f8fafc;
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .status-badge.pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-badge.in-progress {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-badge.completed {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .status-badge.cancelled {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: #3b82f6;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #2563eb;
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-        }
-
-        .btn-success {
-            background: #10b981;
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: #059669;
-        }
-
-        .btn-danger {
-            background: #ef4444;
-            color: white;
-        }
-
-        .btn-danger:hover {
-            background: #dc2626;
-        }
-
-        .btn-sm {
-            padding: 0.375rem 0.75rem;
-            font-size: 0.75rem;
-        }
-
-        /* Forms */
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group {
+        .stat-card i {
+            font-size: 2.5rem;
             margin-bottom: 1rem;
         }
 
-        .form-group label {
-            display: block;
+        .stat-card h3 {
+            font-size: 2rem;
             margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #374151;
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 0.75rem;
-            padding: 0;
-            max-width: 500px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 1.25rem;
+        .stat-card p {
+            color: #666;
             font-weight: 600;
-            color: #1e293b;
         }
 
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #6b7280;
-            cursor: pointer;
+        .pending { color: #f39c12; }
+        .in-progress { color: #3498db; }
+        .completed { color: #27ae60; }
+        .total { color: #9b59b6; }
+
+        .orders-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        .modal-body {
-            padding: 1.5rem;
+        .orders-section h2 {
+            margin-bottom: 1.5rem;
+            color: #1e3c72;
         }
 
-        .modal-footer {
-            padding: 1.5rem;
-            border-top: 1px solid #e2e8f0;
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .orders-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-in-progress {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .order-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 1rem;
+            gap: 0.5rem;
         }
 
-        /* Responsive */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-info {
+            background: #3498db;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .logout-btn {
+            float: right;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
+            .container {
+                padding: 0 0.5rem;
             }
-
-            .sidebar.mobile-show {
-                transform: translateX(0);
+            
+            .orders-table {
+                font-size: 0.8rem;
             }
-
-            .main-content {
-                margin-left: 0;
+            
+            .orders-table th,
+            .orders-table td {
+                padding: 0.5rem;
             }
-
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .top-bar {
-                padding: 1rem;
-            }
-
-            .content-area {
-                padding: 1rem;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Loading States */
-        .loading {
-            display: inline-block;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .skeleton {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
         }
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fas fa-microphone-alt"></i> JD Admin</h2>
-                <p>Management Dashboard</p>
-            </div>
+    <div class="header">
+        <h1><i class="fas fa-microphone"></i> JD Legal Transcripts</h1>
+        <p>Admin Dashboard - Manage Orders & Transcriptions</p>
+        <button class="btn logout-btn hidden" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
 
-            <nav class="sidebar-nav">
-                <div class="nav-item">
-                    <a href="#" class="nav-link active" data-section="dashboard">
-                        <i class="fas fa-tachometer-alt"></i>
-                        Dashboard
-                    </a>
+    <!-- Login Form -->
+    <div id="login-section">
+        <div class="login-form">
+            <h2><i class="fas fa-lock"></i> Admin Login</h2>
+            <div id="login-alert"></div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
                 </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" data-section="orders">
-                        <i class="fas fa-clipboard-list"></i>
-                        Orders
-                        <span class="notification-badge" id="ordersBadge">5</span>
-                    </a>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
                 </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" data-section="transcribers">
-                        <i class="fas fa-users"></i>
-                        Transcribers
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" data-section="performance">
-                        <i class="fas fa-chart-line"></i>
-                        Performance
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#" class="nav-link" data-section="settings">
-                        <i class="fas fa-cog"></i>
-                        Settings
-                    </a>
-                </div>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">A</div>
-                    <div>
-                        <div style="font-weight: 600; font-size: 0.875rem;" id="userName">Admin</div>
-                        <div style="font-size: 0.75rem; opacity: 0.7;">Administrator</div>
-                    </div>
-                </div>
-                <button class="logout-btn" onclick="logout()">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Logout
+                <button type="submit" class="btn btn-full">
+                    <i class="fas fa-sign-in-alt"></i> Login
                 </button>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Top Bar -->
-            <div class="top-bar">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <button class="mobile-menu-btn" onclick="toggleSidebar()">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
-                </div>
-
-                <div class="top-bar-actions">
-                    <button class="notification-btn" onclick="showNotifications()">
-                        <i class="fas fa-bell"></i>
-                        <span class="notification-badge">3</span>
-                    </button>
-                    <div style="font-weight: 500; color: #64748b;" id="currentTime"></div>
-                </div>
-            </div>
-
-            <!-- Content Area -->
-            <div class="content-area">
-                <!-- Dashboard Section -->
-                <div class="content-section active" id="dashboard-section">
-                    <div class="stats-grid">
-                        <div class="stat-card orders">
-                            <div class="stat-header">
-                                <span class="stat-title">Total Orders</span>
-                                <div class="stat-icon">
-                                    <i class="fas fa-clipboard-list"></i>
-                                </div>
-                            </div>
-                            <div class="stat-value" id="totalOrders">127</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                +12% from last month
-                            </div>
-                        </div>
-
-                        <div class="stat-card pending">
-                            <div class="stat-header">
-                                <span class="stat-title">Pending Orders</span>
-                                <div class="stat-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                            </div>
-                            <div class="stat-value" id="pendingOrders">5</div>
-                            <div class="stat-change negative">
-                                <i class="fas fa-arrow-down"></i>
-                                -3 from yesterday
-                            </div>
-                        </div>
-
-                        <div class="stat-card completed">
-                            <div class="stat-header">
-                                <span class="stat-title">Completed</span>
-                                <div class="stat-icon">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                            </div>
-                            <div class="stat-value" id="completedOrders">122</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                +8% completion rate
-                            </div>
-                        </div>
-
-                        <div class="stat-card transcribers">
-                            <div class="stat-header">
-                                <span class="stat-title">Active Transcribers</span>
-                                <div class="stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                            </div>
-                            <div class="stat-value" id="activeTranscribers">8</div>
-                            <div class="stat-change positive">
-                                <i class="fas fa-arrow-up"></i>
-                                2 new this week
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Recent Orders -->
-                    <div class="content-section active">
-                        <div class="section-header">
-                            <h3 class="section-title">Recent Orders</h3>
-                            <button class="btn btn-primary" onclick="showSection('orders')">
-                                View All Orders
-                            </button>
-                        </div>
-                        <div class="section-content">
-                            <div class="table-container">
-                                <table class="data-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Order ID</th>
-                                            <th>Client</th>
-                                            <th>Service</th>
-                                            <th>Status</th>
-                                            <th>Assigned To</th>
-                                            <th>Due Date</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recentOrdersTable">
-                                        <!-- Orders will be populated by JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Orders Section -->
-                <div class="content-section" id="orders-section">
-                    <div class="section-header">
-                        <h3 class="section-title">Order Management</h3>
-                        <div>
-                            <button class="btn btn-secondary" onclick="refreshOrders()">
-                                <i class="fas fa-sync-alt"></i> Refresh
-                            </button>
-                            <button class="btn btn-primary" onclick="showNewOrderModal()">
-                                <i class="fas fa-plus"></i> New Order
-                            </button>
-                        </div>
-                    </div>
-                    <div class="section-content">
-                        <div class="form-grid" style="margin-bottom: 1.5rem;">
-                            <div class="form-group">
-                                <label>Filter by Status</label>
-                                <select id="statusFilter" onchange="filterOrders()">
-                                    <option value="">All Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Search Orders</label>
-                                <input type="text" id="orderSearch" placeholder="Search by client name or order ID..." onkeyup="searchOrders()">
-                            </div>
-                        </div>
-
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Client Info</th>
-                                        <th>Service Type</th>
-                                        <th>Status</th>
-                                        <th>Assigned To</th>
-                                        <th>Created</th>
-                                        <th>Due Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ordersTable">
-                                    <!-- Orders will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Transcribers Section -->
-                <div class="content-section" id="transcribers-section">
-                    <div class="section-header">
-                        <h3 class="section-title">Transcriber Management</h3>
-                        <button class="btn btn-primary" onclick="showAddTranscriberModal()">
-                            <i class="fas fa-user-plus"></i> Add Transcriber
-                        </button>
-                    </div>
-                    <div class="section-content">
-                        <div class="table-container">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Specialization</th>
-                                        <th>Active Orders</th>
-                                        <th>Completed</th>
-                                        <th>Rating</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="transcribersTable">
-                                    <!-- Transcribers will be populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Performance Section -->
-                <div class="content-section" id="performance-section">
-                    <div class="section-header">
-                        <h3 class="section-title">Performance Analytics</h3>
-                        <div>
-                            <select id="performancePeriod" onchange="updatePerformanceData()">
-                                <option value="week">This Week</option>
-                                <option value="month">This Month</option>
-                                <option value="quarter">This Quarter</option>
-                                <option value="year">This Year</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="section-content">
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-header">
-                                    <span class="stat-title">Average Turnaround</span>
-                                    <div class="stat-icon" style="background: #fef3c7; color: #f59e0b;">
-                                        <i class="fas fa-stopwatch"></i>
-                                    </div>
-                                </div>
-                                <div class="stat-value">18.5 hrs</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-down"></i>
-                                    -2.3 hrs improvement
-                                </div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-header">
-                                    <span class="stat-title">Quality Score</span>
-                                    <div class="stat-icon" style="background: #d1fae5; color: #10b981;">
-                                        <i class="fas fa-star"></i>
-                                    </div>
-                                </div>
-                                <div class="stat-value">4.8/5</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    +0.2 from last month
-                                </div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-header">
-                                    <span class="stat-title">Revenue</span>
-                                    <div class="stat-icon" style="background: #dbeafe; color: #3b82f6;">
-                                        <i class="fas fa-dollar-sign"></i>
-                                    </div>
-                                </div>
-                                <div class="stat-value">$12,450</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    +15% from last month
-                                </div>
-                            </div>
-
-                            <div class="stat-card">
-                                <div class="stat-header">
-                                    <span class="stat-title">Client Satisfaction</span>
-                                    <div class="stat-icon" style="background: #ede9fe; color: #8b5cf6;">
-                                        <i class="fas fa-heart"></i>
-                                    </div>
-                                </div>
-                                <div class="stat-value">96%</div>
-                                <div class="stat-change positive">
-                                    <i class="fas fa-arrow-up"></i>
-                                    +3% satisfaction rate
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Top Performers -->
-                        <div class="content-section active" style="margin-top: 2rem;">
-                            <div class="section-header">
-                                <h4 class="section-title">Top Performers</h4>
-                            </div>
-                            <div class="section-content">
-                                <div class="table-container">
-                                    <table class="data-table">
-                                        <thead>
-                                            <tr>
-                                                <th>Rank</th>
-                                                <th>Transcriber</th>
-                                                <th>Orders Completed</th>
-                                                <th>Avg. Turnaround</th>
-                                                <th>Quality Score</th>
-                                                <th>Revenue Generated</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="performanceTable">
-                                            <!-- Performance data will be populated by JavaScript -->
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Settings Section -->
-                <div class="content-section" id="settings-section">
-                    <div class="section-header">
-                        <h3 class="section-title">System Settings</h3>
-                    </div>
-                    <div class="section-content">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label>Company Name</label>
-                                <input type="text" value="JD Legal Transcripts" id="companyName">
-                            </div>
-                            <div class="form-group">
-                                <label>Admin Email</label>
-                                <input type="email" value="admin@jdlegaltranscripts.com" id="adminEmail">
-                            </div>
-                            <div class="form-group">
-                                <label>Default Turnaround (hours)</label>
-                                <input type="number" value="24" id="defaultTurnaround">
-                            </div>
-                            <div class="form-group">
-                                <label>Auto-assign Orders</label>
-                                <select id="autoAssign">
-                                    <option value="true">Enabled</option>
-                                    <option value="false">Disabled</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: 2rem;">
-                            <button class="btn btn-primary" onclick="saveSettings()">
-                                <i class="fas fa-save"></i> Save Settings
-                            </button>
-                            <button class="btn btn-secondary" onclick="resetSettings()">
-                                <i class="fas fa-undo"></i> Reset to Default
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
+            </form>
+        </div>
     </div>
 
-    <!-- Modals -->
-    <!-- Assign Order Modal -->
-    <div class="modal" id="assignOrderModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Assign Order</h3>
-                <button class="modal-close" onclick="closeModal('assignOrderModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>Select Transcriber</label>
-                    <select id="assignTranscriber">
-                        <option value="">Choose transcriber...</option>
-                    </select>
+    <!-- Dashboard -->
+    <div id="dashboard-section" class="dashboard">
+        <div class="container">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-clipboard-list total"></i>
+                    <h3 id="total-orders">0</h3>
+                    <p>Total Orders</p>
                 </div>
-                <div class="form-group">
-                    <label>Priority</label>
-                    <select id="assignPriority">
-                        <option value="normal">Normal</option>
-                        <option value="high">High</option>
-                        <option value="urgent">Urgent</option>
-                    </select>
+                <div class="stat-card">
+                    <i class="fas fa-clock pending"></i>
+                    <h3 id="pending-orders">0</h3>
+                    <p>Pending Orders</p>
                 </div>
-                <div class="form-group">
-                    <label>Notes</label>
-                    <textarea id="assignNotes" rows="3" placeholder="Special instructions..."></textarea>
+                <div class="stat-card">
+                    <i class="fas fa-play in-progress"></i>
+                    <h3 id="in-progress-orders">0</h3>
+                    <p>In Progress</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-check-circle completed"></i>
+                    <h3 id="completed-orders">0</h3>
+                    <p>Completed</p>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('assignOrderModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="assignOrder()">Assign Order</button>
+
+            <!-- Orders Management -->
+            <div class="orders-section">
+                <h2><i class="fas fa-list"></i> Recent Orders</h2>
+                <div id="orders-alert"></div>
+                
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Client</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-tbody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading orders...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Add Transcriber Modal -->
-    <div class="modal" id="addTranscriberModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add New Transcriber</h3>
-                <button class="modal-close" onclick="closeModal('addTranscriberModal')">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="transcriberName" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="transcriberEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone</label>
-                        <input type="tel" id="transcriberPhone">
-                    </div>
-                    <div class="form-group">
-                        <label>Specialization</label>
-                        <select id="transcriberSpecialization">
-                            <option value="legal">Legal</option>
-                            <option value="medical">Medical</option>
-                            <option value="business">Business</option>
-                            <option value="academic">Academic</option>
-                            <option value="general">General</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Experience Level</label>
-                    <select id="transcriberExperience">
-                        <option value="junior">Junior (0-2 years)</option>
-                        <option value="intermediate">Intermediate (2-5 years)</option>
-                        <option value="senior">Senior (5+ years)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Hourly Rate ($)</label>
-                    <input type="number" id="transcriberRate" min="10" max="100" step="0.50">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('addTranscriberModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="addTranscriber()">Add Transcriber</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        const API_BASE_URL = 'https://jd-transcripts-backend-production.up.railway.app';
+        let authToken = localStorage.getItem('adminToken');
 
-    <script src="admin-dashboard.js"></script>
+        // Check if already logged in
+        if (authToken) {
+            showDashboard();
+        }
+
+        // Login form handler
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    authToken = result.data.token;
+                    localStorage.setItem('adminToken', authToken);
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminUsername', result.data.user.username);
+                    localStorage.setItem('adminRole', result.data.user.role);
+                    localStorage.setItem('adminLoginTime', new Date().toISOString());
+                    showAlert('login-alert', 'Login successful!', 'success');
+                    setTimeout(showDashboard, 1000);
+                } else {
+                    showAlert('login-alert', result.message || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showAlert('login-alert', 'Login failed. Please try again.', 'error');
+            }
+        });
+
+        async function showDashboard() {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.querySelector('.logout-btn').classList.remove('hidden');
+            
+            await loadDashboardData();
+        }
+
+        async function loadDashboardData() {
+            try {
+                // Load dashboard stats
+                const statsResponse = await fetch(`${API_BASE_URL}/api/dashboard/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (statsResponse.ok) {
+                    const statsData = await statsResponse.json();
+                    updateStats(statsData.stats);
+                }
+
+                // Load orders
+                const ordersResponse = await fetch(`${API_BASE_URL}/api/orders`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (ordersResponse.ok) {
+                    const ordersData = await ordersResponse.json();
+                    updateOrdersTable(ordersData.orders);
+                } else {
+                    showAlert('orders-alert', 'Failed to load orders', 'error');
+                }
+            } catch (error) {
+                console.error('Dashboard load error:', error);
+                showAlert('orders-alert', 'Failed to load dashboard data', 'error');
+            }
+        }
+
+        function updateStats(stats) {
+            document.getElementById('total-orders').textContent = stats.totalOrders;
+            document.getElementById('pending-orders').textContent = stats.pendingOrders;
+            document.getElementById('in-progress-orders').textContent = stats.inProgressOrders;
+            document.getElementById('completed-orders').textContent = stats.completedOrders;
+        }
+
+        function updateOrdersTable(orders) {
+            const tbody = document.getElementById('orders-tbody');
+            
+            if (orders.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            No orders found
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td><strong>${order.orderId}</strong></td>
+                    <td>${order.clientName}</td>
+                    <td>${order.serviceType}</td>
+                    <td>
+                        <span class="status-badge status-${order.status}">
+                            ${order.status}
+                        </span>
+                    </td>
+                    <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <div class="order-actions">
+                            <button class="btn btn-sm btn-info" onclick="viewOrder('${order._id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${order.status === 'pending' ? `
+                                <button class="btn btn-sm btn-warning" onclick="updateOrderStatus('${order._id}', 'in-progress')">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                            ` : ''}
+                            ${order.status === 'in-progress' ? `
+                                <button class="btn btn-sm btn-success" onclick="updateOrderStatus('${order._id}', 'completed')">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('orders-alert', 'Order status updated successfully!', 'success');
+                    await loadDashboardData();
+                } else {
+                    showAlert('orders-alert', result.message || 'Failed to update order', 'error');
+                }
+            } catch (error) {
+                console.error('Update order error:', error);
+                showAlert('orders-alert', 'Failed to update order status', 'error');
+            }
+        }
+
+        function viewOrder(orderId) {
+            // For now, just show an alert. In a full implementation, you'd open a modal or new page
+            alert(`View order details for: ${orderId}`);
+        }
+
+        function logout() {
+            localStorage.removeItem('adminToken');
+            authToken = null;
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.querySelector('.logout-btn').classList.add('hidden');
+            document.getElementById('login-form').reset();
+        }
+
+        function showAlert(containerId, message, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `
+                <div class="alert alert-${type}">
+                    ${message}
+                </div>
+            `;
+            
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        // Auto-refresh dashboard every 30 seconds
+        setInterval(() => {
+            if (authToken && document.getElementById('dashboard-section').style.display !== 'none') {
+                loadDashboardData();
+            }
+        }, 30000);
+    </script>
 </body>
 </html>
