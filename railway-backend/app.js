@@ -58,6 +58,8 @@ app.get('/', (req, res) => {
             'GET /api/health - Health check',
             'POST /api/orders - Create order',
             'POST /api/orders/track - Track order',
+            'PUT /api/orders/status/:orderId - Update order status',
+            'GET /api/orders/status/:orderId - Get order status',
             'POST /api/email/contact - Contact form',
             'POST /api/auth/login - Admin login',
             'GET /api/careers/positions - Job positions'
@@ -70,6 +72,7 @@ try {
     app.use('/api/auth', require('./routes/auth'));
     app.use('/api/orders', require('./routes/order')); // Using the simpler order.js file
     app.use('/api/orders', require('./routes/track')); // Order tracking route
+    app.use('/api/orders', require('./routes/orderStatus')); // Order status updates
     app.use('/api/transcribers', require('./routes/transcribers'));
     app.use('/api/admin', require('./routes/admin'));
     app.use('/api/careers', require('./routes/careers'));

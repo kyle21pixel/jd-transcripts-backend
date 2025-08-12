@@ -2,10 +2,10 @@ const nodemailer = require('nodemailer');
 
 class EmailController {
     constructor() {
-        this.transporter = nodemailer.createTransporter({
+        this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER || 'admin@jdlegaltranscripts.com',
+                user: process.env.EMAIL_USER || 'admin@jdreporting.org',
                 pass: process.env.EMAIL_PASS || 'your-app-password'
             }
         });
@@ -16,7 +16,7 @@ class EmailController {
         try {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
-                to: process.env.ADMIN_EMAIL || 'admin@jdlegaltranscripts.com',
+                to: process.env.ADMIN_EMAIL || 'admin@jdreporting.org',
                 subject: `🔔 New Order Received - ${orderData.orderId}`,
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -172,7 +172,7 @@ class EmailController {
                                    style="background: #10b981; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin-right: 10px;">
                                     Access Portal
                                 </a>
-                                <a href="mailto:admin@jdlegaltranscripts.com" 
+                                <a href="mailto:admin@jdreporting.org" 
                                    style="background: #6b7280; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
                                     Contact Admin
                                 </a>
@@ -261,7 +261,7 @@ class EmailController {
                             </div>
 
                             <div style="text-align: center; margin-top: 30px;">
-                                <a href="mailto:admin@jdlegaltranscripts.com" 
+                                <a href="mailto:support@jdreporting.org" 
                                    style="background: #6b7280; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; margin-right: 10px;">
                                     Request Revision
                                 </a>
@@ -289,12 +289,136 @@ class EmailController {
         }
     }
 
+    // Send order status update notification with tracking link
+    async sendOrderStatusUpdate(orderData) {
+        try {
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: orderData.clientEmail || orderData.customerEmail,
+                subject: `🔄 Order Status Update - ${orderData.orderId}`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                        <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; padding: 20px; text-align: center;">
+                            <h1 style="margin: 0;">Order Status Update</h1>
+                            <p style="margin: 5px 0 0 0; opacity: 0.9;">JD Reporting Company</p>
+                        </div>
+                        
+                        <div style="padding: 30px; background: #f8fafc;">
+                            <h2 style="color: #1e293b; margin-top: 0;">Dear Customer,</h2>
+                            <p style="color: #374151; line-height: 1.6;">We're writing to inform you that the status of your order has been updated.</p>
+                            
+                            <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: bold; color: #374151;">Order ID:</td>
+                                        <td style="padding: 8px 0; color: #1e293b;">${orderData.orderId}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: bold; color: #374151;">Service Type:</td>
+                                        <td style="padding: 8px 0; color: #1e293b;">${orderData.serviceType}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: bold; color: #374151;">Current Status:</td>
+                                        <td style="padding: 8px 0;">
+                                            <span style="background: ${
+                                                orderData.status === 'Completed' ? '#d1fae5' : 
+                                                orderData.status === 'Quality Check' ? '#ddd6fe' : 
+                                                orderData.status === 'In Progress' ? '#e0f2fe' : 
+                                                orderData.status === 'Processing' ? '#fef3c7' : '#f3f4f6'
+                                            }; 
+                                            color: ${
+                                                orderData.status === 'Completed' ? '#065f46' : 
+                                                orderData.status === 'Quality Check' ? '#5b21b6' : 
+                                                orderData.status === 'In Progress' ? '#0c4a6e' : 
+                                                orderData.status === 'Processing' ? '#92400e' : '#374151'
+                                            }; 
+                                            padding: 4px 8px; border-radius: 4px; font-size: 14px; font-weight: 600;">
+                                                ${orderData.status}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: bold; color: #374151;">Update Date:</td>
+                                        <td style="padding: 8px 0; color: #1e293b;">${new Date().toLocaleDateString()}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px 0; font-weight: bold; color: #374151;">Estimated Completion:</td>
+                                        <td style="padding: 8px 0; color: #1e293b;">${
+                                            orderData.dueDate ? new Date(orderData.dueDate).toLocaleDateString() : 'To be determined'
+                                        }</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <div style="text-align: center; margin: 30px 0;">
+                                <a href="${process.env.FRONTEND_URL || 'https://jd-reporting-company.netlify.app'}/track-order.html" 
+                                   style="background: #2563eb; color: white; padding: 15px 30px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block; font-size: 16px;">
+                                    Track Your Order
+                                </a>
+                            </div>
+
+                            <div style="background: #e0f2fe; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #0284c7;">
+                                <h4 style="color: #0c4a6e; margin-top: 0;">What's Next?</h4>
+                                ${
+                                    orderData.status === 'Received' ? `
+                                        <p style="color: #0c4a6e; line-height: 1.6; margin-bottom: 0;">
+                                            Your order has been received and is being prepared for processing. Our team will begin work on it shortly.
+                                        </p>
+                                    ` : orderData.status === 'Processing' ? `
+                                        <p style="color: #0c4a6e; line-height: 1.6; margin-bottom: 0;">
+                                            Your order is now being processed. Our team is preparing the necessary resources to begin transcription.
+                                        </p>
+                                    ` : orderData.status === 'In Progress' ? `
+                                        <p style="color: #0c4a6e; line-height: 1.6; margin-bottom: 0;">
+                                            Your transcription is actively being worked on by our specialists. We're making good progress!
+                                        </p>
+                                    ` : orderData.status === 'Quality Check' ? `
+                                        <p style="color: #0c4a6e; line-height: 1.6; margin-bottom: 0;">
+                                            Your transcription is complete and is now undergoing our rigorous quality check process to ensure accuracy.
+                                        </p>
+                                    ` : orderData.status === 'Completed' ? `
+                                        <p style="color: #0c4a6e; line-height: 1.6; margin-bottom: 0;">
+                                            Your transcription is complete! You can now download your files from your account.
+                                        </p>
+                                    ` : `
+                                        <p style="color: #0c4a6e; line-height: 1.6; margin-bottom: 0;">
+                                            We'll keep you updated as your order progresses through our system.
+                                        </p>
+                                    `
+                                }
+                            </div>
+
+                            <div style="text-align: center; margin-top: 30px;">
+                                <a href="mailto:support@jdreporting.org" 
+                                   style="background: #6b7280; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+                                    Questions? Contact Us
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #1e293b; color: white; padding: 20px; text-align: center; font-size: 14px;">
+                            <p style="margin: 0;">Thank you for choosing JD Reporting Company!</p>
+                            <p style="margin: 5px 0 0 0; opacity: 0.7;">We appreciate your business</p>
+                        </div>
+                    </div>
+                `
+            };
+
+            await this.transporter.sendMail(mailOptions);
+            console.log(`Status update notification sent to ${orderData.clientEmail || orderData.customerEmail}`);
+            return { success: true };
+        } catch (error) {
+            console.error('Error sending status update notification:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
     // Send daily summary to admin
     async sendDailySummary(summaryData) {
         try {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
-                to: process.env.ADMIN_EMAIL || 'admin@jdlegaltranscripts.com',
+                to: process.env.ADMIN_EMAIL || 'admin@jdreporting.org',
                 subject: `📊 Daily Summary - ${new Date().toLocaleDateString()}`,
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
