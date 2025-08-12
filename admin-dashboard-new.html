@@ -598,7 +598,15 @@
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
-            if (checkAuth()) {
+            // Check if we're on the dashboard page
+            if (window.location.pathname.includes('admin-dashboard')) {
+                // Only redirect if not logged in
+                if (localStorage.getItem('adminLoggedIn') !== 'true' || !localStorage.getItem('adminToken')) {
+                    window.location.href = 'admin-login-new.html';
+                    return;
+                }
+                
+                // If we're logged in, load the dashboard
                 loadUserInfo();
                 loadDashboardData();
             }
