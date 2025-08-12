@@ -18,6 +18,11 @@ const orderSchema = new mongoose.Schema({
         lowercase: true,
         trim: true
     },
+    customerEmail: {
+        type: String,
+        lowercase: true,
+        trim: true
+    },
     clientPhone: {
         type: String,
         trim: true
@@ -39,14 +44,18 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    totalAmount: {
+        type: Number,
+        default: 0
+    },
     instructions: {
         type: String,
         default: ''
     },
     status: {
         type: String,
-        enum: ['pending', 'in-progress', 'completed', 'cancelled', 'revision-requested'],
-        default: 'pending'
+        enum: ['Received', 'Processing', 'In Progress', 'Quality Check', 'Completed', 'Cancelled', 'Revision Requested'],
+        default: 'Received'
     },
     priority: {
         type: String,
