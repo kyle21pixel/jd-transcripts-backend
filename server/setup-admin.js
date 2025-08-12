@@ -19,7 +19,7 @@ async function setupAdmin() {
         const adminUsers = [
             {
                 name: 'JD Admin',
-                email: 'admin@jdlegaltranscripts.com',
+                email: 'admin@jdreporting.org',
                 username: 'jd.admin',
                 password: 'admin123',
                 role: 'admin',
@@ -27,7 +27,7 @@ async function setupAdmin() {
             },
             {
                 name: 'JD Manager',
-                email: 'manager@jdlegaltranscripts.com',
+                email: 'manager@jdreporting.org',
                 username: 'jd.manager',
                 password: 'manager123',
                 role: 'manager',
@@ -35,7 +35,7 @@ async function setupAdmin() {
             },
             {
                 name: 'JD Supervisor',
-                email: 'supervisor@jdlegaltranscripts.com',
+                email: 'supervisor@jdreporting.org',
                 username: 'jd.supervisor',
                 password: 'super123',
                 role: 'supervisor',
