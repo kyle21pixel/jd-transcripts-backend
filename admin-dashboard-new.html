@@ -441,7 +441,10 @@
             const token = localStorage.getItem('adminToken');
             
             if (!isLoggedIn || !token) {
-                window.location.href = 'admin-login-new.html';
+                // Prevent redirect loop by checking the current page
+                if (window.location.pathname.includes('admin-dashboard')) {
+                    window.location.href = 'admin-login-new.html';
+                }
                 return false;
             }
             return true;
@@ -470,11 +473,31 @@
             }
         }
 
+        // API Base URL
+        const API_BASE_URL = 'https://jd-transcripts-backend-production.up.railway.app';
+        
         // Load dashboard data
         async function loadDashboardData() {
             try {
-                // Mock data for now - replace with actual API calls
-                const mockData = {
+                // Try to fetch data from API, fallback to mock data if API is not available
+                let dashboardData;
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/admin/dashboard`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        dashboardData = await response.json();
+                    } else {
+                        throw new Error('API request failed');
+                    }
+                } catch (apiError) {
+                    console.log('Using mock data due to API error:', apiError);
+                    // Mock data as fallback
+                    dashboardData = {
                     totalOrders: 156,
                     pendingOrders: 23,
                     processingOrders: 12,
@@ -508,13 +531,13 @@
                 };
 
                 // Update stats
-                document.getElementById('totalOrders').textContent = mockData.totalOrders;
-                document.getElementById('pendingOrders').textContent = mockData.pendingOrders;
-                document.getElementById('processingOrders').textContent = mockData.processingOrders;
-                document.getElementById('completedOrders').textContent = mockData.completedOrders;
+                document.getElementById('totalOrders').textContent = dashboardData.totalOrders;
+                document.getElementById('pendingOrders').textContent = dashboardData.pendingOrders;
+                document.getElementById('processingOrders').textContent = dashboardData.processingOrders;
+                document.getElementById('completedOrders').textContent = dashboardData.completedOrders;
 
                 // Update orders table
-                if (mockData.recentOrders.length > 0) {
+                if (dashboardData.recentOrders.length > 0) {
                     const ordersHTML = `
                         <table class="orders-table">
                             <thead>
@@ -529,7 +552,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${mockData.recentOrders.map(order => `
+                                ${dashboardData.recentOrders.map(order => `
                                     <tr>
                                         <td><strong>${order.id}</strong></td>
                                         <td>${order.customer}</td>

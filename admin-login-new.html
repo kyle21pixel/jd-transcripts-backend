@@ -383,7 +383,7 @@
         }
 
         function showForgotPassword() {
-            alert('Please contact the system administrator for password reset:\\n\\nEmail: admin@jdlegaltranscripts.com\\nPhone: +1 (555) 123-4567');
+            alert('Please contact the system administrator for password reset:\\n\\nEmail: admin@jdreporting.org\\nPhone: +1 (555) 123-4567');
         }
 
         function quickLogin(username, password) {
@@ -402,7 +402,7 @@
             
             try {
                 // Call the backend API
-                const API_BASE_URL = 'http://localhost:5000';
+                const API_BASE_URL = 'https://jd-transcripts-backend-production.up.railway.app';
                 const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {
