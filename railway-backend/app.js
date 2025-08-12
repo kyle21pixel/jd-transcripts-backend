@@ -51,7 +51,7 @@ if (process.env.MONGODB_URI) {
 // Root route
 app.get('/', (req, res) => {
     res.json({
-        message: 'JD Legal Transcripts API is running!',
+        message: 'JD Reporting Company API is running!',
         status: 'success',
         timestamp: new Date().toISOString(),
         endpoints: [
@@ -80,7 +80,7 @@ try {
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
-        message: 'JD Legal Transcripts API is running',
+        message: 'JD Reporting Company API is running',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development'
     });

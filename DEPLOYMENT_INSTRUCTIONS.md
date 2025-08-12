@@ -1,4 +1,4 @@
-# JD Legal Transcripts - Deployment Instructions
+# JD Reporting Company - Deployment Instructions
 
 ## 🚀 Frontend Deployment (Netlify)
 
@@ -16,7 +16,7 @@
 ### Step 2: Custom Domain (Optional)
 1. In Netlify dashboard, go to "Site settings" → "Domain management"
 2. Click "Add custom domain"
-3. Enter your domain (e.g., `jdlegaltranscripts.com`)
+3. Enter your domain (e.g., `jdreporting.org`)
 4. Follow DNS configuration instructions
 
 ## 🔧 Backend Deployment (Railway)
@@ -35,14 +35,14 @@ Set these environment variables in Railway dashboard:
 NODE_ENV=production
 PORT=5000
 MONGODB_URI=mongodb+srv://jdtranscripts:JDTranscripts2025@cluster0.mongodb.net/jd-transcripts?retryWrites=true&w=majority
-JWT_SECRET=jd-legal-transcripts-super-secret-jwt-key-2025-production-secure
+JWT_SECRET=jd-reporting-company-super-secret-jwt-key-2025-production-secure
 JWT_EXPIRE=7d
 EMAIL_SERVICE=gmail
-EMAIL_USER=admin@jdlegaltranscripts.com
+EMAIL_USER=admin@jdreporting.org
 EMAIL_PASS=jdtranscripts2025app
-ADMIN_EMAIL=admin@jdlegaltranscripts.com
-FRONTEND_URL=https://your-netlify-url.netlify.app
-CORS_ORIGIN=https://your-netlify-url.netlify.app
+ADMIN_EMAIL=admin@jdreporting.org
+FRONTEND_URL=https://jd-reporting-company.netlify.app
+CORS_ORIGIN=https://jd-reporting-company.netlify.app
 MAX_FILE_SIZE=100MB
 UPLOAD_PATH=./uploads
 BCRYPT_ROUNDS=12

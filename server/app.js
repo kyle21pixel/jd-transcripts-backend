@@ -44,7 +44,7 @@ if (process.env.MONGODB_URI) {
 // Root route
 app.get('/', (req, res) => {
     res.json({
-        message: 'JD Legal Transcripts API is running!',
+        message: 'JD Reporting Company API is running!',
         status: 'success',
         timestamp: new Date().toISOString(),
         endpoints: [
@@ -65,6 +65,7 @@ try {
     app.use('/api/admin', require('./routes/admin'));
     app.use('/api/careers', require('./routes/careers'));
     app.use('/api/email', require('./routes/email'));
+    app.use('/api/supabase', require('./routes/supabase')); // Supabase integration routes
 } catch (error) {
     console.error('Error loading routes:', error);
 }
@@ -73,7 +74,7 @@ try {
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'OK',
-        message: 'JD Legal Transcripts API is running',
+        message: 'JD Reporting Company API is running',
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV || 'development'
     });

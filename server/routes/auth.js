@@ -2,9 +2,10 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user');
 
-// Simple admin users (in production, this would be in database)
-const adminUsers = [
+// Fallback admin users (used when database is not available)
+const fallbackAdminUsers = [
     {
         id: 1,
         username: 'jd.admin',
@@ -43,48 +44,94 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // Find user
-        const user = adminUsers.find(u => u.username === username);
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid credentials'
+        let user = null;
+        let isMatch = false;
+
+        try {
+            // Try to find user in MongoDB first
+            user = await User.findOne({ 
+                $or: [
+                    { email: username },
+                    { username: username }
+                ]
             });
-        }
 
-        // Check password
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid credentials'
-            });
-        }
+            if (user) {
+                // Check password against MongoDB user
+                isMatch = await bcrypt.compare(password, user.password);
+                
+                if (isMatch) {
+                    // Generate JWT token
+                    const token = jwt.sign(
+                        { 
+                            id: user._id, 
+                            username: user.username || user.email, 
+                            role: user.role || (user.isAdmin ? 'admin' : 'user'),
+                            email: user.email
+                        },
+                        process.env.JWT_SECRET || 'fallback-secret',
+                        { expiresIn: process.env.JWT_EXPIRE || '7d' }
+                    );
 
-        // Generate JWT token
-        const token = jwt.sign(
-            { 
-                id: user.id, 
-                username: user.username, 
-                role: user.role 
-            },
-            process.env.JWT_SECRET || 'fallback-secret',
-            { expiresIn: process.env.JWT_EXPIRE || '7d' }
-        );
-
-        res.json({
-            success: true,
-            message: 'Login successful',
-            data: {
-                token,
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    role: user.role,
-                    email: user.email
+                    return res.json({
+                        success: true,
+                        message: 'Login successful',
+                        data: {
+                            token,
+                            user: {
+                                id: user._id,
+                                username: user.username || user.email,
+                                role: user.role || (user.isAdmin ? 'admin' : 'user'),
+                                email: user.email,
+                                name: user.name
+                            }
+                        }
+                    });
                 }
             }
+        } catch (dbError) {
+            console.log('Database not available, using fallback users:', dbError.message);
+        }
+
+        // Fallback to hardcoded users if database is not available or user not found
+        if (!user || !isMatch) {
+            const fallbackUser = fallbackAdminUsers.find(u => u.username === username || u.email === username);
+            if (fallbackUser) {
+                const fallbackMatch = await bcrypt.compare(password, fallbackUser.password);
+                if (fallbackMatch) {
+                    const token = jwt.sign(
+                        { 
+                            id: fallbackUser.id, 
+                            username: fallbackUser.username, 
+                            role: fallbackUser.role 
+                        },
+                        process.env.JWT_SECRET || 'fallback-secret',
+                        { expiresIn: process.env.JWT_EXPIRE || '7d' }
+                    );
+
+                    return res.json({
+                        success: true,
+                        message: 'Login successful (fallback mode)',
+                        data: {
+                            token,
+                            user: {
+                                id: fallbackUser.id,
+                                username: fallbackUser.username,
+                                role: fallbackUser.role,
+                                email: fallbackUser.email
+                            }
+                        }
+                    });
+                }
+            }
+        }
+
+        // If we get here, credentials are invalid
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid credentials'
         });
+
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({
@@ -110,26 +157,51 @@ router.post('/verify', async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
-        const user = adminUsers.find(u => u.id === decoded.id);
+        let user = null;
 
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid token'
+        try {
+            // Try to find user in MongoDB first
+            user = await User.findById(decoded.id);
+            
+            if (user) {
+                return res.json({
+                    success: true,
+                    data: {
+                        user: {
+                            id: user._id,
+                            username: user.username || user.email,
+                            role: user.role || (user.isAdmin ? 'admin' : 'user'),
+                            email: user.email,
+                            name: user.name
+                        }
+                    }
+                });
+            }
+        } catch (dbError) {
+            console.log('Database not available for token verification, using fallback');
+        }
+
+        // Fallback to hardcoded users
+        const fallbackUser = fallbackAdminUsers.find(u => u.id === decoded.id);
+        if (fallbackUser) {
+            return res.json({
+                success: true,
+                data: {
+                    user: {
+                        id: fallbackUser.id,
+                        username: fallbackUser.username,
+                        role: fallbackUser.role,
+                        email: fallbackUser.email
+                    }
+                }
             });
         }
 
-        res.json({
-            success: true,
-            data: {
-                user: {
-                    id: user.id,
-                    username: user.username,
-                    role: user.role,
-                    email: user.email
-                }
-            }
+        return res.status(401).json({
+            success: false,
+            message: 'Invalid token'
         });
+
     } catch (error) {
         console.error('Token verification error:', error);
         res.status(401).json({
