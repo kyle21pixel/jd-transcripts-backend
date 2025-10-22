@@ -10,11 +10,10 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install --production
 
-# Copy application files
-COPY backend-server.js ./
-COPY *.js ./
+# Copy all application files
+COPY . .
 
-# Create data directory
+# Create data directory if it doesn't exist
 RUN mkdir -p data
 
 # Expose port
