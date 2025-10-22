@@ -1,0 +1,16 @@
+node_modules/
+.env
+.git/
+*.log
+*.bat
+*.ps1
+*.md
+.vscode/
+xampp/
+data/
+*.sql
+*.php
+*.html
+public/
+frontend/
+wp-content/

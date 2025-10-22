@@ -1,0 +1,25 @@
+# Railway Environment Variables
+# Copy these to your Railway project's Variables section
+
+PORT=3001
+NODE_ENV=production
+
+# Database (if using MySQL)
+DB_HOST=your-mysql-host
+DB_USER=your-mysql-user
+DB_PASSWORD=your-mysql-password
+DB_NAME=jd_transcripts
+
+# Frontend URL (update after Netlify deployment)
+FRONTEND_URL=https://your-frontend.netlify.app
+CORS_ORIGIN=https://your-frontend.netlify.app
+
+# Email Configuration (optional)
+EMAIL_SERVICE=gmail
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-email-password
+ADMIN_EMAIL=admin@jdtranscripts.com
+
+# JWT Secret (for authentication)
+JWT_SECRET=your-super-secret-jwt-key-change-this
+JWT_EXPIRE=7d
