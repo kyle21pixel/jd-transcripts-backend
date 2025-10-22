@@ -450,7 +450,7 @@
             submitBtn.disabled = true;
 
             // Send order to backend API
-            fetch('http://localhost:8080/jd%203/php_backend/api/orders.php', {
+            fetch('https://shiny-stars-own.loca.lt/api/orders', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
