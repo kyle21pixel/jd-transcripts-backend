@@ -271,22 +271,44 @@ function initOrderForm() {
     }
 
     async function simulateOrderSubmission(formData) {
-        // Simulate network delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        
-        // Simulate success (in real implementation, this would be an actual API call)
+        // Short artificial delay for UX
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+        // Build order object and persist to localStorage (frontend-only demo)
+        const costText = document.getElementById('estimated-cost').value || '';
+        const parsedCost = parseFloat((costText.match(/[\d.]+/) || [0])[0]) || 0;
+        const fileInputEl = document.getElementById('file');
+        const selectedFile = fileInputEl && fileInputEl.files && fileInputEl.files[0] ? fileInputEl.files[0] : null;
+
         const orderData = {
-            orderNumber: 'JD' + Date.now(),
-            name: formData.get('name'),
+            orderId: 'JD' + Date.now(),
+            orderNumber: null, // kept for compatibility with other pages if needed
+            clientName: formData.get('name'),
+            name: formData.get('name'), // legacy key used elsewhere
             email: formData.get('email'),
-            service: formData.get('service'),
+            serviceType: formData.get('service'),
+            service: formData.get('service'), // legacy key
             turnaround: formData.get('turnaround'),
-            estimatedCost: document.getElementById('estimated-cost').value
+            estimatedCost: Number(parsedCost.toFixed(2)),
+            estimatedCostText: costText,
+            status: 'pending',
+            createdAt: new Date().toISOString(),
+            // Upload placeholder (no actual file storage on frontend-only mode)
+            upload: selectedFile ? {
+                name: selectedFile.name,
+                size: selectedFile.size,
+                type: selectedFile.type || 'application/octet-stream'
+            } : null
         };
-        
-        // Store order data for success page
+
+        // Persist order list locally
+        const existing = JSON.parse(localStorage.getItem('orders') || '[]');
+        existing.unshift(orderData); // show newest first in admin
+        localStorage.setItem('orders', JSON.stringify(existing));
+
+        // Store last order for success page
         sessionStorage.setItem('lastOrder', JSON.stringify(orderData));
-        
+
         return orderData;
     }
 

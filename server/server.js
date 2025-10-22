@@ -9,7 +9,7 @@ const mpesaRoutes = require('./routes/mpesa');
 const orderRoutes = require('./routes/orders');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Security middleware
 app.use(helmet());
@@ -23,17 +23,10 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // CORS configuration
-app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    'http://localhost:3000',
-    'http://127.0.0.1:5500',
-    'https://jd-transcripts-live.surge.sh'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-API-Key']
-}));
+app.use(cors());
+
+// Handle preflight requests for all routes
+app.options('*', cors());
 
 // Body parser middleware
 app.use(bodyParser.json({ limit: '10mb' }));

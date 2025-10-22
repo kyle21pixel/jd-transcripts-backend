@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders Management - JD Reporting Admin</title>
+    <link rel="stylesheet" href="assets/css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>JD Admin</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="orders.html" class="nav-link active">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="transcribers.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Transcribers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Back to Website</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 class="page-title">Orders Management</h1>
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary" onclick="loadOrders()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Filter Orders</h2>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <select id="filterStatus" class="form-control" style="max-width: 200px;" onchange="loadOrders()">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                    <input type="text" id="searchOrders" class="form-control" placeholder="Search by order #, client name..." style="max-width: 300px;" oninput="filterOrders()">
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">All Orders (<span id="orderCount">0</span>)</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Client</th>
+                                <th>Email</th>
+                                <th>Service</th>
+                                <th>Turnaround</th>
+                                <th>Status</th>
+                                <th>Transcriber</th>
+                                <th>Amount</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr>
+                                <td colspan="10" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Assign Modal -->
+    <div id="assignModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Assign Order to Transcriber</h3>
+            </div>
+            <form id="assignForm">
+                <div class="form-group">
+                    <label class="form-label">Order</label>
+                    <input type="text" id="assignOrderNumber" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Select Transcriber</label>
+                    <select id="assignTranscriber" class="form-control" required>
+                        <option value="">-- Select Transcriber --</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hideModal('assignModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Assign Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Order Status</h3>
+            </div>
+            <form id="statusForm">
+                <div class="form-group">
+                    <label class="form-label">Order</label>
+                    <input type="text" id="statusOrderNumber" class="form-control" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Status</label>
+                    <select id="newStatus" class="form-control" required>
+                        <option value="pending">Pending</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hideModal('statusModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Status</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/admin-common.js"></script>
+    <script>
+        let allOrders = [];
+        let transcribers = [];
+        let currentOrderId = null;
+
+        // Load Orders
+        async function loadOrders() {
+            try {
+                const response = await apiGet('/admin/orders');
+                if (response.success) {
+                    allOrders = response.data || response.orders || [];
+                    filterOrders();
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Filter Orders
+        function filterOrders() {
+            const statusFilter = $('filterStatus').value;
+            const searchTerm = $('searchOrders').value.toLowerCase();
+
+            let filtered = allOrders;
+
+            // Filter by status
+            if (statusFilter) {
+                filtered = filtered.filter(order => order.status === statusFilter);
+            }
+
+            // Filter by search
+            if (searchTerm) {
+                filtered = filtered.filter(order => 
+                    order.order_number.toLowerCase().includes(searchTerm) ||
+                    order.client_name.toLowerCase().includes(searchTerm) ||
+                    order.client_email.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            displayOrders(filtered);
+        }
+
+        // Display Orders
+        function displayOrders(orders) {
+            const tbody = $('ordersTable');
+            $('orderCount').textContent = orders.length;
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="10" class="text-center">No orders found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td><strong>${order.order_number}</strong></td>
+                    <td>${order.client_name}</td>
+                    <td>${order.client_email}</td>
+                    <td>${order.service_type || '-'}</td>
+                    <td>${order.turnaround || '-'}</td>
+                    <td>${getStatusBadge(order.status)}</td>
+                    <td>${order.transcriber_first_name ? `${order.transcriber_first_name} ${order.transcriber_last_name}` : '-'}</td>
+                    <td>${formatCurrency(order.estimated_cost)}</td>
+                    <td>${formatDate(order.created_at)}</td>
+                    <td>
+                        <div class="flex gap-1">
+                            <button class="btn btn-primary btn-sm" onclick="openAssignModal(${order.id}, '${order.order_number}')" title="Assign">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                            <button class="btn btn-success btn-sm" onclick="openStatusModal(${order.id}, '${order.order_number}', '${order.status}')" title="Update Status">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteOrder(${order.id}, '${order.order_number}')" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load Transcribers
+        async function loadTranscribers() {
+            try {
+                const response = await apiGet('/admin/transcribers');
+                if (response.success) {
+                    transcribers = response.data || response.transcribers || [];
+                    populateTranscriberSelect();
+                }
+            } catch (error) {
+                console.error('Error loading transcribers:', error);
+            }
+        }
+
+        // Populate Transcriber Select
+        function populateTranscriberSelect() {
+            const select = $('assignTranscriber');
+            select.innerHTML = '<option value="">-- Select Transcriber --</option>' +
+                transcribers.map(t => `<option value="${t.id}">${t.first_name} ${t.last_name} (${t.email})</option>`).join('');
+        }
+
+        // Open Assign Modal
+        function openAssignModal(orderId, orderNumber) {
+            currentOrderId = orderId;
+            $('assignOrderNumber').value = orderNumber;
+            showModal('assignModal');
+        }
+
+        // Open Status Modal
+        function openStatusModal(orderId, orderNumber, currentStatus) {
+            currentOrderId = orderId;
+            $('statusOrderNumber').value = orderNumber;
+            $('newStatus').value = currentStatus;
+            showModal('statusModal');
+        }
+
+        // Assign Order
+        $('assignForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const transcriberId = $('assignTranscriber').value;
+            
+            if (!transcriberId) {
+                showToast('Please select a transcriber', 'error');
+                return;
+            }
+
+            try {
+                const response = await apiPost('/admin/orders/assign', {
+                    orderId: currentOrderId,
+                    transcriberId: transcriberId
+                });
+
+                if (response.success) {
+                    showToast('Order assigned successfully', 'success');
+                    hideModal('assignModal');
+                    loadOrders();
+                } else {
+                    showToast(response.error || 'Failed to assign order', 'error');
+                }
+            } catch (error) {
+                showToast('Error assigning order', 'error');
+            }
+        });
+
+        // Update Status
+        $('statusForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newStatus = $('newStatus').value;
+
+            try {
+                const response = await apiPut('/admin/orders/status', {
+                    orderId: currentOrderId,
+                    status: newStatus
+                });
+
+                if (response.success) {
+                    showToast('Order status updated successfully', 'success');
+                    hideModal('statusModal');
+                    loadOrders();
+                } else {
+                    showToast(response.error || 'Failed to update status', 'error');
+                }
+            } catch (error) {
+                showToast('Error updating status', 'error');
+            }
+        });
+
+        // Delete Order
+        async function deleteOrder(orderId, orderNumber) {
+            if (!confirm(`Are you sure you want to delete order ${orderNumber}?`)) {
+                return;
+            }
+
+            try {
+                const response = await apiDelete(`/admin/orders?id=${orderId}`);
+                if (response.success) {
+                    showToast('Order deleted successfully', 'success');
+                    loadOrders();
+                } else {
+                    showToast(response.error || 'Failed to delete order', 'error');
+                }
+            } catch (error) {
+                showToast('Error deleting order', 'error');
+            }
+        }
+
+        // Initialize
+        loadOrders();
+        loadTranscribers();
+    </script>
+</body>
+</html>

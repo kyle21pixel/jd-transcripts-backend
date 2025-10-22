@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useSupabaseQuery } from '../../hooks/useSupabase';
 import { supabase } from '../../config/supabase';
 
 const SystemStats = () => {

@@ -2,11 +2,15 @@ const nodemailer = require('nodemailer');
 
 class EmailController {
     constructor() {
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.error('WARNING: Email credentials not properly configured in environment variables');
+        }
+        
         this.transporter = nodemailer.createTransport({
-            service: 'gmail',
+            service: process.env.EMAIL_SERVICE || 'gmail',
             auth: {
-                user: process.env.EMAIL_USER || 'admin@jdreporting.org',
-                pass: process.env.EMAIL_PASS || 'your-app-password'
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
             }
         });
     }

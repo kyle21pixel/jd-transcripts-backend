@@ -1,0 +1,10 @@
+[build]
+  # Static site - no build needed
+  publish = "."
+  command = "echo 'Static site ready'"
+
+# SPA fallback - must be last
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

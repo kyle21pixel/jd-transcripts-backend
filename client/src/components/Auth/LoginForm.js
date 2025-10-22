@@ -1,87 +1,145 @@
 import React, { useState } from 'react';
-import { useAuthContext } from './AuthProvider';
+import { useAuth } from '../../contexts/AuthContext';
 
-const LoginForm = ({ onSuccess, onToggleMode }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState('');
+const LoginForm = ({ onLoginSuccess, onSwitchToRegister }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
-    const { signIn } = useAuthContext();
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError(null);
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-        try {
-            const result = await signIn(email, password);
-            if (result.success) {
-                onSuccess && onSuccess(result.data);
-            } else {
-                setError(result.error);
-            }
-        } catch (err) {
-            setError('An unexpected error occurred');
-        } finally {
-            setIsLoading(false);
+    try {
+      const result = await login(formData.email, formData.password);
+      
+      if (result.success) {
+        if (onLoginSuccess) {
+          onLoginSuccess(result.user);
         }
-    };
+      } else {
+        setError(result.error || 'Login failed');
+      }
+    } catch (err) {
+      setError(err.message || 'An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return (
-        <div className="auth-form">
-            <h2>Sign In</h2>
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input
-                        type="email"
-                        id="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        disabled={isLoading}
-                    />
-                </div>
-                
-                <div className="form-group">
-                    <label htmlFor="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        disabled={isLoading}
-                    />
-                </div>
-
-                {error && (
-                    <div className="error-message">
-                        {error}
-                    </div>
-                )}
-
-                <button 
-                    type="submit" 
-                    disabled={isLoading}
-                    className="btn btn-primary"
-                >
-                    {isLoading ? 'Signing In...' : 'Sign In'}
-                </button>
-            </form>
-
-            <div className="auth-links">
-                <button 
-                    type="button" 
-                    onClick={onToggleMode}
-                    className="link-button"
-                >
-                    Don't have an account? Sign Up
-                </button>
-            </div>
+  return (
+    <div className="login-form-container">
+      <div className="card">
+        <div className="card-header text-center">
+          <h3 className="card-title mb-0">
+            <i className="fas fa-sign-in-alt me-2"></i>
+            Login to JD Reporting
+          </h3>
         </div>
-    );
+        <div className="card-body">
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label htmlFor="email" className="form-label">
+                Email Address
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleInputChange}
+                required
+                placeholder="Enter your email"
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="password" className="form-label">
+                Password
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                required
+                placeholder="Enter your password"
+              />
+            </div>
+
+            {error && (
+              <div className="alert alert-danger">
+                <i className="fas fa-exclamation-triangle me-2"></i>
+                {error}
+              </div>
+            )}
+
+            <div className="d-grid mb-3">
+              <button
+                type="submit"
+                className="btn btn-primary btn-lg"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin me-2"></i>
+                    Signing In...
+                  </>
+                ) : (
+                  <>
+                    <i className="fas fa-sign-in-alt me-2"></i>
+                    Sign In
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="text-center">
+              <button
+                type="button"
+                className="btn btn-link"
+                onClick={() => {/* Handle forgot password */}}
+              >
+                Forgot Password?
+              </button>
+            </div>
+
+            {onSwitchToRegister && (
+              <div className="text-center mt-3">
+                <p className="text-muted">
+                  Don't have an account?{' '}
+                  <button
+                    type="button"
+                    className="btn btn-link p-0"
+                    onClick={onSwitchToRegister}
+                  >
+                    Register here
+                  </button>
+                </p>
+              </div>
+            )}
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default LoginForm;

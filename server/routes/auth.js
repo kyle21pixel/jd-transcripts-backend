@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/user');
+const mysql = require('../config/mysql');
 
 // Fallback admin users (used when database is not available)
 const fallbackAdminUsers = [
@@ -48,25 +48,21 @@ router.post('/login', async (req, res) => {
         let isMatch = false;
 
         try {
-            // Try to find user in MongoDB first
-            user = await User.findOne({ 
-                $or: [
-                    { email: username },
-                    { username: username }
-                ]
-            });
+            const sql = 'SELECT * FROM users WHERE (email = ? OR username = ?) AND status = "active" LIMIT 1';
+            const rows = await mysql.query(sql, [username, username]);
+            user = rows.length > 0 ? rows[0] : null;
 
             if (user) {
-                // Check password against MongoDB user
                 isMatch = await bcrypt.compare(password, user.password);
-                
+
                 if (isMatch) {
-                    // Generate JWT token
+                    await mysql.query('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
+
                     const token = jwt.sign(
-                        { 
-                            id: user._id, 
-                            username: user.username || user.email, 
-                            role: user.role || (user.isAdmin ? 'admin' : 'user'),
+                        {
+                            id: user.id,
+                            username: user.username || user.email,
+                            role: user.role,
                             email: user.email
                         },
                         process.env.JWT_SECRET || 'fallback-secret',
@@ -79,11 +75,11 @@ router.post('/login', async (req, res) => {
                         data: {
                             token,
                             user: {
-                                id: user._id,
+                                id: user.id,
                                 username: user.username || user.email,
-                                role: user.role || (user.isAdmin ? 'admin' : 'user'),
+                                role: user.role,
                                 email: user.email,
-                                name: user.name
+                                name: `${user.first_name} ${user.last_name}`
                             }
                         }
                     });
@@ -227,38 +223,67 @@ router.post('/change-password', async (req, res) => {
             });
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
-        const userIndex = adminUsers.findIndex(u => u.id === decoded.id);
-
-        if (userIndex === -1) {
-            return res.status(401).json({
-                success: false,
-                message: 'User not found'
-            });
-        }
-
-        const user = adminUsers[userIndex];
-
-        // Verify current password
-        const isMatch = await bcrypt.compare(currentPassword, user.password);
-        if (!isMatch) {
+        // Validate input
+        if (!currentPassword || !newPassword) {
             return res.status(400).json({
                 success: false,
-                message: 'Current password is incorrect'
+                message: 'Current password and new password are required'
             });
         }
 
-        // Hash new password
-        const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
-        const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
+        if (newPassword.length < 6) {
+            return res.status(400).json({
+                success: false,
+                message: 'New password must be at least 6 characters long'
+            });
+        }
 
-        // Update password (in production, this would update the database)
-        adminUsers[userIndex].password = hashedPassword;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
 
-        res.json({
-            success: true,
-            message: 'Password changed successfully'
+        try {
+            // Try to find user in MongoDB first
+            const user = await User.findById(decoded.id);
+
+            if (user) {
+                // Verify current password
+                const isMatch = await bcrypt.compare(currentPassword, user.password);
+                if (!isMatch) {
+                    return res.status(400).json({
+                        success: false,
+                        message: 'Current password is incorrect'
+                    });
+                }
+
+                // Hash new password
+                const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
+                user.password = await bcrypt.hash(newPassword, saltRounds);
+                await user.save();
+
+                return res.json({
+                    success: true,
+                    message: 'Password changed successfully'
+                });
+            }
+        } catch (dbError) {
+            console.log('Database not available for password change');
+        }
+
+        // Fallback to hardcoded users (not recommended for production)
+        const fallbackUser = fallbackAdminUsers.find(u => u.id === decoded.id);
+        if (fallbackUser) {
+            // For fallback users, we'll just return success without actually changing
+            // In production, you should not use fallback users
+            return res.json({
+                success: true,
+                message: 'Password change not supported for fallback users'
+            });
+        }
+
+        return res.status(401).json({
+            success: false,
+            message: 'User not found'
         });
+
     } catch (error) {
         console.error('Password change error:', error);
         res.status(500).json({

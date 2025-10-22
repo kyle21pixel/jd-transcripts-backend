@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - JD Transcriber Panel</title>
+    <link rel="stylesheet" href="assets/css/transcriber-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <i class="fas fa-headset"></i>
+                    <span>JD Transcriber</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="my-orders.html" class="nav-link active">
+                            <i class="fas fa-tasks"></i>
+                            <span>My Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="available-orders.html" class="nav-link">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Available Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="performance.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Performance</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Back to Website</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 class="page-title">My Orders</h1>
+                <div class="top-bar-actions">
+                    <select id="statusFilter" class="form-control" onchange="filterOrders()" style="width: 200px;">
+                        <option value="all">All Status</option>
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="loadOrders()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">All My Orders (<span id="orderCount">0</span>)</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Client</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                                <th>Assigned</th>
+                                <th>Deadline</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTable">
+                            <tr>
+                                <td colspan="8" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Update Status Modal -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Update Order Status</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Select New Status</label>
+                    <select id="newStatus" class="form-control">
+                        <option value="assigned">Assigned</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </div>
+                <input type="hidden" id="selectedOrderId">
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('statusModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="updateOrderStatus()">Update Status</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/transcriber-common.js"></script>
+    <script>
+        let allOrders = [];
+
+        // Load Orders
+        async function loadOrders() {
+            try {
+                const result = await apiGet('orders');
+                if (result.success) {
+                    allOrders = result.data || result.orders || [];
+                    filterOrders();
+                } else {
+                    showToast('Failed to load orders', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+        }
+
+        // Filter Orders
+        function filterOrders() {
+            const statusFilter = $('statusFilter').value;
+            let filtered = allOrders;
+
+            if (statusFilter !== 'all') {
+                filtered = allOrders.filter(order => order.status === statusFilter);
+            }
+
+            displayOrders(filtered);
+        }
+
+        // Display Orders
+        function displayOrders(orders) {
+            const tbody = $('ordersTable');
+            $('orderCount').textContent = orders.length;
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No orders found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => `
+                <tr>
+                    <td><strong>${order.order_number}</strong></td>
+                    <td>${order.client_name}<br><small style="color: #6B7280;">${order.client_email}</small></td>
+                    <td>${order.service_type || 'Standard'}</td>
+                    <td>${getStatusBadge(order.status)}</td>
+                    <td>${formatDate(order.assigned_at)}</td>
+                    <td>${getTimeRemaining(order.deadline)}<br><small style="color: #6B7280;">${formatDate(order.deadline)}</small></td>
+                    <td><strong>${formatCurrency(order.estimated_cost)}</strong></td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            ${order.status === 'assigned' ? 
+                                `<button class="btn btn-primary btn-sm" onclick="startOrder(${order.id})">
+                                    <i class="fas fa-play"></i> Start
+                                </button>` : ''
+                            }
+                            ${order.status === 'in_progress' ?
+                                `<button class="btn btn-success btn-sm" onclick="completeOrder(${order.id})">
+                                    <i class="fas fa-check"></i> Complete
+                                </button>` : ''
+                            }
+                            <button class="btn btn-outline btn-sm" onclick="showStatusModal(${order.id}, '${order.status}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Show Status Modal
+        function showStatusModal(orderId, currentStatus) {
+            $('selectedOrderId').value = orderId;
+            $('newStatus').value = currentStatus;
+            showModal('statusModal');
+        }
+
+        // Update Order Status
+        async function updateOrderStatus() {
+            const orderId = $('selectedOrderId').value;
+            const status = $('newStatus').value;
+
+            try {
+                const result = await apiPut('status', {
+                    orderId: orderId,
+                    status: status
+                });
+
+                if (result.success) {
+                    showToast('Order status updated successfully', 'success');
+                    hideModal('statusModal');
+                    loadOrders();
+                } else {
+                    showToast(result.error || 'Failed to update status', 'error');
+                }
+            } catch (error) {
+                showToast('Error updating order status', 'error');
+            }
+        }
+
+        // Initialize
+        loadOrders();
+    </script>
+</body>
+</html>

@@ -1,0 +1,4047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - JD Reporting Company</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* User modal tabs */
+        .user-tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+    /* ...existing code... */
+        
+        .user-tab-content.active {
+            display: block;
+    /* ...existing code... */
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+    // End of switch block
+    </style>
+    <!-- Error Tracking Script -->
+    <script>
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error('ERROR:', message, 'at', source, 'line', lineno, 'column', colno);
+            if (error) console.error(error);
+            
+            // Display error on page for debugging
+            const errorDiv = document.createElement('div');
+            errorDiv.style.position = 'fixed';
+            errorDiv.style.top = '10px';
+            errorDiv.style.right = '10px';
+            errorDiv.style.backgroundColor = '#fee2e2';
+            errorDiv.style.color = '#dc2626';
+            errorDiv.style.padding = '10px';
+            errorDiv.style.borderRadius = '5px';
+            errorDiv.style.zIndex = '9999';
+            errorDiv.style.maxWidth = '400px';
+            errorDiv.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            errorDiv.innerHTML = `<strong>JavaScript Error:</strong><br>${message}<br>Line: ${lineno}, Column: ${colno}`;
+            document.body.appendChild(errorDiv);
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => errorDiv.remove(), 10000);
+            
+            return true; // Prevents default error handling
+        };
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+    // End of switch block
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: stretch;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.total {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .stat-icon.pending {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .stat-icon.processing {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .stat-icon.completed {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .stat-icon.users {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .stat-icon.revenue {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .section {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .section-content {
+            padding: 2rem;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .orders-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-processing {
+            background: #ddd6fe;
+            color: #5b21b6;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2563eb;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .close {
+            color: #6b7280;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .close:hover {
+            color: #374151;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab.active {
+            border-bottom-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .orders-table {
+                font-size: 0.875rem;
+            }
+
+            .orders-table th,
+            .orders-table td {
+                padding: 0.5rem;
+            }
+
+            .modal-content {
+                margin: 2% auto;
+                width: 95%;
+            }
+            
+            .tabs {
+                justify-content: flex-start;
+                padding-bottom: 0.5rem;
+            }
+            
+            .tab {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.875rem;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .section-header > div {
+                display: flex;
+                width: 100%;
+        justify-content: space-between;
+        
+        /* Additional responsive adjustments */
+        @media (max-width: 480px) {
+            .stat-card {
+                padding: 1.5rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .section-content {
+                padding: 1.5rem 1rem;
+            }
+            
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1><i class="fas fa-microphone-alt"></i> JD Reporting Company</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userInfo">Loading...</span>
+                </div>
+                <a href="#" class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Debug Buttons (for testing) -->
+    <div style="position: fixed; top: 70px; right: 20px; z-index: 1000; display: flex; gap: 10px;">
+        <button style="padding: 8px 16px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="showUsersTab()">Show Users</button>
+        <button style="padding: 8px 16px; background-color: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="showApplicationsTab()">Show Applications</button>
+    </div>
+
+    <div class="container">
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard-grid">
+            <div class="stat-card" onclick="showOrdersTab()">
+                <div class="stat-icon total">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-number" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card" onclick="showOrdersTab('pending')">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="pendingOrders">0</div>
+                <div class="stat-label">Pending Orders</div>
+            </div>
+            <div class="stat-card" onclick="showOrdersTab('processing')">
+                <div class="stat-icon processing">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="stat-number" id="processingOrders">0</div>
+                <div class="stat-label">Processing</div>
+            </div>
+            <div class="stat-card" onclick="showOrdersTab('completed')">
+                <div class="stat-icon completed">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="completedOrders">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card" onclick="showUsersTab()">
+                <div class="stat-icon users">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number" id="totalUsers">0</div>
+                <div class="stat-label">Total Users</div>
+            </div>
+            <div class="stat-card" onclick="showApplicationsTab()">
+                <div class="stat-icon" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                <div class="stat-number" id="totalApplications">0</div>
+                <div class="stat-label">New Applications</div>
+            </div>
+            <div class="stat-card" onclick="showRevenueTab()">
+                <div class="stat-icon revenue">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-number" id="totalRevenue">$0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+        </div>
+
+        <!-- Main Content Tabs -->
+        <div class="section">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('dashboard')">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </div>
+                <div class="tab" onclick="showTab('orders')">
+                    <i class="fas fa-clipboard-list"></i> Orders
+                </div>
+                <div class="tab" onclick="showTab('users')">
+                    <i class="fas fa-users"></i> Users
+                </div>
+                <div class="tab" onclick="showTab('transcribers')">
+                    <i class="fas fa-headset"></i> Transcribers
+                </div>
+                <div class="tab" onclick="showTab('applications')">
+                    <i class="fas fa-file-alt"></i> Applications
+                </div>
+                <div class="tab" onclick="showTab('reports')">
+                    <i class="fas fa-chart-bar"></i> Reports
+                </div>
+                <div class="tab" onclick="showTab('settings')">
+                    <i class="fas fa-cog"></i> Settings
+                </div>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2 class="section-title">Recent Activity</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshDashboard()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="exportData()">
+                            <i class="fas fa-download"></i> Export Data
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="recentActivity">
+                        <div class="empty-state">
+                            <i class="fas fa-chart-line"></i>
+                            <h3>Welcome to Admin Dashboard</h3>
+                            <p>Recent activity and system overview will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Tab -->
+            <div id="orders-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">Order Management</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshOrders()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddOrderModal()">
+                            <i class="fas fa-plus"></i> Add Order
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="ordersContent">
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <h3>No Orders Found</h3>
+                            <p>Orders will appear here when customers submit them.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="users-tab" class="tab-content" style="display: none;">
+                <div class="section-header" style="background: #f8fafc; padding: 1.5rem 2rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="section-title" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">User Management</h2>
+                    <div>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; border-radius: 0.5rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; cursor: pointer; font-weight: 500; margin-right: 0.5rem;" onclick="refreshUsers()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; border-radius: 0.5rem; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; border: none; cursor: pointer; font-weight: 500;" onclick="showAddUserModal()">
+                            <i class="fas fa-user-plus"></i> Add User
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content" style="padding: 2rem;">
+                    <div id="usersContent" style="width: 100%;">
+                        <!-- Content will be populated by JavaScript -->
+                        <div class="empty-state" style="text-align: center; padding: 4rem 2rem; color: #6b7280;">
+                            <i class="fas fa-users" style="font-size: 4rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #374151;">No Users Found</h3>
+                            <p>System users will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Transcribers Tab -->
+            <div id="transcribers-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">Transcriber Management</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshTranscribers()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddTranscriberModal()">
+                            <i class="fas fa-user-plus"></i> Add Transcriber
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="transcriber-filters" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="transcriberSpecialization" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Specialization</label>
+                            <select id="transcriberSpecialization" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                                <option value="all">All Specializations</option>
+                                <option value="legal">Legal</option>
+                                <option value="medical">Medical</option>
+                                <option value="business">Business</option>
+                                <option value="academic">Academic</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="transcriberAvailability" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Availability</label>
+                            <select id="transcriberAvailability" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                                <option value="all">All Statuses</option>
+                                <option value="available">Available</option>
+                                <option value="busy">Busy</option>
+                                <option value="unavailable">Unavailable</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="transcriberSearch" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Search</label>
+                            <input type="text" id="transcriberSearch" placeholder="Search by name or email" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                        </div>
+                    </div>
+                    <div id="transcribersContent">
+                        <div class="empty-state">
+                            <i class="fas fa-headset"></i>
+                            <h3>No Transcribers Found</h3>
+                            <p>Transcribers will appear here once added to the system.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Applications Tab -->
+            <div id="applications-tab" class="tab-content" style="display: none;">
+                <div class="section-header" style="background: #f8fafc; padding: 1.5rem 2rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="section-title" style="font-size: 1.5rem; font-weight: 700; color: #1f2937;">Job Applications</h2>
+                    <div>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem; border-radius: 0.5rem; background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; cursor: pointer; font-weight: 500; margin-right: 0.5rem;" onclick="refreshApplications()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; border-radius: 0.5rem; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; border: none; cursor: pointer; font-weight: 500;" onclick="exportApplications()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content" style="padding: 2rem;">
+                    <div class="application-filters" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="applicationStatus" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Status</label>
+                            <select id="applicationStatus" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s;" onchange="filterApplications()">
+                                <option value="all">All Applications</option>
+                                <option value="new">New</option>
+                                <option value="reviewing">Reviewing</option>
+                                <option value="interviewed">Interviewed</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="applicationPosition" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Position</label>
+                            <select id="applicationPosition" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s;" onchange="filterApplications()">
+                                <option value="all">All Positions</option>
+                                <option value="legal">Legal Transcriber</option>
+                                <option value="medical">Medical Transcriber</option>
+                                <option value="business">Business Transcriber</option>
+                                <option value="academic">Academic Transcriber</option>
+                                <option value="general">General Transcriber</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="applicationSearch" style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Search</label>
+                            <input type="text" id="applicationSearch" placeholder="Search by name or email" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem; font-size: 1rem; transition: all 0.3s;" oninput="filterApplications()">
+                        </div>
+                    </div>
+                    <div id="applicationsContent" style="width: 100%;">
+                        <!-- Content will be populated by JavaScript -->
+                        <div class="empty-state" style="text-align: center; padding: 4rem 2rem; color: #6b7280;">
+                            <i class="fas fa-file-alt" style="font-size: 4rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #374151;">No Applications Found</h3>
+                            <p>New job applications will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Tab -->
+            <div id="reports-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">Reports & Analytics</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshReports()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="exportReports()">
+                            <i class="fas fa-download"></i> Export Reports
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="report-filters" style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="reportType" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Report Type</label>
+                            <select id="reportType" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                                <option value="revenue">Revenue Report</option>
+                                <option value="orders">Orders Report</option>
+                                <option value="transcribers">Transcriber Performance</option>
+                                <option value="clients">Client Activity</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="reportPeriod" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Time Period</label>
+                            <select id="reportPeriod" class="form-control" style="width: 100%; padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #e5e7eb;">
+                                <option value="7days">Last 7 Days</option>
+                                <option value="30days">Last 30 Days</option>
+                                <option value="90days">Last 90 Days</option>
+                                <option value="year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 200px; display: flex; align-items: flex-end;">
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 0.5rem;" onclick="generateReport()">
+                                <i class="fas fa-chart-line"></i> Generate Report
+                            </button>
+                        </div>
+                    </div>
+                    <div id="reportsContent">
+                        <div class="empty-state">
+                            <i class="fas fa-chart-bar"></i>
+                            <h3>No Reports Generated</h3>
+                            <p>Select report parameters and click "Generate Report" to view data.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">System Settings</h2>
+                    <div>
+                        <button class="btn btn-primary" onclick="saveSettings()">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="settings-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div class="settings-section">
+                            <h3 style="margin-bottom: 1.5rem; color: #1f2937; font-weight: 600;">Company Information</h3>
+                            <div class="form-group">
+                                <label for="companyName">Company Name</label>
+                                <input type="text" id="companyName" value="JD Reporting Company">
+                            </div>
+                            <div class="form-group">
+                                <label for="companyEmail">Company Email</label>
+                                <input type="email" id="companyEmail" value="admin@jdreporting.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="companyPhone">Company Phone</label>
+                                <input type="tel" id="companyPhone" value="+1 (555) 123-4567">
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 style="margin-bottom: 1.5rem; color: #1f2937; font-weight: 600;">System Settings</h3>
+                            <div class="form-group">
+                                <label for="timezone">Timezone</label>
+                                <select id="timezone">
+                                    <option value="UTC">UTC</option>
+                                    <option value="EST">Eastern Time</option>
+                                    <option value="PST">Pacific Time</option>
+                                    <option value="CST">Central Time</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="dateFormat">Date Format</label>
+                                <select id="dateFormat">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="currency">Currency</label>
+                                <select id="currency">
+                                    <option value="USD">USD ($)</option>
+                                    <option value="EUR">EUR (€)</option>
+                                    <option value="GBP">GBP (£)</option>
+                                    <option value="KES">KES (KSh)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="orderModalTitle">Order Details</h2>
+                <button class="close" onclick="closeModal('orderModal')">&times;</button>
+            </div>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="orderCustomer">Customer Name</label>
+                    <input type="text" id="orderCustomer" required>
+                </div>
+                <div class="form-group">
+                    <label for="orderEmail">Customer Email</label>
+                    <input type="email" id="orderEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="orderService">Service Type</label>
+                    <select id="orderService" required>
+                        <option value="">Select Service</option>
+                        <option value="legal">Legal Transcription</option>
+                        <option value="medical">Medical Transcription</option>
+                        <option value="business">Business Transcription</option>
+                        <option value="academic">Academic Transcription</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="orderStatus">Status</label>
+                    <select id="orderStatus" required>
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="orderAmount">Amount ($)</label>
+                    <input type="number" id="orderAmount" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label for="orderNotes">Notes</label>
+                    <textarea id="orderNotes" rows="3"></textarea>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('orderModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="userModalTitle">User Details</h2>
+                <button class="close" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <form id="userForm">
+                <div class="tabs" style="margin-bottom: 1.5rem;">
+                    <div class="tab active" onclick="switchUserTab('personal')">
+                        <i class="fas fa-user"></i> Personal Info
+                    </div>
+                    <div class="tab" onclick="switchUserTab('account')">
+                        <i class="fas fa-lock"></i> Account
+                    </div>
+                    <div class="tab" onclick="switchUserTab('permissions')">
+                        <i class="fas fa-shield-alt"></i> Permissions
+                    </div>
+                </div>
+                
+                <!-- Personal Information Tab -->
+                <div id="personal-tab" class="user-tab-content active">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Personal Information</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="userName">Full Name</label>
+                            <input type="text" id="userName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userEmail">Email</label>
+                            <input type="email" id="userEmail" required>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="userPhone">Phone Number</label>
+                            <input type="tel" id="userPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="userDepartment">Department</label>
+                            <select id="userDepartment">
+                                <option value="">Select Department</option>
+                                <option value="management">Management</option>
+                                <option value="operations">Operations</option>
+                                <option value="sales">Sales</option>
+                                <option value="support">Support</option>
+                                <option value="transcription">Transcription</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Tab -->
+                <div id="account-tab" class="user-tab-content">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Account Settings</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="userUsername">Username</label>
+                            <input type="text" id="userUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="userStatus">Account Status</label>
+                            <select id="userStatus" required>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="userPassword">Password</label>
+                            <input type="password" id="userPassword" placeholder="Leave blank to keep current password">
+                            <small style="color: #6b7280; display: block; margin-top: 0.25rem;">
+                                <span id="newUserPasswordNote" style="display: none; color: #dc2626;">* Required for new users</span>
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="userConfirmPassword">Confirm Password</label>
+                            <input type="password" id="userConfirmPassword" placeholder="Confirm password">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Permissions Tab -->
+                <div id="permissions-tab" class="user-tab-content">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Role & Permissions</h3>
+                    <div class="form-group">
+                        <label for="userRole">User Role</label>
+                        <select id="userRole" required>
+                            <option value="">Select Role</option>
+                            <option value="admin">Administrator</option>
+                            <option value="manager">Manager</option>
+                            <option value="staff">Staff</option>
+                            <option value="client">Client</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Permissions</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="userPermissions" value="manage_users"> Manage Users
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="userPermissions" value="manage_orders"> Manage Orders
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="userPermissions" value="manage_transcribers"> Manage Transcribers
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="userPermissions" value="view_reports"> View Reports
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="userPermissions" value="manage_settings"> Manage Settings
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="userPermissions" value="assign_tasks"> Assign Tasks
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="userNotes">Additional Notes</label>
+                        <textarea id="userNotes" rows="3" placeholder="Any additional notes about this user..."></textarea>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: space-between; margin-top: 1.5rem; border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+                    <div>
+                        <button type="button" class="btn btn-secondary" id="prevUserTabBtn" onclick="navigateUserTab('prev')" disabled>
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-primary" id="nextUserTabBtn" onclick="navigateUserTab('next')">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('userModal')">Cancel</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Save User
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Application Modal -->
+    <div id="applicationModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="applicationModalTitle">Application Details</h2>
+                <button class="close" onclick="closeModal('applicationModal')">&times;</button>
+            </div>
+            <div id="applicationDetails" style="margin-bottom: 1.5rem;">
+                <!-- Application details will be loaded here -->
+            </div>
+            <div style="border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+                <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600;">Update Application Status</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                    <div class="form-group" style="flex: 2; min-width: 200px;">
+                        <label for="updateApplicationStatus">Status</label>
+                        <select id="updateApplicationStatus" class="form-control">
+                            <option value="new">New</option>
+                            <option value="reviewing">Reviewing</option>
+                            <option value="interviewed">Interviewed</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex: 3; min-width: 300px;">
+                        <label for="applicationNotes">Notes</label>
+                        <textarea id="applicationNotes" rows="3" placeholder="Add notes about this application..."></textarea>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('applicationModal')">Close</button>
+                    <button type="button" class="btn btn-danger" onclick="rejectApplication()">Reject</button>
+                    <button type="button" class="btn btn-success" onclick="approveApplication()">Approve</button>
+                    <button type="button" class="btn btn-primary" onclick="updateApplicationStatus()">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transcriber Modal -->
+    <div id="transcriberModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title" id="transcriberModalTitle">Transcriber Details</h2>
+                <button class="close" onclick="closeModal('transcriberModal')">&times;</button>
+            </div>
+            <form id="transcriberForm">
+                <div class="tabs" style="margin-bottom: 1.5rem;">
+                    <div class="tab active" onclick="switchTranscriberTab('personal')">
+                        <i class="fas fa-user"></i> Personal Info
+                    </div>
+                    <div class="tab" onclick="switchTranscriberTab('professional')">
+                        <i class="fas fa-briefcase"></i> Professional
+                    </div>
+                    <div class="tab" onclick="switchTranscriberTab('account')">
+                        <i class="fas fa-lock"></i> Account
+                    </div>
+                    <div class="tab" onclick="switchTranscriberTab('skills')">
+                        <i class="fas fa-tools"></i> Skills
+                    </div>
+                </div>
+                
+                <!-- Personal Information Tab -->
+                <div id="personal-tab" class="transcriber-tab-content active">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Personal Information</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="transcriberName">Full Name</label>
+                            <input type="text" id="transcriberName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriberEmail">Email</label>
+                            <input type="email" id="transcriberEmail" required>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="transcriberPhone">Phone Number</label>
+                            <input type="tel" id="transcriberPhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriberAddress">Address</label>
+                            <input type="text" id="transcriberAddress">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transcriberBio">Bio</label>
+                        <textarea id="transcriberBio" rows="3" placeholder="Brief description of the transcriber's background..."></textarea>
+                    </div>
+                </div>
+                
+                <!-- Professional Details Tab -->
+                <div id="professional-tab" class="transcriber-tab-content">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Professional Details</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="transcriberSpecialization">Specialization</label>
+                            <select id="transcriberSpecialization" required>
+                                <option value="">Select Specialization</option>
+                                <option value="Legal">Legal</option>
+                                <option value="Medical">Medical</option>
+                                <option value="Business">Business</option>
+                                <option value="Academic">Academic</option>
+                                <option value="General">General</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriberExperience">Experience Level</label>
+                            <select id="transcriberExperience" required>
+                                <option value="">Select Experience</option>
+                                <option value="junior">Junior (0-2 years)</option>
+                                <option value="intermediate">Intermediate (2-5 years)</option>
+                                <option value="senior">Senior (5+ years)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="transcriberRate">Hourly Rate ($)</label>
+                            <input type="number" id="transcriberRate" min="10" max="100" step="0.5" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriberAvailability">Availability</label>
+                            <select id="transcriberAvailability">
+                                <option value="available">Available</option>
+                                <option value="busy">Busy</option>
+                                <option value="unavailable">Unavailable</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transcriberLanguages">Languages</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 0.5rem; margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberLanguages" value="English"> English
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberLanguages" value="Spanish"> Spanish
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberLanguages" value="French"> French
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberLanguages" value="German"> German
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberLanguages" value="Chinese"> Chinese
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberLanguages" value="Japanese"> Japanese
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Tab -->
+                <div id="account-tab" class="transcriber-tab-content">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Account Settings</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="transcriberUsername">Username</label>
+                            <input type="text" id="transcriberUsername" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriberStatus">Account Status</label>
+                            <select id="transcriberStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                        <div class="form-group">
+                            <label for="transcriberPassword">Password</label>
+                            <input type="password" id="transcriberPassword" placeholder="Leave blank to keep current password">
+                            <small style="color: #6b7280; display: block; margin-top: 0.25rem;">
+                                <span id="newUserPasswordNote" style="display: none; color: #dc2626;">* Required for new users</span>
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="transcriberConfirmPassword">Confirm Password</label>
+                            <input type="password" id="transcriberConfirmPassword" placeholder="Confirm password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="transcriberMaxOrders">Maximum Concurrent Orders</label>
+                        <input type="number" id="transcriberMaxOrders" min="1" max="10" value="3">
+                    </div>
+                </div>
+                
+                <!-- Skills Tab -->
+                <div id="skills-tab" class="transcriber-tab-content">
+                    <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Skills & Expertise</h3>
+                    <div class="form-group">
+                        <label for="transcriberSkills">Skills (Select all that apply)</label>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.5rem; margin-top: 0.5rem;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Verbatim Transcription"> Verbatim Transcription
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Clean Read"> Clean Read
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Time Coding"> Time Coding
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Speaker ID"> Speaker ID
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Rush Orders"> Rush Orders
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Multiple Speakers"> Multiple Speakers
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Technical Terminology"> Technical Terminology
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                <input type="checkbox" name="transcriberSkills" value="Foreign Accents"> Foreign Accents
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transcriberCertifications">Certifications</label>
+                        <textarea id="transcriberCertifications" rows="2" placeholder="List any relevant certifications..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="transcriberNotes">Additional Notes</label>
+                        <textarea id="transcriberNotes" rows="3" placeholder="Any additional notes about this transcriber..."></textarea>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; justify-content: space-between; margin-top: 1.5rem; border-top: 1px solid #e5e7eb; padding-top: 1.5rem;">
+                    <div>
+                        <button type="button" class="btn btn-secondary" id="prevTabBtn" onclick="navigateTranscriberTab('prev')" disabled>
+                            <i class="fas fa-arrow-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-primary" id="nextTabBtn" onclick="navigateTranscriberTab('next')">
+                            Next <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('transcriberModal')">Cancel</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> Save Transcriber
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let orders = [];
+        let users = [];
+        let transcribers = [];
+        let applications = [];
+        let reports = [];
+        let currentEditId = null;
+
+        // Check authentication
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            const token = localStorage.getItem('adminToken');
+            
+            if (!isLoggedIn || !token) {
+                window.location.href = 'admin-login-new.html';
+                return false;
+            }
+            return true;
+        }
+
+        // Load user info
+        function loadUserInfo() {
+            const username = localStorage.getItem('adminUsername');
+            const role = localStorage.getItem('adminRole');
+            
+            if (username && role) {
+                document.getElementById('userInfo').textContent = `${username} (${role})`;
+            }
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminUsername');
+                localStorage.removeItem('adminRole');
+                localStorage.removeItem('adminLoginTime');
+                window.location.href = 'admin-login-new.html';
+            }
+        }
+
+        // Show alert
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertId = 'alert-' + Date.now();
+            
+            const alertHTML = `
+                <div id="${alertId}" class="alert alert-${type} show">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                    ${message}
+                </div>
+            `;
+            
+            alertContainer.innerHTML = alertHTML;
+            
+            setTimeout(() => {
+                const alert = document.getElementById(alertId);
+                if (alert) {
+                    alert.classList.remove('show');
+                    setTimeout(() => alert.remove(), 300);
+                }
+            }, 5000);
+        }
+
+        // Tab management
+        function showTab(tabName) {
+            console.log(`Showing tab: ${tabName}`);
+            
+            try {
+                // Hide all tab navigation items
+                document.querySelectorAll('.tab').forEach(tab => {
+                    tab.classList.remove('active');
+                    tab.style.borderBottomColor = 'transparent';
+                    tab.style.color = '#374151';
+                });
+                
+                // Hide all tab content
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                    content.style.display = 'none';
+                });
+                
+                // Show selected tab in navigation
+                const tabElement = document.querySelector(`[onclick="showTab('${tabName}')"]`);
+                if (tabElement) {
+                    tabElement.classList.add('active');
+                    tabElement.style.borderBottomColor = '#2563eb';
+                    tabElement.style.color = '#2563eb';
+                    console.log(`Tab element activated: ${tabName}`);
+                } else {
+                    console.warn(`Tab element not found for: ${tabName}`);
+                }
+                
+                // Show selected tab content
+                const contentElement = document.getElementById(`${tabName}-tab`);
+                if (contentElement) {
+                    contentElement.classList.add('active');
+                    contentElement.style.display = 'block';
+                    console.log(`Tab content activated: ${tabName}-tab`);
+                    
+                    // Load tab-specific data
+                    if (tabName === 'users') {
+                        setTimeout(() => loadUsers(), 50);
+                    } else if (tabName === 'applications') {
+                        setTimeout(() => {
+                            loadApplications();
+                            filterApplications();
+                        }, 50);
+                    } else if (tabName === 'orders') {
+                        setTimeout(() => loadOrders(), 50);
+                    } else if (tabName === 'transcribers') {
+                        setTimeout(() => loadTranscribers(), 50);
+                    }
+                } else {
+                    console.warn(`Tab content element not found for: ${tabName}-tab`);
+                    console.log("Available tab content elements:", 
+                        Array.from(document.querySelectorAll('.tab-content'))
+                            .map(el => el.id)
+                            .join(', ')
+                    );
+                }
+            } catch (error) {
+                console.error("Error in showTab function:", error);
+            }
+        }
+            
+            // Load tab data
+            switch(tabName) {
+                case 'orders':
+                    loadOrders();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'transcribers':
+                    loadTranscribers();
+                    break;
+                case 'applications':
+                    loadApplications();
+                    break;
+                case 'reports':
+                    loadReports();
+                    break;
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+            }
+        }
+
+        // Quick navigation functions
+        function showOrdersTab(status = null) {
+            showTab('orders');
+            if (status) {
+                // Filter orders by status if needed
+                setTimeout(() => filterOrdersByStatus(status), 100);
+            }
+        }
+
+        function showUsersTab() {
+            console.log("Showing users tab with direct approach");
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            // Show users tab
+            const usersTab = document.getElementById('users-tab');
+            if (usersTab) {
+                usersTab.classList.add('active');
+                usersTab.style.display = 'block';
+                
+                // Update tab navigation
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                const tabElement = document.querySelector('[onclick="showTab(\'users\')"]');
+                if (tabElement) {
+                    tabElement.classList.add('active');
+                }
+                
+                // Force reload users
+                setTimeout(() => {
+                    loadUsers();
+                }, 100);
+            } else {
+                console.error("Users tab element not found!");
+            }
+        }
+
+        function showRevenueTab() {
+            showTab('reports');
+            // Set report type to revenue
+            if (document.getElementById('reportType')) {
+                document.getElementById('reportType').value = 'revenue';
+                generateReport();
+            }
+        }
+        
+        function showTranscribersTab() {
+            showTab('transcribers');
+        }
+        
+        function showApplicationsTab() {
+            console.log("Showing applications tab with direct approach");
+            
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+                content.style.display = 'none';
+            });
+            
+            // Show applications tab
+            const applicationsTab = document.getElementById('applications-tab');
+            if (applicationsTab) {
+                applicationsTab.classList.add('active');
+                applicationsTab.style.display = 'block';
+                
+                // Update tab navigation
+                document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+                const tabElement = document.querySelector('[onclick="showTab(\'applications\')"]');
+                if (tabElement) {
+                    tabElement.classList.add('active');
+                }
+                
+                // Force reload applications
+                setTimeout(() => {
+                    loadApplications();
+                    filterApplications();
+                }, 100);
+            } else {
+                console.error("Applications tab element not found!");
+            }
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            // Load from localStorage or use mock data
+            const savedOrders = JSON.parse(localStorage.getItem('jd_orders') || '[]');
+            const savedUsers = JSON.parse(localStorage.getItem('jd_users') || '[]');
+            
+            // If no saved data, create some sample data
+            if (savedOrders.length === 0) {
+                const sampleOrders = [
+                    {
+                        id: 'JD-' + Date.now() + '-001',
+                        customer: 'John Smith',
+                        email: 'john@example.com',
+                        service: 'legal',
+                        status: 'pending',
+                        amount: 150.00,
+                        date: new Date().toISOString().split('T')[0],
+                        notes: 'Sample legal transcription order'
+                    },
+                    {
+                        id: 'JD-' + Date.now() + '-002',
+                        customer: 'Sarah Johnson',
+                        email: 'sarah@example.com',
+                        service: 'medical',
+                        status: 'processing',
+                        amount: 200.00,
+                        date: new Date(Date.now() - 86400000).toISOString().split('T')[0],
+                        notes: 'Medical transcription in progress'
+                    },
+                    {
+                        id: 'JD-' + Date.now() + '-003',
+                        customer: 'Mike Davis',
+                        email: 'mike@example.com',
+                        service: 'business',
+                        status: 'completed',
+                        amount: 100.00,
+                        date: new Date(Date.now() - 172800000).toISOString().split('T')[0],
+                        notes: 'Business meeting transcription completed'
+                    }
+                ];
+                localStorage.setItem('jd_orders', JSON.stringify(sampleOrders));
+                orders = sampleOrders;
+            } else {
+                orders = savedOrders;
+            }
+
+            // If no saved users, create sample users
+            if (savedUsers.length === 0) {
+                const sampleUsers = [
+                    {
+                        id: 'USER-' + Date.now() + '-001',
+                        name: 'Admin User',
+                        email: 'admin@jdreporting.com',
+                        role: 'admin',
+                        status: 'active',
+                        joinDate: new Date().toISOString().split('T')[0]
+                    },
+                    {
+                        id: 'USER-' + Date.now() + '-002',
+                        name: 'Manager User',
+                        email: 'manager@jdreporting.com',
+                        role: 'manager',
+                        status: 'active',
+                        joinDate: new Date(Date.now() - 86400000).toISOString().split('T')[0]
+                    }
+                ];
+                localStorage.setItem('jd_users', JSON.stringify(sampleUsers));
+                users = sampleUsers;
+            } else {
+                users = savedUsers;
+            }
+
+            updateStats();
+            loadRecentActivity();
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalOrders = orders.length;
+            const pendingOrders = orders.filter(o => o.status === 'pending').length;
+            const processingOrders = orders.filter(o => o.status === 'processing').length;
+            const completedOrders = orders.filter(o => o.status === 'completed').length;
+            const totalUsers = users.length;
+            const totalRevenue = orders.filter(o => o.status === 'completed').reduce((sum, o) => sum + o.amount, 0);
+
+            document.getElementById('totalOrders').textContent = totalOrders;
+            document.getElementById('pendingOrders').textContent = pendingOrders;
+            document.getElementById('processingOrders').textContent = processingOrders;
+            document.getElementById('completedOrders').textContent = completedOrders;
+            document.getElementById('totalUsers').textContent = totalUsers;
+            document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toFixed(2);
+        }
+
+        // Load recent activity
+        function loadRecentActivity() {
+            const recentOrders = orders.slice(-5).reverse();
+            const activityHTML = `
+                <h4 style="margin-bottom: 1rem;">Recent Orders</h4>
+                <div style="space-y: 1rem;">
+                    ${recentOrders.map(order => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: #f8fafc; border-radius: 0.5rem; margin-bottom: 0.5rem;">
+                            <div>
+                                <strong>${order.id}</strong> - ${order.customer}
+                                <br>
+                                <small style="color: #6b7280;">${order.service} • $${order.amount.toFixed(2)}</small>
+                            </div>
+                            <span class="status-badge status-${order.status}">${order.status}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            document.getElementById('recentActivity').innerHTML = activityHTML;
+        }
+
+        // Load orders
+        function loadOrders() {
+            if (orders.length === 0) {
+                document.getElementById('ordersContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No Orders Found</h3>
+                        <p>Orders will appear here when customers submit them.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const ordersHTML = `
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orders.map(order => `
+                            <tr>
+                                <td><strong>${order.id}</strong></td>
+                                <td>${order.customer}</td>
+                                <td>${order.email}</td>
+                                <td>${order.service}</td>
+                                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                                <td><strong>$${order.amount.toFixed(2)}</strong></td>
+                                <td>${order.date}</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="editOrder('${order.id}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteOrder('${order.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('ordersContent').innerHTML = ordersHTML;
+        }
+
+        // Load users
+        function loadUsers() {
+            console.log("Loading users with direct approach");
+            
+            try {
+                // Force create some sample users if none exist
+                if (!users || users.length === 0) {
+                    console.log("Creating sample users");
+                    users = [
+                        {
+                            id: 'USER-001',
+                            name: 'Admin User',
+                            email: 'admin@jdreporting.com',
+                            role: 'admin',
+                            status: 'active',
+                            joinDate: '2023-01-15'
+                        },
+                        {
+                            id: 'USER-002',
+                            name: 'Manager User',
+                            email: 'manager@jdreporting.com',
+                            role: 'manager',
+                            status: 'active',
+                            joinDate: '2023-02-20'
+                        },
+                        {
+                            id: 'USER-003',
+                            name: 'Staff Member',
+                            email: 'staff@jdreporting.com',
+                            role: 'staff',
+                            status: 'inactive',
+                            joinDate: '2023-03-10'
+                        }
+                    ];
+                }
+                
+                // Update dashboard counter
+                const totalUsersElement = document.getElementById('totalUsers');
+                if (totalUsersElement) {
+                    totalUsersElement.textContent = users.length;
+                }
+                
+                // Get the users content element
+                const usersContentElement = document.getElementById('usersContent');
+                if (!usersContentElement) {
+                    console.error("Users content element not found!");
+                    return;
+                }
+                
+                // Create HTML directly with all inline styles
+                let html = `
+                    <div style="overflow-x: auto; width: 100%;">
+                        <table style="width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 1rem;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">User ID</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Name</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Email</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Role</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Status</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Join Date</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                // Add each user row
+                for (const user of users) {
+                    const statusBg = user.status === 'active' ? '#d1fae5' : '#fef3c7';
+                    const statusColor = user.status === 'active' ? '#065f46' : '#92400e';
+                    
+                    html += `
+                        <tr>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;"><strong>${user.id}</strong></td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${user.name}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${user.email}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${user.role}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">
+                                <span style="display: inline-block; padding: 4px 8px; border-radius: 9999px; font-size: 12px; font-weight: 600; text-transform: uppercase; background-color: ${statusBg}; color: ${statusColor};">
+                                    ${user.status}
+                                </span>
+                            </td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${user.joinDate}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">
+                                <button style="margin-right: 5px; padding: 4px 8px; background-color: #f3f4f6; color: #374151; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" onclick="editUser('${user.id}')">
+                                    <i class="fas fa-edit" style="margin-right: 4px;"></i> Edit
+                                </button>
+                                <button style="padding: 4px 8px; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" onclick="deleteUser('${user.id}')">
+                                    <i class="fas fa-trash" style="margin-right: 4px;"></i> Delete
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                // Set the HTML content
+                usersContentElement.innerHTML = html;
+                console.log("Users table rendered with direct approach");
+                
+                // Make sure the users tab is visible
+                const usersTab = document.getElementById('users-tab');
+                if (usersTab && !usersTab.classList.contains('active')) {
+                    usersTab.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Error loading users:", error);
+                
+                // Show error message
+                const usersContentElement = document.getElementById('usersContent');
+                if (usersContentElement) {
+                    usersContentElement.innerHTML = `
+                        <div style="text-align: center; padding: 4rem 2rem; color: #dc2626;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem;">Error Loading Users</h3>
+                            <p>${error.message}</p>
+                            <button style="margin-top: 1rem; padding: 8px 16px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="loadUsers()">Try Again</button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            currentEditId = null;
+            // Reset forms
+            if (modalId === 'orderModal') {
+                document.getElementById('orderForm').reset();
+            } else if (modalId === 'userModal') {
+                document.getElementById('userForm').reset();
+            } else if (modalId === 'applicationModal') {
+                // Clear application details
+                document.getElementById('applicationDetails').innerHTML = '';
+                document.getElementById('applicationNotes').value = '';
+            }
+        }
+
+        // Order management functions
+        function showAddOrderModal() {
+            currentEditId = null;
+            document.getElementById('orderModalTitle').textContent = 'Add New Order';
+            document.getElementById('orderForm').reset();
+            showModal('orderModal');
+        }
+
+        function editOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+
+            currentEditId = orderId;
+            document.getElementById('orderModalTitle').textContent = 'Edit Order';
+            document.getElementById('orderCustomer').value = order.customer;
+            document.getElementById('orderEmail').value = order.email;
+            document.getElementById('orderService').value = order.service;
+            document.getElementById('orderStatus').value = order.status;
+            document.getElementById('orderAmount').value = order.amount;
+            document.getElementById('orderNotes').value = order.notes || '';
+            showModal('orderModal');
+        }
+
+        function deleteOrder(orderId) {
+            if (confirm('Are you sure you want to delete this order?')) {
+                orders = orders.filter(o => o.id !== orderId);
+                localStorage.setItem('jd_orders', JSON.stringify(orders));
+                loadOrders();
+                updateStats();
+                showAlert('Order deleted successfully', 'success');
+            }
+        }
+
+        // User management functions
+        function showAddUserModal() {
+            currentEditId = null;
+            document.getElementById('userModalTitle').textContent = 'Add New User';
+            document.getElementById('userForm').reset();
+            showModal('userModal');
+        }
+
+        function editUser(userId) {
+            const user = users.find(u => u.id === userId);
+            if (!user) return;
+
+            currentEditId = userId;
+            document.getElementById('userModalTitle').textContent = 'Edit User';
+            document.getElementById('userName').value = user.name;
+            document.getElementById('userEmail').value = user.email;
+            document.getElementById('userRole').value = user.role;
+            document.getElementById('userStatus').value = user.status;
+            showModal('userModal');
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                users = users.filter(u => u.id !== userId);
+                localStorage.setItem('jd_users', JSON.stringify(users));
+                loadUsers();
+                updateStats();
+                showAlert('User deleted successfully', 'success');
+            }
+        }
+
+        // Form submissions
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const orderData = {
+                customer: document.getElementById('orderCustomer').value,
+                email: document.getElementById('orderEmail').value,
+                service: document.getElementById('orderService').value,
+                status: document.getElementById('orderStatus').value,
+                amount: parseFloat(document.getElementById('orderAmount').value),
+                notes: document.getElementById('orderNotes').value,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            if (currentEditId) {
+                // Edit existing order
+                const orderIndex = orders.findIndex(o => o.id === currentEditId);
+                if (orderIndex !== -1) {
+                    orders[orderIndex] = { ...orders[orderIndex], ...orderData };
+                    showAlert('Order updated successfully', 'success');
+                }
+            } else {
+                // Add new order
+                const newOrder = {
+                    id: 'JD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 3).toUpperCase(),
+                    ...orderData
+                };
+                orders.push(newOrder);
+                showAlert('Order added successfully', 'success');
+            }
+
+            localStorage.setItem('jd_orders', JSON.stringify(orders));
+            loadOrders();
+            updateStats();
+            closeModal('orderModal');
+        });
+
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userData = {
+                name: document.getElementById('userName').value,
+                email: document.getElementById('userEmail').value,
+                role: document.getElementById('userRole').value,
+                status: document.getElementById('userStatus').value,
+                joinDate: new Date().toISOString().split('T')[0]
+            };
+
+            if (currentEditId) {
+                // Edit existing user
+                const userIndex = users.findIndex(u => u.id === currentEditId);
+                if (userIndex !== -1) {
+                    users[userIndex] = { ...users[userIndex], ...userData };
+                    showAlert('User updated successfully', 'success');
+                }
+            } else {
+                // Add new user
+                const newUser = {
+                    id: 'USER-' + Date.now() + '-' + Math.random().toString(36).substr(2, 3).toUpperCase(),
+                    ...userData
+                };
+                users.push(newUser);
+                showAlert('User added successfully', 'success');
+            }
+
+            localStorage.setItem('jd_users', JSON.stringify(users));
+            loadUsers();
+            updateStats();
+            closeModal('userModal');
+        });
+
+        // Utility functions
+        function refreshDashboard() {
+            loadDashboardData();
+            showAlert('Dashboard refreshed', 'info');
+        }
+
+        function refreshOrders() {
+            loadOrders();
+            showAlert('Orders refreshed', 'info');
+        }
+
+        function refreshUsers() {
+            loadUsers();
+            showAlert('Users refreshed', 'info');
+        }
+
+        function exportData() {
+            const data = {
+                orders: orders,
+                users: users,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'jd-admin-data-' + new Date().toISOString().split('T')[0] + '.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            showAlert('Data exported successfully', 'success');
+        }
+
+        function saveSettings() {
+            const settings = {
+                companyName: document.getElementById('companyName').value,
+                companyEmail: document.getElementById('companyEmail').value,
+                companyPhone: document.getElementById('companyPhone').value,
+                timezone: document.getElementById('timezone').value
+            };
+            
+            localStorage.setItem('jd_settings', JSON.stringify(settings));
+            showAlert('Settings saved successfully', 'success');
+        }
+
+        // Load settings on page load
+        function loadSettings() {
+            const savedSettings = JSON.parse(localStorage.getItem('jd_settings') || '{}');
+            
+            if (savedSettings.companyName) {
+                document.getElementById('companyName').value = savedSettings.companyName;
+            }
+            if (savedSettings.companyEmail) {
+                document.getElementById('companyEmail').value = savedSettings.companyEmail;
+            }
+            if (savedSettings.companyPhone) {
+                document.getElementById('companyPhone').value = savedSettings.companyPhone;
+            }
+            if (savedSettings.timezone) {
+                document.getElementById('timezone').value = savedSettings.timezone;
+            }
+        }
+
+        // Filter orders by status
+        function filterOrdersByStatus(status) {
+            const filteredOrders = orders.filter(order => order.status === status);
+            if (filteredOrders.length === 0) {
+                document.getElementById('ordersContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox"></i>
+                        <h3>No ${status.charAt(0).toUpperCase() + status.slice(1)} Orders</h3>
+                        <p>No orders with ${status} status found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const ordersHTML = `
+                <div style="margin-bottom: 1rem;">
+                    <button class="btn btn-secondary" onclick="loadOrders()">
+                        <i class="fas fa-arrow-left"></i> Show All Orders
+                    </button>
+                    <span style="margin-left: 1rem; color: #6b7280;">Showing ${status} orders (${filteredOrders.length})</span>
+                </div>
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Email</th>
+                            <th>Service</th>
+                            <th>Status</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredOrders.map(order => `
+                            <tr>
+                                <td><strong>${order.id}</strong></td>
+                                <td>${order.customer}</td>
+                                <td>${order.email}</td>
+                                <td>${order.service}</td>
+                                <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                                <td><strong>$${order.amount.toFixed(2)}</strong></td>
+                                <td>${order.date}</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="editOrder('${order.id}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteOrder('${order.id}')">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('ordersContent').innerHTML = ordersHTML;
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const orderModal = document.getElementById('orderModal');
+            const userModal = document.getElementById('userModal');
+            const applicationModal = document.getElementById('applicationModal');
+            const transcriberModal = document.getElementById('transcriberModal');
+            
+            if (event.target === orderModal) {
+                closeModal('orderModal');
+            }
+            if (event.target === userModal) {
+                closeModal('userModal');
+            }
+            if (event.target === applicationModal) {
+                closeModal('applicationModal');
+            }
+            if (event.target === transcriberModal) {
+                closeModal('transcriberModal');
+            }
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM Content Loaded - Initializing dashboard");
+            
+            // Check authentication
+            if (!checkAuth()) {
+                return;
+            }
+            
+            // Load user info and dashboard data
+            loadUserInfo();
+            loadDashboardData();
+            loadSettings();
+            
+            // Initialize all data tables with a slight delay to ensure DOM is ready
+            setTimeout(() => {
+                console.log("Initializing data tables");
+                loadOrders();
+                loadUsers();
+                loadTranscribers();
+                loadApplications();
+                
+                // Pre-render users and applications tables
+                const usersTab = document.getElementById('users-tab');
+                if (usersTab) {
+                    const usersContent = document.getElementById('usersContent');
+                    if (usersContent) {
+                        console.log("Pre-rendering users table");
+                        loadUsers();
+                    }
+                }
+                
+                const applicationsTab = document.getElementById('applications-tab');
+                if (applicationsTab) {
+                    const applicationsContent = document.getElementById('applicationsContent');
+                    if (applicationsContent) {
+                        console.log("Pre-rendering applications table");
+                        filterApplications();
+                    }
+                }
+            }, 500);
+            
+            // Set up auto-refresh every 5 minutes
+            setInterval(() => {
+                loadDashboardData();
+            }, 5 * 60 * 1000);
+        });
+
+        // Transcriber management functions
+        function loadTranscribers() {
+            // Sample transcriber data for demonstration
+            if (transcribers.length === 0) {
+                transcribers = [
+                    {
+                        id: 'T' + Date.now().toString().slice(-6) + '-001',
+                        name: 'John Smith',
+                        email: 'john.smith@example.com',
+                        phone: '+1 (555) 123-4567',
+                        specialization: 'Legal',
+                        experience: 'senior',
+                        hourlyRate: 35,
+                        status: 'active',
+                        availability: 'available',
+                        skills: ['Verbatim Transcription', 'Time Coding', 'Speaker ID'],
+                        notes: 'Experienced legal transcriber with court reporting background.'
+                    },
+                    {
+                        id: 'T' + Date.now().toString().slice(-6) + '-002',
+                        name: 'Sarah Johnson',
+                        email: 'sarah.j@example.com',
+                        phone: '+1 (555) 987-6543',
+                        specialization: 'Medical',
+                        experience: 'intermediate',
+                        hourlyRate: 28,
+                        status: 'active',
+                        availability: 'busy',
+                        skills: ['Medical Terminology', 'Clean Read', 'Rush Orders'],
+                        notes: 'Former medical assistant with excellent knowledge of terminology.'
+                    }
+                ];
+            }
+            
+            if (transcribers.length === 0) {
+                document.getElementById('transcribersContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-headset"></i>
+                        <h3>No Transcribers Found</h3>
+                        <p>Transcribers will appear here once added to the system.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Filter transcribers based on selected filters
+            let filteredTranscribers = [...transcribers];
+            const specialization = document.getElementById('transcriberSpecialization')?.value;
+            const availability = document.getElementById('transcriberAvailability')?.value;
+            const searchTerm = document.getElementById('transcriberSearch')?.value?.toLowerCase();
+            
+            if (specialization && specialization !== 'all') {
+                filteredTranscribers = filteredTranscribers.filter(t => t.specialization.toLowerCase() === specialization.toLowerCase());
+            }
+            
+            if (availability && availability !== 'all') {
+                filteredTranscribers = filteredTranscribers.filter(t => t.availability === availability);
+            }
+            
+            if (searchTerm) {
+                filteredTranscribers = filteredTranscribers.filter(t => 
+                    t.name.toLowerCase().includes(searchTerm) || 
+                    t.email.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            const transcribersHTML = `
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Specialization</th>
+                            <th>Experience</th>
+                            <th>Rate</th>
+                            <th>Availability</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredTranscribers.map(transcriber => `
+                            <tr>
+                                <td><strong>${transcriber.id}</strong></td>
+                                <td>${transcriber.name}</td>
+                                <td>${transcriber.specialization}</td>
+                                <td>${transcriber.experience.charAt(0).toUpperCase() + transcriber.experience.slice(1)}</td>
+                                <td>$${transcriber.hourlyRate}/hr</td>
+                                <td>
+                                    <span class="status-badge status-${
+                                        transcriber.availability === 'available' ? 'completed' : 
+                                        transcriber.availability === 'busy' ? 'processing' : 'pending'
+                                    }">
+                                        ${transcriber.availability}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm" onclick="editTranscriber('${transcriber.id}')">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="btn btn-primary btn-sm" onclick="assignWork('${transcriber.id}')">
+                                        <i class="fas fa-tasks"></i> Assign
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteTranscriber('${transcriber.id}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('transcribersContent').innerHTML = transcribersHTML;
+        }
+        
+        function showAddTranscriberModal() {
+            currentEditId = null;
+            document.getElementById('transcriberModalTitle').textContent = 'Add New Transcriber';
+            document.getElementById('transcriberForm').reset();
+            
+            // Show password required note for new users
+            document.getElementById('newUserPasswordNote').style.display = 'inline';
+            
+            // Reset to first tab
+            currentTranscriberTab = 'personal';
+            switchTranscriberTab('personal');
+            
+            showModal('transcriberModal');
+        }
+        
+        function editTranscriber(transcriberID) {
+            const transcriber = transcribers.find(t => t.id === transcriberID);
+            if (!transcriber) return;
+
+            currentEditId = transcriberID;
+            document.getElementById('transcriberModalTitle').textContent = 'Edit Transcriber';
+            
+            // Hide password required note for existing users
+            document.getElementById('newUserPasswordNote').style.display = 'none';
+
+            // Fill form with transcriber data - Personal tab
+            document.getElementById('transcriberName').value = transcriber.name;
+            document.getElementById('transcriberEmail').value = transcriber.email;
+            document.getElementById('transcriberPhone').value = transcriber.phone || '';
+            document.getElementById('transcriberAddress').value = transcriber.address || '';
+            document.getElementById('transcriberBio').value = transcriber.bio || '';
+            
+            // Professional tab
+            document.getElementById('transcriberSpecialization').value = transcriber.specialization;
+            document.getElementById('transcriberExperience').value = transcriber.experience;
+            document.getElementById('transcriberRate').value = transcriber.hourlyRate;
+            document.getElementById('transcriberAvailability').value = transcriber.availability || 'available';
+            
+            // Account tab
+            document.getElementById('transcriberUsername').value = transcriber.username || transcriber.email.split('@')[0];
+            document.getElementById('transcriberStatus').value = transcriber.status || 'active';
+            document.getElementById('transcriberMaxOrders').value = transcriber.maxConcurrentOrders || 3;
+            
+            // Skills tab
+            document.getElementById('transcriberCertifications').value = transcriber.certifications || '';
+            document.getElementById('transcriberNotes').value = transcriber.notes || '';
+            
+            // Check skills
+            if (transcriber.skills && transcriber.skills.length > 0) {
+                document.getElementsByName('transcriberSkills').forEach(checkbox => {
+                    checkbox.checked = transcriber.skills.includes(checkbox.value);
+                });
+            }
+            
+            // Check languages
+            if (transcriber.languages && transcriber.languages.length > 0) {
+                document.getElementsByName('transcriberLanguages').forEach(checkbox => {
+                    checkbox.checked = transcriber.languages.includes(checkbox.value);
+                });
+            }
+            
+            // Reset to first tab
+            currentTranscriberTab = 'personal';
+            switchTranscriberTab('personal');
+
+            showModal('transcriberModal');
+        }
+        
+        function deleteTranscriber(transcriberID) {
+            if (confirm('Are you sure you want to delete this transcriber?')) {
+                transcribers = transcribers.filter(t => t.id !== transcriberID);
+                loadTranscribers();
+                showAlert('Transcriber deleted successfully', 'success');
+            }
+        }
+        
+        function assignWork(transcriberID) {
+            const transcriber = transcribers.find(t => t.id === transcriberID);
+            if (!transcriber) return;
+            
+            // Get available orders (those that are pending assignment)
+            const availableOrders = orders.filter(order => 
+                order.status === 'pending' || order.status === 'new' || !order.assignedTo
+            );
+            
+            if (availableOrders.length === 0) {
+                showAlert('No orders available for assignment', 'error');
+                return;
+            }
+            
+            // Create and show the assignment modal
+            const modalHTML = `
+                <div id="assignTaskModal" class="modal" style="display: block;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title">Assign Task to ${transcriber.name}</h2>
+                            <button class="close" onclick="document.getElementById('assignTaskModal').remove()">&times;</button>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <p>Select an order to assign to this transcriber:</p>
+                            
+                            <div class="form-group">
+                                <label for="orderSelect">Available Orders</label>
+                                <select id="orderSelect" class="form-control" style="width: 100%; padding: 0.75rem; border: 2px solid #e5e7eb; border-radius: 0.5rem;">
+                                    ${availableOrders.map(order => `
+                                        <option value="${order.id}">${order.id} - ${order.title} (${order.type})</option>
+                                    `).join('')}
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="assignmentNotes">Assignment Notes (Optional)</label>
+                                <textarea id="assignmentNotes" class="form-control" rows="3" placeholder="Add any special instructions or notes for this assignment..."></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="assignmentDeadline">Deadline</label>
+                                <input type="date" id="assignmentDeadline" class="form-control" 
+                                    value="${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="assignmentPriority">Priority</label>
+                                <select id="assignmentPriority" class="form-control">
+                                    <option value="normal">Normal</option>
+                                    <option value="high">High</option>
+                                    <option value="urgent">Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="document.getElementById('assignTaskModal').remove()">
+                                Cancel
+                            </button>
+                            <button class="btn btn-primary" onclick="confirmAssignment('${transcriber.id}')">
+                                <i class="fas fa-check"></i> Assign Task
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Append the modal to the body
+            const modalContainer = document.createElement('div');
+            modalContainer.innerHTML = modalHTML;
+            document.body.appendChild(modalContainer.firstChild);
+        }
+        
+        function confirmAssignment(transcriberID) {
+            const transcriber = transcribers.find(t => t.id === transcriberID);
+            if (!transcriber) return;
+            
+            const orderSelect = document.getElementById('orderSelect');
+            const orderID = orderSelect.value;
+            const order = orders.find(o => o.id === orderID);
+            
+            if (!order) {
+                showAlert('Please select a valid order', 'error');
+                return;
+            }
+            
+            const assignmentNotes = document.getElementById('assignmentNotes').value;
+            const assignmentDeadline = document.getElementById('assignmentDeadline').value;
+            const assignmentPriority = document.getElementById('assignmentPriority').value;
+            
+            // Update the order with assignment details
+            order.assignedTo = transcriberID;
+            order.assignedToName = transcriber.name;
+            order.status = 'assigned';
+            order.assignmentDate = new Date().toISOString();
+            order.deadline = assignmentDeadline;
+            order.priority = assignmentPriority;
+            
+            if (assignmentNotes) {
+                order.notes = order.notes ? order.notes + '\n\n' + assignmentNotes : assignmentNotes;
+            }
+            
+            // Update transcriber status if needed
+            transcriber.availability = 'busy';
+            
+            // Close the modal
+            document.getElementById('assignTaskModal').remove();
+            
+            // Refresh the orders and transcribers lists
+            loadOrders();
+            loadTranscribers();
+            
+            // Show success message
+            showAlert(`Task "${order.title}" successfully assigned to ${transcriber.name}`, 'success');
+        }
+        
+        function refreshTranscribers() {
+            loadTranscribers();
+            showAlert('Transcribers refreshed', 'info');
+        }
+        
+        // Reports functions
+        function loadReports() {
+            document.getElementById('reportsContent').innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-chart-bar"></i>
+                    <h3>No Reports Generated</h3>
+                    <p>Select report parameters and click "Generate Report" to view data.</p>
+                </div>
+            `;
+        }
+        
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const reportPeriod = document.getElementById('reportPeriod').value;
+            
+            // Sample report data
+            let reportHTML = '';
+            
+            if (reportType === 'revenue') {
+                reportHTML = `
+                    <div>
+                        <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Revenue Report (${getReportPeriodText(reportPeriod)})</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Total Revenue</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #10b981;">$${calculateTotalRevenue()}</div>
+                            </div>
+                            
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Orders Completed</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #3b82f6;">${orders.filter(o => o.status === 'completed').length}</div>
+                            </div>
+                            
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Average Order Value</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #8b5cf6;">$${calculateAverageOrderValue()}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="margin-bottom: 1rem; color: #1f2937;">Revenue by Service Type</h4>
+                            <div style="background: white; border-radius: 0.5rem; padding: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                                <div style="display: flex; height: 200px; align-items: flex-end; gap: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid #e5e7eb;">
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 100%; background: #3b82f6; border-radius: 0.25rem 0.25rem 0 0; height: 120px;"></div>
+                                        <div style="font-weight: 500;">Legal</div>
+                                    </div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 100%; background: #10b981; border-radius: 0.25rem 0.25rem 0 0; height: 80px;"></div>
+                                        <div style="font-weight: 500;">Medical</div>
+                                    </div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 100%; background: #f59e0b; border-radius: 0.25rem 0.25rem 0 0; height: 150px;"></div>
+                                        <div style="font-weight: 500;">Business</div>
+                                    </div>
+                                    <div style="flex: 1; display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                                        <div style="width: 100%; background: #8b5cf6; border-radius: 0.25rem 0.25rem 0 0; height: 60px;"></div>
+                                        <div style="font-weight: 500;">Academic</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (reportType === 'orders') {
+                reportHTML = `
+                    <div>
+                        <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Orders Report (${getReportPeriodText(reportPeriod)})</h3>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Total Orders</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #3b82f6;">${orders.length}</div>
+                            </div>
+                            
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Pending</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #f59e0b;">${orders.filter(o => o.status === 'pending').length}</div>
+                            </div>
+                            
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Processing</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #8b5cf6;">${orders.filter(o => o.status === 'processing').length}</div>
+                            </div>
+                            
+                            <div class="stat-card" style="text-align: center;">
+                                <div style="font-size: 1.25rem; color: #6b7280; margin-bottom: 0.5rem;">Completed</div>
+                                <div style="font-size: 2.5rem; font-weight: 700; color: #10b981;">${orders.filter(o => o.status === 'completed').length}</div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="margin-bottom: 1rem; color: #1f2937;">Recent Orders</h4>
+                            <table class="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Service</th>
+                                        <th>Status</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${orders.slice(0, 5).map(order => `
+                                        <tr>
+                                            <td><strong>${order.id}</strong></td>
+                                            <td>${order.customer}</td>
+                                            <td>${order.service}</td>
+                                            <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                                            <td><strong>$${order.amount.toFixed(2)}</strong></td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            } else if (reportType === 'transcribers') {
+                reportHTML = `
+                    <div>
+                        <h3 style="margin-bottom: 1.5rem; color: #1f2937;">Transcriber Performance (${getReportPeriodText(reportPeriod)})</h3>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h4 style="margin-bottom: 1rem; color: #1f2937;">Top Performers</h4>
+                            <table class="orders-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transcriber</th>
+                                        <th>Specialization</th>
+                                        <th>Orders Completed</th>
+                                        <th>On-Time Delivery</th>
+                                        <th>Quality Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${transcribers.map(t => `
+                                        <tr>
+                                            <td><strong>${t.name}</strong></td>
+                                            <td>${t.specialization}</td>
+                                            <td>${Math.floor(Math.random() * 20) + 5}</td>
+                                            <td>${Math.floor(Math.random() * 10) + 90}%</td>
+                                            <td>
+                                                <div style="display: flex; gap: 0.25rem; color: #f59e0b;">
+                                                    ${'★'.repeat(Math.floor(Math.random() * 2) + 4)}
+                                                    ${'☆'.repeat(5 - (Math.floor(Math.random() * 2) + 4))}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('reportsContent').innerHTML = reportHTML;
+        }
+        
+        function getReportPeriodText(period) {
+            switch(period) {
+                case '7days': return 'Last 7 Days';
+                case '30days': return 'Last 30 Days';
+                case '90days': return 'Last 90 Days';
+                case 'year': return 'This Year';
+                case 'custom': return 'Custom Range';
+                default: return 'All Time';
+            }
+        }
+        
+        function calculateTotalRevenue() {
+            return orders.filter(o => o.status === 'completed')
+                .reduce((sum, order) => sum + order.amount, 0)
+                .toFixed(2);
+        }
+        
+        function calculateAverageOrderValue() {
+            const completedOrders = orders.filter(o => o.status === 'completed');
+            if (completedOrders.length === 0) return '0.00';
+            
+            const total = completedOrders.reduce((sum, order) => sum + order.amount, 0);
+            return (total / completedOrders.length).toFixed(2);
+        }
+        
+        function refreshReports() {
+            generateReport();
+            showAlert('Reports refreshed', 'info');
+        }
+        
+        function exportReports() {
+            showAlert('Reports exported successfully', 'success');
+        }
+        
+        // Applications management functions
+        function loadApplications() {
+            console.log("Loading applications with direct approach...");
+            
+            try {
+                // Force create sample applications
+                applications = [
+                    {
+                        id: 'APP-' + Date.now().toString().slice(-6) + '-001',
+                        name: 'Emily Johnson',
+                        email: 'emily.johnson@example.com',
+                        phone: '+1 (555) 987-6543',
+                        position: 'legal',
+                        experience: '5 years',
+                        education: 'Bachelor of Arts in English, University of Washington',
+                        skills: ['Legal terminology', 'Time coding', 'Verbatim transcription'],
+                        resumeUrl: '#',
+                        coverLetter: 'I am writing to express my interest in the Legal Transcriber position at JD Reporting Company. With 5 years of experience in legal transcription, I have developed expertise in court reporting and legal terminology...',
+                        status: 'new',
+                        submittedDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        notes: '',
+                        lastUpdated: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'APP-' + Date.now().toString().slice(-6) + '-002',
+                        name: 'Michael Rodriguez',
+                        email: 'michael.r@example.com',
+                        phone: '+1 (555) 123-4567',
+                        position: 'medical',
+                        experience: '3 years',
+                        education: 'Associate Degree in Medical Transcription, Community College of Denver',
+                        skills: ['Medical terminology', 'EHR systems', 'Fast typing (90 WPM)'],
+                        resumeUrl: '#',
+                        coverLetter: 'I am excited to apply for the Medical Transcriber position at JD Reporting Company. As a certified medical transcriptionist with 3 years of experience in hospital settings, I have developed a strong understanding of medical terminology...',
+                        status: 'reviewing',
+                        submittedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                        notes: 'Candidate has excellent medical background. Schedule interview.',
+                        lastUpdated: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'APP-' + Date.now().toString().slice(-6) + '-003',
+                        name: 'Sarah Williams',
+                        email: 'sarah.w@example.com',
+                        phone: '+1 (555) 456-7890',
+                        position: 'general',
+                        experience: '2 years',
+                        education: 'Bachelor of Communications, State University',
+                        skills: ['Audio editing', 'Transcription software', 'Research skills'],
+                        resumeUrl: '#',
+                        coverLetter: 'I am applying for the General Transcriber position at JD Reporting Company. With 2 years of freelance transcription experience across various industries, I have developed versatile skills that allow me to handle diverse content...',
+                        status: 'interviewed',
+                        submittedDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+                        notes: 'Interview completed on ' + new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString() + '. Strong candidate, good communication skills.',
+                        lastUpdated: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+                    }
+                ];
+            }
+            
+            // Update dashboard counter
+            const totalAppsElement = document.getElementById('totalApplications');
+            if (totalAppsElement) {
+                totalAppsElement.textContent = applications.filter(a => a.status === 'new').length;
+            }
+            // Add missing catch block for error handling
+            try {
+                const totalAppsElement = document.getElementById('totalApplications');
+                if (totalAppsElement) {
+                    totalAppsElement.textContent = applications.filter(a => a.status === 'new').length;
+                }
+            } catch (error) {
+                console.error('Error updating dashboard counter:', error);
+            }
+            
+            if (applications.length === 0) {
+                const applicationsContentElement = document.getElementById('applicationsContent');
+                if (applicationsContentElement) {
+                    applicationsContentElement.innerHTML = `
+                        <div style="text-align: center; padding: 4rem 2rem; color: #6b7280;">
+                            <i class="fas fa-file-alt" style="font-size: 4rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #374151;">No Applications Found</h3>
+                            <p>New job applications will appear here.</p>
+                        </div>
+                    `;
+                }
+                return;
+            }
+            
+            // Make sure the applications tab is visible
+            const applicationsTab = document.getElementById('applications-tab');
+            if (applicationsTab && !applicationsTab.classList.contains('active')) {
+                applicationsTab.style.display = 'block';
+            }
+            
+            // Filter applications based on selected filters
+            filterApplications();
+        }
+        
+        function filterApplications() {
+            console.log("Filtering applications with direct approach...");
+            
+            try {
+                const status = document.getElementById('applicationStatus')?.value || 'all';
+                const position = document.getElementById('applicationPosition')?.value || 'all';
+                const searchTerm = (document.getElementById('applicationSearch')?.value || '').toLowerCase();
+                
+                console.log("Filter criteria:", { status, position, searchTerm });
+                
+                // Make a copy of applications array
+                let filtered = [...applications];
+                
+                // Apply filters
+                if (status !== 'all') {
+                    filtered = filtered.filter(a => a.status === status);
+                }
+                
+                if (position !== 'all') {
+                    filtered = filtered.filter(a => a.position === position);
+                }
+                
+                if (searchTerm) {
+                    filtered = filtered.filter(a => 
+                        a.name.toLowerCase().includes(searchTerm) || 
+                        a.email.toLowerCase().includes(searchTerm)
+                    );
+                }
+                
+                console.log(`Filtered to ${filtered.length} applications`);
+                
+                // Render the filtered applications
+                renderApplications(filtered);
+            } catch (error) {
+                console.error("Error in filterApplications:", error);
+                document.getElementById('applicationsContent').innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #dc2626;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>Error Filtering Applications</h3>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function renderApplications(filteredApps) {
+            console.log("Rendering applications with direct approach...", filteredApps);
+            
+            try {
+                // If no applications to display
+                if (!filteredApps || filteredApps.length === 0) {
+                    document.getElementById('applicationsContent').innerHTML = `
+                        <div style="text-align: center; padding: 4rem 2rem; color: #6b7280;">
+                            <i class="fas fa-search" style="font-size: 4rem; margin-bottom: 1rem; color: #d1d5db;"></i>
+                            <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #374151;">No Matching Applications</h3>
+                            <p>Try adjusting your filters to see more results.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Create HTML for applications table
+                let html = `
+                    <div style="overflow-x: auto; width: 100%;">
+                        <table style="width: 100%; border-collapse: collapse; border-spacing: 0; margin-bottom: 1rem;">
+                            <thead>
+                                <tr>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">ID</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Name</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Email</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Position</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Submitted</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Status</th>
+                                    <th style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; background-color: #f8fafc; font-weight: 600; color: #374151;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                // Add each application row
+                for (const app of filteredApps) {
+                    // Determine status style
+                    let statusBg, statusColor, statusText;
+                    
+                    if (app.status === 'new') {
+                        statusBg = '#fef3c7';
+                        statusColor = '#92400e';
+                        statusText = 'New';
+                    } else if (app.status === 'reviewing') {
+                        statusBg = '#ddd6fe';
+                        statusColor = '#5b21b6';
+                        statusText = 'Reviewing';
+                    } else if (app.status === 'interviewed') {
+                        statusBg = '#ddd6fe';
+                        statusColor = '#5b21b6';
+                        statusText = 'Interviewed';
+                    } else if (app.status === 'approved') {
+                        statusBg = '#d1fae5';
+                        statusColor = '#065f46';
+                        statusText = 'Approved';
+                    } else {
+                        statusBg = '#fee2e2';
+                        statusColor = '#dc2626';
+                        statusText = 'Rejected';
+                    }
+                    
+                    // Format position
+                    let positionText;
+                    switch (app.position) {
+                        case 'legal': positionText = 'Legal Transcriber'; break;
+                        case 'medical': positionText = 'Medical Transcriber'; break;
+                        case 'business': positionText = 'Business Transcriber'; break;
+                        case 'academic': positionText = 'Academic Transcriber'; break;
+                        case 'general': positionText = 'General Transcriber'; break;
+                        default: positionText = app.position;
+                    }
+                    
+                    // Format date
+                    const date = new Date(app.submittedDate);
+                    const dateText = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric' 
+                    });
+                    
+                    html += `
+                        <tr>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;"><strong>${app.id}</strong></td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${app.name}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${app.email}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${positionText}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">${dateText}</td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">
+                                <span style="display: inline-block; padding: 4px 8px; border-radius: 9999px; font-size: 12px; font-weight: 600; text-transform: uppercase; background-color: ${statusBg}; color: ${statusColor};">
+                                    ${statusText}
+                                </span>
+                            </td>
+                            <td style="padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb;">
+                                <button style="margin-right: 5px; padding: 4px 8px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" onclick="viewApplication('${app.id}')">
+                                    <i class="fas fa-eye" style="margin-right: 4px;"></i> View
+                                </button>
+                                ${app.status === 'new' || app.status === 'reviewing' ? `
+                                    <button style="margin-right: 5px; padding: 4px 8px; background-color: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" onclick="scheduleInterview('${app.id}')">
+                                        <i class="fas fa-calendar-alt" style="margin-right: 4px;"></i> Interview
+                                    </button>
+                                ` : ''}
+                                ${app.status !== 'approved' && app.status !== 'rejected' ? `
+                                    <button style="padding: 4px 8px; background-color: #ef4444; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px; display: inline-flex; align-items: center;" onclick="rejectApplicationDirect('${app.id}')">
+                                        <i class="fas fa-times" style="margin-right: 4px;"></i>
+                                    </button>
+                                ` : ''}
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+                html += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                
+                // Set the HTML content
+                document.getElementById('applicationsContent').innerHTML = html;
+                console.log("Applications table rendered successfully with direct approach");
+            } catch (error) {
+                console.error("Error rendering applications:", error);
+                document.getElementById('applicationsContent').innerHTML = `
+                    <div style="text-align: center; padding: 4rem 2rem; color: #6b7280;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 4rem; margin-bottom: 1rem; color: #ef4444;"></i>
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.5rem; color: #374151;">Error Loading Applications</h3>
+                        <p>There was an error loading the applications: ${error.message}</p>
+                        <button style="margin-top: 1rem; padding: 8px 16px; background-color: #2563eb; color: white; border: none; border-radius: 6px; cursor: pointer;" onclick="loadApplications()">Try Again</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function formatPosition(position) {
+            const positions = {
+                'legal': 'Legal Transcriber',
+                'medical': 'Medical Transcriber',
+                'business': 'Business Transcriber',
+                'academic': 'Academic Transcriber',
+                'general': 'General Transcriber'
+            };
+            return positions[position] || position;
+        }
+        
+        function formatStatus(status) {
+            return status.charAt(0).toUpperCase() + status.slice(1);
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+        
+        function viewApplication(applicationId) {
+            const application = applications.find(a => a.id === applicationId);
+            if (!application) return;
+            
+            currentEditId = applicationId;
+            
+            const statusBadgeClass = 
+                application.status === 'new' ? 'status-pending' : 
+                application.status === 'reviewing' ? 'status-processing' : 
+                application.status === 'interviewed' ? 'status-processing' :
+                application.status === 'approved' ? 'status-completed' : 'status-cancelled';
+            
+            const detailsHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Applicant Information</h3>
+                        <p><strong>Name:</strong> ${application.name}</p>
+                        <p><strong>Email:</strong> <a href="mailto:${application.email}" style="color: #2563eb;">${application.email}</a></p>
+                        <p><strong>Phone:</strong> ${application.phone}</p>
+                        <p><strong>Position:</strong> ${formatPosition(application.position)}</p>
+                        <p><strong>Experience:</strong> ${application.experience}</p>
+                        <p><strong>Education:</strong> ${application.education}</p>
+                        <p><strong>Submitted:</strong> ${formatDate(application.submittedDate)}</p>
+                        <p><strong>Status:</strong> <span class="status-badge ${statusBadgeClass}">${formatStatus(application.status)}</span></p>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 1rem; color: #1f2937; font-weight: 600; border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem;">Skills & Qualifications</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <strong>Skills:</strong>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                                ${application.skills.map(skill => `
+                                    <span style="background: #f3f4f6; padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.875rem;">${skill}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div style="margin-top: 1.5rem;">
+                            <strong>Cover Letter:</strong>
+                            <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem; max-height: 200px; overflow-y: auto; border: 1px solid #e5e7eb;">
+                                ${application.coverLetter}
+                            </div>
+                        </div>
+                        ${application.notes ? `
+                            <div style="margin-top: 1.5rem;">
+                                <strong>Notes:</strong>
+                                <div style="background: #f9fafb; padding: 1rem; border-radius: 0.5rem; margin-top: 0.5rem; border: 1px solid #e5e7eb;">
+                                    ${application.notes}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('applicationDetails').innerHTML = detailsHTML;
+            document.getElementById('updateApplicationStatus').value = application.status;
+            document.getElementById('applicationNotes').value = application.notes || '';
+            
+            showModal('applicationModal');
+        }
+        
+        function updateApplicationStatus() {
+            if (!currentEditId) return;
+            
+            const application = applications.find(a => a.id === currentEditId);
+            if (!application) return;
+            
+            const newStatus = document.getElementById('updateApplicationStatus').value;
+            const notes = document.getElementById('applicationNotes').value;
+            
+            application.status = newStatus;
+            application.notes = notes;
+            application.lastUpdated = new Date().toISOString();
+            
+            showAlert(`Application status updated to "${formatStatus(newStatus)}"`, 'success');
+            closeModal('applicationModal');
+            loadApplications();
+        }
+        
+        function approveApplication() {
+            if (!currentEditId) return;
+            
+            const application = applications.find(a => a.id === currentEditId);
+            if (!application) return;
+            
+            application.status = 'approved';
+            application.notes = document.getElementById('applicationNotes').value;
+            application.lastUpdated = new Date().toISOString();
+            
+            // In a real implementation, you would:
+            // 1. Send an approval email to the applicant
+            // 2. Create a new transcriber account based on the application
+            // 3. Move the application to an archive or hired status
+            
+            showAlert('Application approved! A new transcriber account will be created.', 'success');
+            closeModal('applicationModal');
+            
+            // Add the approved applicant as a new transcriber
+            const newTranscriber = {
+                id: 'T' + Date.now().toString().slice(-6) + '-' + Math.random().toString(36).substr(2, 3).toUpperCase(),
+                name: application.name,
+                email: application.email,
+                phone: application.phone,
+                specialization: application.position,
+                experience: application.experience.includes('year') ? 
+                    parseInt(application.experience) >= 5 ? 'senior' : 
+                    parseInt(application.experience) >= 2 ? 'intermediate' : 'junior' : 'junior',
+                hourlyRate: 25, // Default rate
+                status: 'active',
+                availability: 'available',
+                skills: application.skills,
+                notes: 'Hired from application ' + application.id
+            };
+            
+            transcribers.push(newTranscriber);
+            loadApplications();
+        }
+        
+        function rejectApplication() {
+            if (!currentEditId) return;
+            
+            const application = applications.find(a => a.id === currentEditId);
+            if (!application) return;
+            
+            application.status = 'rejected';
+            application.notes = document.getElementById('applicationNotes').value;
+            application.lastUpdated = new Date().toISOString();
+            
+            // In a real implementation, you would send a rejection email to the applicant
+            
+            showAlert('Application rejected. The applicant will be notified.', 'info');
+            closeModal('applicationModal');
+            loadApplications();
+        }
+        
+        function rejectApplicationDirect(applicationId) {
+            if (confirm('Are you sure you want to reject this application?')) {
+                const application = applications.find(a => a.id === applicationId);
+                if (!application) return;
+                
+                application.status = 'rejected';
+                application.lastUpdated = new Date().toISOString();
+                
+                showAlert('Application rejected', 'info');
+                loadApplications();
+            }
+        }
+        
+        function scheduleInterview(applicationId) {
+            const application = applications.find(a => a.id === applicationId);
+            if (!application) return;
+            
+            // In a real implementation, you would open a calendar/scheduling interface
+            // For now, we'll just update the status and add a note
+            
+            application.status = 'interviewed';
+            application.notes = document.getElementById('applicationNotes').value;
+            application.lastUpdated = new Date().toISOString();
+            
+            // In a real implementation, you would send a rejection email to the applicant
+            
+            showAlert('Application rejected. The applicant will be notified.', 'info');
+            closeModal('applicationModal');
+            loadApplications();
+        }
+        
+        function rejectApplicationDirect(applicationId) {
+            if (confirm('Are you sure you want to reject this application?')) {
+                const application = applications.find(a => a.id === applicationId);
+                if (!application) return;
+                
+                application.status = 'rejected';
+                application.lastUpdated = new Date().toISOString();
+                
+                showAlert('Application rejected', 'info');
+                loadApplications();
+            }
+        }
+        
+        function scheduleInterview(applicationId) {
+            const application = applications.find(a => a.id === applicationId);
+            if (!application) return;
+            
+            // In a real implementation, you would open a calendar/scheduling interface
+            // For now, we'll just update the status and add a note
+            
+            application.status = 'interviewed';
+            application.notes = (application.notes ? application.notes + '\n\n' : '') + 
+                                'Interview scheduled for ' + new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString();
+            application.lastUpdated = new Date().toISOString();
+            
+            showAlert('Interview scheduled with ' + application.name, 'success');
+            loadApplications();
+        }
+        
+        function refreshApplications() {
+            loadApplications();
+            showAlert('Applications refreshed', 'info');
+        }
+        
+        function exportApplications() {
+            showAlert('Applications exported successfully', 'success');
+        }
+        
+        // Tab management for modals
+        let currentTranscriberTab = 'personal';
+        const transcriberTabs = ['personal', 'professional', 'account', 'skills'];
+        
+        let currentUserTab = 'personal';
+        const userTabs = ['personal', 'account', 'permissions'];
+        
+        function switchTranscriberTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.transcriber-tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            document.querySelector(`.tab[onclick="switchTranscriberTab('${tabName}')"]`).classList.add('active');
+            
+            // Update current tab
+            currentTranscriberTab = tabName;
+            
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prevTabBtn');
+            const nextBtn = document.getElementById('nextTabBtn');
+            
+            const currentIndex = transcriberTabs.indexOf(tabName);
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === transcriberTabs.length - 1;
+            
+            // If it's the last tab, change Next button to Save
+            if (currentIndex === transcriberTabs.length - 1) {
+                nextBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+                nextBtn.classList.remove('btn-primary');
+                nextBtn.classList.add('btn-success');
+                nextBtn.onclick = function() {
+                    document.getElementById('transcriberForm').dispatchEvent(new Event('submit'));
+                };
+            } else {
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+                nextBtn.classList.remove('btn-success');
+                nextBtn.classList.add('btn-primary');
+                nextBtn.onclick = function() {
+                    navigateTranscriberTab('next');
+                };
+            }
+        }
+        
+        function navigateTranscriberTab(direction) {
+            const currentIndex = transcriberTabs.indexOf(currentTranscriberTab);
+            let newIndex;
+            
+            if (direction === 'next') {
+                newIndex = Math.min(currentIndex + 1, transcriberTabs.length - 1);
+            } else {
+                newIndex = Math.max(currentIndex - 1, 0);
+            }
+            
+            switchTranscriberTab(transcriberTabs[newIndex]);
+        }
+        
+        // User modal tab management
+        function switchUserTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.user-tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            document.querySelector(`.tab[onclick="switchUserTab('${tabName}')"]`).classList.add('active');
+            
+            // Update current tab
+            currentUserTab = tabName;
+            
+            // Update navigation buttons
+            const prevBtn = document.getElementById('prevUserTabBtn');
+            const nextBtn = document.getElementById('nextUserTabBtn');
+            
+            const currentIndex = userTabs.indexOf(tabName);
+            prevBtn.disabled = currentIndex === 0;
+            nextBtn.disabled = currentIndex === userTabs.length - 1;
+            
+            // If it's the last tab, change Next button to Save
+            if (currentIndex === userTabs.length - 1) {
+                nextBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+                nextBtn.classList.remove('btn-primary');
+                nextBtn.classList.add('btn-success');
+                nextBtn.onclick = function() {
+                    document.getElementById('userForm').dispatchEvent(new Event('submit'));
+                };
+            } else {
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+                nextBtn.classList.remove('btn-success');
+                nextBtn.classList.add('btn-primary');
+                nextBtn.onclick = function() {
+                    navigateUserTab('next');
+                };
+            }
+        }
+        
+        function navigateUserTab(direction) {
+            const currentIndex = userTabs.indexOf(currentUserTab);
+            let newIndex;
+            
+            if (direction === 'next') {
+                newIndex = Math.min(currentIndex + 1, userTabs.length - 1);
+            } else {
+                newIndex = Math.max(currentIndex - 1, 0);
+            }
+            
+            switchUserTab(userTabs[newIndex]);
+        }
+        
+        // Add event listener for transcriber form
+        document.addEventListener('DOMContentLoaded', function() {
+            const transcriberForm = document.getElementById('transcriberForm');
+            if (transcriberForm) {
+                transcriberForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Validate form
+                    const name = document.getElementById('transcriberName').value;
+                    const email = document.getElementById('transcriberEmail').value;
+                    const username = document.getElementById('transcriberUsername').value;
+                    const password = document.getElementById('transcriberPassword').value;
+                    const confirmPassword = document.getElementById('transcriberConfirmPassword').value;
+                    
+                    if (!name || !email || !username) {
+                        showAlert('Please fill in all required fields', 'error');
+                        return;
+                    }
+                    
+                    // For new users, password is required
+                    if (!currentEditId && !password) {
+                        showAlert('Password is required for new users', 'error');
+                        switchTranscriberTab('account');
+                        return;
+                    }
+                    
+                    // If password is provided, confirm it matches
+                    if (password && password !== confirmPassword) {
+                        showAlert('Passwords do not match', 'error');
+                        switchTranscriberTab('account');
+                        return;
+                    }
+                    
+                    // Get selected skills
+                    const selectedSkills = [];
+                    document.getElementsByName('transcriberSkills').forEach(checkbox => {
+                        if (checkbox.checked) {
+                            selectedSkills.push(checkbox.value);
+                        }
+                    });
+                    
+                    // Get selected languages
+                    const selectedLanguages = [];
+                    document.getElementsByName('transcriberLanguages').forEach(checkbox => {
+                        if (checkbox.checked) {
+                            selectedLanguages.push(checkbox.value);
+                        }
+                    });
+                    
+                    const transcriberData = {
+                        // Personal tab
+                        name: name,
+                        email: email,
+                        phone: document.getElementById('transcriberPhone').value,
+                        address: document.getElementById('transcriberAddress').value,
+                        bio: document.getElementById('transcriberBio').value,
+                        
+                        // Professional tab
+                        specialization: document.getElementById('transcriberSpecialization').value,
+                        experience: document.getElementById('transcriberExperience').value,
+                        hourlyRate: parseFloat(document.getElementById('transcriberRate').value),
+                        availability: document.getElementById('transcriberAvailability').value,
+                        languages: selectedLanguages,
+                        
+                        // Account tab
+                        username: username,
+                        status: document.getElementById('transcriberStatus').value,
+                        maxConcurrentOrders: parseInt(document.getElementById('transcriberMaxOrders').value),
+                        
+                        // Skills tab
+                        skills: selectedSkills,
+                        certifications: document.getElementById('transcriberCertifications').value,
+                        notes: document.getElementById('transcriberNotes').value
+                    };
+                    
+                    // Add password only if provided (for security)
+                    if (password) {
+                        transcriberData.password = password;
+                    }
+                    
+                    if (currentEditId) {
+                        // Edit existing transcriber
+                        const index = transcribers.findIndex(t => t.id === currentEditId);
+                        if (index !== -1) {
+                            transcribers[index] = { ...transcribers[index], ...transcriberData };
+                            showAlert('Transcriber updated successfully', 'success');
+                        }
+                    } else {
+                        // Add new transcriber
+                        const newTranscriber = {
+                            id: 'T' + Date.now().toString().slice(-6) + '-' + Math.random().toString(36).substr(2, 3).toUpperCase(),
+                            joinDate: new Date().toISOString().split('T')[0],
+                            ...transcriberData
+                        };
+                        transcribers.push(newTranscriber);
+                        showAlert('Transcriber added successfully', 'success');
+                        
+                        // Ask if admin wants to assign a task to the new transcriber
+                        setTimeout(() => {
+                            if (confirm('Would you like to assign a task to the new transcriber?')) {
+                                assignWork(newTranscriber.id);
+                            }
+                        }, 500);
+                    }
+                    
+                    // Save to localStorage
+                    localStorage.setItem('jd_transcribers', JSON.stringify(transcribers));
+                    
+                    loadTranscribers();
+                    closeModal('transcriberModal');
+                });
+            }
+        });
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to close modals
+            if (e.key === 'Escape') {
+                closeModal('orderModal');
+                closeModal('userModal');
+                closeModal('transcriberModal');
+                closeModal('applicationModal');
+            }
+            
+            // Ctrl+N for new order
+            if (e.ctrlKey && e.key === 'n') {
+                e.preventDefault();
+                showAddOrderModal();
+            }
+            
+            // Ctrl+R for refresh
+            if (e.ctrlKey && e.key === 'r') {
+                e.preventDefault();
+                refreshDashboard();
+            }
+            
+            // Ctrl+T for new transcriber
+            if (e.ctrlKey && e.key === 't') {
+                e.preventDefault();
+                showAddTranscriberModal();
+            }
+            
+            // Ctrl+A for applications
+            if (e.ctrlKey && e.key === 'a') {
+                e.preventDefault();
+                showApplicationsTab();
+            }
+        });
+        
+        // Missing essential functions that are called by onclick handlers
+        function refreshDashboard() {
+            console.log("Refreshing dashboard...");
+            loadDashboardData();
+            updateStats();
+            showAlert('Dashboard refreshed successfully', 'success');
+        }
+        
+        function exportData() {
+            console.log("Exporting data...");
+            const data = {
+                orders: orders,
+                users: users,
+                transcribers: transcribers,
+                applications: applications,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `jd-dashboard-export-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showAlert('Data exported successfully', 'success');
+        }
+        
+        function refreshOrders() {
+            console.log("Refreshing orders...");
+            loadOrders();
+            showAlert('Orders refreshed successfully', 'success');
+        }
+        
+        function refreshUsers() {
+            console.log("Refreshing users...");
+            loadUsers();
+            showAlert('Users refreshed successfully', 'success');
+        }
+        
+        function refreshTranscribers() {
+            console.log("Refreshing transcribers...");
+            loadTranscribers();
+            showAlert('Transcribers refreshed successfully', 'success');
+        }
+        
+        function refreshApplications() {
+            console.log("Refreshing applications...");
+            loadApplications();
+            showAlert('Applications refreshed successfully', 'success');
+        }
+        
+        function addNewOrder() {
+            console.log("Opening add order modal...");
+            showAddOrderModal();
+        }
+        
+        function addNewUser() {
+            console.log("Opening add user modal...");
+            showAddUserModal();
+        }
+        
+        function addNewTranscriber() {
+            console.log("Opening add transcriber modal...");
+            showAddTranscriberModal();
+        }
+        
+        function showAddUserModal() {
+            console.log("Opening add user modal...");
+            currentEditId = null;
+            document.getElementById('userModalTitle').textContent = 'Add New User';
+            const form = document.getElementById('userForm');
+            if (form) form.reset();
+            openModal('userModal');
+        }
+        
+        function openModal(modalId) {
+            console.log("Opening modal:", modalId);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        function closeModal(modalId) {
+            console.log("Closing modal:", modalId);
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        function updateDashboardStats() {
+            console.log("Updating dashboard stats...");
+            
+            // Update order stats
+            const totalOrders = orders.length;
+            const pendingOrders = orders.filter(o => o.status === 'pending').length;
+            const processingOrders = orders.filter(o => o.status === 'processing').length;
+            const completedOrders = orders.filter(o => o.status === 'completed').length;
+            
+            // Update user stats
+            const totalUsers = users.length;
+            const totalApplications = applications.length;
+            
+            // Calculate revenue
+            const totalRevenue = orders
+                .filter(o => o.status === 'completed')
+                .reduce((sum, o) => sum + (o.amount || 0), 0);
+            
+            // Update DOM elements
+            const elements = {
+                'totalOrders': totalOrders,
+                'pendingOrders': pendingOrders,
+                'processingOrders': processingOrders,
+                'completedOrders': completedOrders,
+                'totalUsers': totalUsers,
+                'totalApplications': totalApplications,
+                'totalRevenue': `$${totalRevenue.toFixed(2)}`
+            };
+            
+            Object.entries(elements).forEach(([id, value]) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = value;
+                }
+            });
+        }
+        
+        function loadApplications() {
+            console.log("Loading applications...");
+            // Load from localStorage or initialize with sample data
+            const stored = localStorage.getItem('jd_applications');
+            if (stored) {
+                applications = JSON.parse(stored);
+            } else {
+                // Initialize with sample data
+                applications = [
+                    {
+                        id: 'APP001',
+                        name: 'Sarah Johnson',
+                        email: 'sarah.johnson@email.com',
+                        position: 'Senior Transcriber',
+                        experience: '5 years',
+                        status: 'pending',
+                        appliedDate: '2024-01-15',
+                        skills: ['Legal Transcription', 'Medical Transcription', 'Fast Typing']
+                    },
+                    {
+                        id: 'APP002',
+                        name: 'Michael Chen',
+                        email: 'michael.chen@email.com',
+                        position: 'Junior Transcriber',
+                        experience: '2 years',
+                        status: 'reviewed',
+                        appliedDate: '2024-01-14',
+                        skills: ['General Transcription', 'Audio Enhancement']
+                    }
+                ];
+                localStorage.setItem('jd_applications', JSON.stringify(applications));
+            }
+            
+            // Update applications display if on applications tab
+            displayApplications();
+        }
+        
+        function displayApplications() {
+            const tbody = document.getElementById('applicationsTableBody');
+            if (!tbody) return;
+            
+            if (applications.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No applications found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = applications.map(app => `
+                <tr>
+                    <td>${app.id}</td>
+                    <td>${app.name}</td>
+                    <td>${app.email}</td>
+                    <td>${app.position}</td>
+                    <td><span class="status-badge status-${app.status}">${app.status}</span></td>
+                    <td>${new Date(app.appliedDate).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" onclick="viewApplication('${app.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-success" onclick="approveApplication('${app.id}')">
+                            <i class="fas fa-check"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="rejectApplication('${app.id}')">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function viewApplication(appId) {
+            console.log("Viewing application:", appId);
+            const app = applications.find(a => a.id === appId);
+            if (app) {
+                alert(`Application Details:\n\nName: ${app.name}\nEmail: ${app.email}\nPosition: ${app.position}\nExperience: ${app.experience}\nSkills: ${app.skills.join(', ')}\nStatus: ${app.status}`);
+            }
+        }
+        
+        function approveApplication(appId) {
+            console.log("Approving application:", appId);
+            const app = applications.find(a => a.id === appId);
+            if (app && confirm(`Approve application from ${app.name}?`)) {
+                app.status = 'approved';
+                localStorage.setItem('jd_applications', JSON.stringify(applications));
+                displayApplications();
+                showAlert(`Application from ${app.name} approved successfully`, 'success');
+            }
+        }
+        
+        function rejectApplication(appId) {
+            console.log("Rejecting application:", appId);
+            const app = applications.find(a => a.id === appId);
+            if (app && confirm(`Reject application from ${app.name}?`)) {
+                app.status = 'rejected';
+                localStorage.setItem('jd_applications', JSON.stringify(applications));
+                displayApplications();
+                showAlert(`Application from ${app.name} rejected`, 'warning');
+            }
+        }
+        
+        // This is the consolidated initialization function that will be called once
+        function initializeDashboard() {
+            console.log("Initializing dashboard...");
+            
+            // Load user info
+            loadUserInfo();
+            
+            // Load all data
+            loadOrders();
+            loadUsers();
+            loadTranscribers();
+            loadApplications();
+            
+            // Update dashboard stats
+            updateDashboardStats();
+            
+            // Show default tab
+            showTab('dashboard');
+            
+            console.log("Dashboard initialization complete");
+        }
+        
+        // Main functions that are called by onclick handlers
+        function refreshDashboard() {
+            console.log("Refreshing dashboard...");
+            initializeDashboard();
+            showAlert('Dashboard refreshed successfully', 'success');
+        }
+        
+        function showAddOrderModal() {
+            console.log("Opening add order modal...");
+            currentEditId = null;
+            document.getElementById('orderModalTitle').textContent = 'Add New Order';
+            document.getElementById('orderForm').reset();
+            openModal('orderModal');
+        }
+        
+        function showAddTranscriberModal() {
+            console.log("Opening add transcriber modal...");
+            currentEditId = null;
+            document.getElementById('transcriberModalTitle').textContent = 'Add New Transcriber';
+            document.getElementById('transcriberForm').reset();
+            openModal('transcriberModal');
+        }
+        
+        function showApplicationsTab() {
+            console.log("Showing applications tab...");
+            showTab('applications');
+        }
+        
+        function showUsersTab() {
+            console.log("Showing users tab...");
+            showTab('users');
+        }
+        
+        function showOrdersTab(status = null) {
+            console.log("Showing orders tab with status:", status);
+            showTab('orders');
+            if (status) {
+                // Filter orders by status if provided
+                setTimeout(() => {
+                    const statusFilter = document.getElementById('statusFilter');
+                    if (statusFilter) {
+                        statusFilter.value = status;
+                        filterOrders();
+                    }
+                }, 100);
+            }
+        }
+        
+        function showRevenueTab() {
+            console.log("Showing revenue tab...");
+            showTab('reports');
+        }
+        
+        function exportData() {
+            console.log("Exporting data...");
+            const data = {
+                orders: orders,
+                users: users,
+                transcribers: transcribers,
+                applications: applications,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `jd-dashboard-export-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showAlert('Data exported successfully', 'success');
+        }
+        
+        function refreshOrders() {
+            console.log("Refreshing orders...");
+            loadOrders();
+            showAlert('Orders refreshed successfully', 'success');
+        }
+        
+        function logout() {
+            console.log("Logging out...");
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any stored session data
+                localStorage.removeItem('jd_admin_session');
+                localStorage.removeItem('jd_current_user');
+                
+                // Redirect to login page or show login form
+                showAlert('Logged out successfully', 'success');
+                
+                // In a real application, you would redirect to login page
+                // window.location.href = 'login.html';
+                
+                // For demo purposes, just reload the page
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
+        }
+        
+        // Filter functions
+        function filterOrders() {
+            const statusFilter = document.getElementById('statusFilter');
+            const searchInput = document.getElementById('orderSearch');
+            
+            if (!statusFilter || !searchInput) return;
+            
+            const status = statusFilter.value;
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            let filteredOrders = orders;
+            
+            if (status && status !== 'all') {
+                filteredOrders = filteredOrders.filter(order => order.status === status);
+            }
+            
+            if (searchTerm) {
+                filteredOrders = filteredOrders.filter(order => 
+                    order.id.toLowerCase().includes(searchTerm) ||
+                    order.clientName.toLowerCase().includes(searchTerm) ||
+                    order.type.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayOrders(filteredOrders);
+        }
+        
+        function displayOrders(ordersToDisplay = orders) {
+            const tbody = document.getElementById('ordersTableBody');
+            if (!tbody) return;
+            
+            if (ordersToDisplay.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No orders found</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = ordersToDisplay.map(order => `
+                <tr>
+                    <td>${order.id}</td>
+                    <td>${order.clientName}</td>
+                    <td>${order.type}</td>
+                    <td>$${order.amount.toFixed(2)}</td>
+                    <td><span class="status-badge status-${order.status}">${order.status}</span></td>
+                    <td>${order.assignedTo || 'Unassigned'}</td>
+                    <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-secondary" onclick="editOrder('${order.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteOrder('${order.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM Content Loaded - Starting initialization...");
+            initializeDashboard();
+        });
+        
+    </script>
+</body>
+</html>

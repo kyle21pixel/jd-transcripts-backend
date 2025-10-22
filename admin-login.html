@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - JD Legal Transcripts</title>
+    <title>Admin Login - JD Reporting Company</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -57,6 +57,10 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .login-header p {
@@ -152,6 +156,20 @@
             display: block;
         }
 
+        .success-message {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
         .forgot-password {
             text-align: center;
             margin-top: 1rem;
@@ -198,11 +216,45 @@
             opacity: 0.8;
         }
 
+        .quick-login {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .quick-login p {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .quick-login-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .quick-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-btn:hover {
+            background: #e5e7eb;
+        }
+
         @media (max-width: 480px) {
             .login-container {
                 margin: 0 10px;
             }
-            
+
             .back-to-site {
                 position: relative;
                 top: 0;
@@ -222,8 +274,8 @@
 
     <div class="login-container">
         <div class="login-header">
-            <h1><i class="fas fa-shield-alt"></i> Admin Login</h1>
-            <p>JD Legal Transcripts Management</p>
+            <h1><i class="fas fa-microphone-alt"></i> JD Reporting Company</h1>
+            <p>Admin Dashboard Access</p>
         </div>
 
         <form class="login-form" id="loginForm">
@@ -232,15 +284,20 @@
                 <span id="errorText">Invalid credentials. Please try again.</span>
             </div>
 
+            <div id="successMessage" class="success-message">
+                <i class="fas fa-check-circle"></i>
+                <span id="successText">Login successful! Redirecting...</span>
+            </div>
+
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" name="username" required autocomplete="username">
+                <input type="text" id="username" name="username" required autocomplete="username" placeholder="Enter your username">
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="password-container">
-                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Enter your password">
                     <button type="button" class="password-toggle" onclick="togglePassword()">
                         <i class="fas fa-eye" id="passwordIcon"></i>
                     </button>
@@ -250,22 +307,29 @@
             <button type="submit" class="login-btn" id="loginBtn">
                 <i class="fas fa-spinner loading" id="loadingIcon"></i>
                 <i class="fas fa-sign-in-alt" id="loginIcon"></i>
-                <span id="loginText">Login to Dashboard</span>
+                <span id="loginText">Access Dashboard</span>
             </button>
 
+            <div class="quick-login">
+                <p>Quick Login (Development Only)</p>
+                <div class="quick-login-buttons">
+                    <button type="button" class="quick-btn" onclick="quickLogin('jd.admin', 'admin123')">Admin</button>
+                    <button type="button" class="quick-btn" onclick="quickLogin('jd.manager', 'manager123')">Manager</button>
+                    <button type="button" class="quick-btn" onclick="quickLogin('jd.supervisor', 'super123')">Supervisor</button>
+                </div>
+            </div>
+
             <div class="forgot-password">
-                <a href="#" onclick="showForgotPassword()">Forgot Password?</a>
+                <a href="#" onclick="showForgotPassword()">Need Help?</a>
             </div>
         </form>
     </div>
 
     <script>
-        // Admin credentials are now handled by the backend API
-
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const passwordIcon = document.getElementById('passwordIcon');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 passwordIcon.className = 'fas fa-eye-slash';
@@ -278,12 +342,25 @@
         function showError(message) {
             const errorDiv = document.getElementById('errorMessage');
             const errorText = document.getElementById('errorText');
+            const successDiv = document.getElementById('successMessage');
+
+            successDiv.classList.remove('show');
             errorText.textContent = message;
             errorDiv.classList.add('show');
-            
+
             setTimeout(() => {
                 errorDiv.classList.remove('show');
             }, 5000);
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            const errorDiv = document.getElementById('errorMessage');
+
+            errorDiv.classList.remove('show');
+            successText.textContent = message;
+            successDiv.classList.add('show');
         }
 
         function showLoading(show) {
@@ -291,76 +368,111 @@
             const loadingIcon = document.getElementById('loadingIcon');
             const loginIcon = document.getElementById('loginIcon');
             const loginText = document.getElementById('loginText');
-            
+
             if (show) {
                 loginBtn.disabled = true;
                 loadingIcon.classList.add('show');
                 loginIcon.style.display = 'none';
-                loginText.textContent = 'Logging in...';
+                loginText.textContent = 'Authenticating...';
             } else {
                 loginBtn.disabled = false;
                 loadingIcon.classList.remove('show');
                 loginIcon.style.display = 'inline-block';
-                loginText.textContent = 'Login to Dashboard';
+                loginText.textContent = 'Access Dashboard';
             }
         }
 
         function showForgotPassword() {
-            alert('Please contact the system administrator to reset your password.\nEmail: admin@jdlegaltranscripts.com\nPhone: +1 (555) 123-4567');
+            alert('Please contact the system administrator for password reset:\n\nEmail: admin@jdreporting.org\nPhone: +1 (555) 123-4567');
+        }
+
+        function quickLogin(username, password) {
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = password;
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        }
+
+        async function autoLogin() {
+            const email = 'admin@jdreporting.com';
+            const password = 'admin123'; // Change to your actual admin password
+            document.getElementById('username').value = email;
+            document.getElementById('password').value = password;
+            await login(email, password);
+        }
+
+        async function login(email, password) {
+            showLoading(true);
+            try {
+                const res = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    showSuccess('Login successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1000);
+                } else {
+                    showError(data.message || 'Invalid credentials. Please try again.');
+                }
+            } catch (err) {
+                showError('Server unreachable.');
+            } finally {
+                showLoading(false);
+            }
         }
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            const username = document.getElementById('username').value;
+            const email = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
+            await login(email, password);
+        });
+
+        // Auto-login on page load for testing
+        window.addEventListener('DOMContentLoaded', autoLogin);
+
             showLoading(true);
-            
+
             try {
-                // Call the backend API
-                const API_BASE_URL = 'http://localhost:5000';
-                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ username, password })
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (result.success) {
-                    // Store authentication token and user info
                     localStorage.setItem('adminToken', result.data.token);
                     localStorage.setItem('adminLoggedIn', 'true');
                     localStorage.setItem('adminUsername', result.data.user.username);
                     localStorage.setItem('adminRole', result.data.user.role);
                     localStorage.setItem('adminLoginTime', new Date().toISOString());
-                    
-                    // Redirect to dashboard
-                    window.location.href = 'admin-dashboard.html';
+
+                    showSuccess('Login successful! Redirecting to dashboard...');
+
+                    setTimeout(() => {
+                        window.location.href = 'admin-dashboard.html';
+                    }, 1000);
                 } else {
                     showLoading(false);
                     showError(result.message || 'Invalid username or password. Please try again.');
-                    
-                    // Clear form
+
                     document.getElementById('password').value = '';
                 }
             } catch (error) {
                 console.error('Login error:', error);
                 showLoading(false);
                 showError('Login failed. Please check your connection and try again.');
-                
-                // Clear form
+
                 document.getElementById('password').value = '';
             }
         });
-
-        // Check if already logged in
-        if (localStorage.getItem('adminLoggedIn') === 'true') {
-            window.location.href = 'admin-dashboard.html';
-        }
 
         // Auto-focus username field
         document.getElementById('username').focus();

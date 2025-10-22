@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Reporting - Dashboard</title>
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <i class="fas fa-microphone-alt logo-icon"></i>
+                <span>JD Reporting Company</span>
+            </a>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link active">Home</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#order" class="nav-link">Order</a></li>
+                <li><a href="track-order.html" class="nav-link">Track Order</a></li>
+                <li><a href="careers.html" class="nav-link">Careers</a></li>
+                <li><a href="about.html" class="nav-link">About Us</a></li>
+                <li><a href="contact.html" class="nav-link">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#order" class="btn btn-primary">Order Now</a>
+                <a href="user-login.html" class="btn btn-outline" style="margin-left: 0.5rem;">
+                    <i class="fas fa-headset"></i> Transcriber Login
+                </a>
+                <a href="/admin-dashboard" class="btn btn-outline" style="margin-left: 0.5rem;">
+                    <i class="fas fa-user-shield"></i> Admin Dashboard
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div id="dashboardContent">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Recent Orders</h2>
+                </div>
+                <div class="table-responsive">
+                    <table class="table" id="recentOrders">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Service Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Orders will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Quick Actions</h2>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-primary" onclick="location.href='/orders.html?action=new'">New Order</button>
+                    <button class="btn btn-primary" onclick="location.href='/customers.html?action=new'">New Customer</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/js/auth.js"></script>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>

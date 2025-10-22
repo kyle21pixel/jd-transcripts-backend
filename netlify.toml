@@ -1,7 +1,132 @@
 [build]
-  publish = "."
-  
+  # Static HTML site - no build needed
+  publish = "public"
+  command = "echo 'Static site ready for deployment'"
+
+  # Environment variables
+  [build.environment]
+    API_BASE_URL = "https://jd-reporting-backend-production.up.railway.app"
+    API_URL = "https://jd-reporting-backend-production.up.railway.app/api"
+    APP_NAME = "JD Reporting Company"
+    APP_VERSION = "1.0.0"
+    NODE_VERSION = "18"
+
+# Security headers for all routes
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-ancestors 'none';"
+
+# Cache static assets
+[[headers]]
+  for = "/css/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/js/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Netlify Functions for API endpoints
+[[redirects]]
+  from = "/api/auth/*"
+  to = "/.netlify/functions/auth"
+  status = 200
+
+[[redirects]]
+  from = "/api/email/contact"
+  to = "/.netlify/functions/contact"
+  status = 200
+
+[[redirects]]
+  from = "/api/careers/apply"
+  to = "/.netlify/functions/careers-apply"
+  status = 200
+
+[[redirects]]
+  from = "/api/orders/track"
+  to = "/.netlify/functions/orders-track"
+  status = 200
+
+[[redirects]]
+  from = "/api/health"
+  to = "/.netlify/functions/health"
+  status = 200
+
+# Fallback API proxy to Railway backend for other endpoints
+[[redirects]]
+  from = "/api/*"
+  to = "https://jd-reporting-backend-production.up.railway.app/api/:splat"
+  status = 200
+
+# Clean URL redirects for better SEO
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/index"
+  to = "/"
+  status = 301
+
+# Handle .html extension removal
+[[redirects]]
+  from = "/*.html"
+  to = "/:splat"
+  status = 301
+
+# Redirect common paths
+[[redirects]]
+  from = "/track"
+  to = "/track-order"
+  status = 301
+
+# SPA fallback - must be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+
+# Form handling for contact form (fallback)
+[forms]
+  contact = "/contact"
+
+# Function settings
+[functions]
+  # Set function timeout to 10 seconds
+  timeout = 10
+  # Enable CORS for all functions
+  cors = true
+
+# Build processing settings
+[build.processing]
+  skip_processing = false
+  
+[build.processing.css]
+  bundle = false
+  minify = true
+
+[build.processing.js]
+  bundle = false
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+  minify = true
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-sitemap"

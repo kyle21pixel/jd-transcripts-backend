@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order | TranscribeHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #2e59d9;
+            --success-color: #1cc88a;
+            --info-color: #36b9cc;
+            --warning-color: #f6c23e;
+            --danger-color: #e74a3b;
+            --light-color: #f8f9fc;
+            --dark-color: #5a5c69;
+        }
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--light-color);
+            color: #444;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: white !important;
+        }
+        
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            color: white !important;
+        }
+        
+        .navbar-nav .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.25rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            font-weight: 600;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d3e2;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(78, 115, 223, 0.25);
+        }
+        
+        .input-group-text {
+            border-radius: 0.5rem 0 0 0.5rem;
+            background-color: #f8f9fc;
+            border: 1px solid #d1d3e2;
+            border-right: none;
+        }
+        
+        .form-control {
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        
+        .page-header {
+            padding: 2rem 0;
+            background-color: white;
+            margin-bottom: 2rem;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+        }
+        
+        .page-header h1 {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .breadcrumb-item a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .breadcrumb-item.active {
+            color: var(--dark-color);
+        }
+        
+        .tracking-progress {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+        
+        .tracking-progress::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: #e3e6f0;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+        
+        .tracking-step {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+        }
+        
+        .tracking-icon {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid #e3e6f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+            color: #858796;
+            font-size: 1.25rem;
+        }
+        
+        .tracking-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #858796;
+            text-align: center;
+        }
+        
+        .tracking-step.active .tracking-icon {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tracking-step.active .tracking-text {
+            color: var(--primary-color);
+        }
+        
+        .tracking-step.completed .tracking-icon {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+            color: white;
+        }
+        
+        .tracking-step.completed .tracking-text {
+            color: var(--success-color);
+        }
+        
+        .tracking-timeline {
+            position: relative;
+            padding-left: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -2rem;
+            height: 100%;
+            width: 2px;
+            background-color: #e3e6f0;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 0.5rem;
+            left: -2.35rem;
+            width: 0.75rem;
+            height: 0.75rem;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+        }
+        
+        .timeline-item:last-child::before {
+            height: 0;
+        }
+        
+        .timeline-date {
+            font-size: 0.85rem;
+            color: #858796;
+            margin-bottom: 0.25rem;
+        }
+        
+        .timeline-title {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .timeline-text {
+            color: #6e707e;
+        }
+        
+        .order-details {
+            margin-bottom: 2rem;
+        }
+        
+        .order-details-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e3e6f0;
+        }
+        
+        .order-details-item:last-child {
+            border-bottom: none;
+        }
+        
+        .order-details-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .order-details-value {
+            color: #6e707e;
+        }
+        
+        .footer {
+            background-color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+            box-shadow: 0 -0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
+        }
+        
+        .footer-heading {
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+        
+        .footer-link {
+            color: #6e707e;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .footer-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .social-icon:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        .copyright {
+            padding: 1rem 0;
+            background-color: var(--light-color);
+            color: #6e707e;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .tracking-text {
+                font-size: 0.7rem;
+            }
+            
+            .tracking-icon {
+                width: 2.5rem;
+                height: 2.5rem;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="new-home.html">
+                <i class="fas fa-headphones me-2"></i>
+                TranscribeHub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="new-home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="new-track-order.html">Track Order</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new-contact.html">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="new-login.html">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Track Your Order</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="new-home.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Track Order</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Order Tracking Form -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Enter Your Order Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="trackingForm">
+                            <div class="mb-3">
+                                <label for="orderNumber" class="form-label">Order Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-hashtag"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="orderNumber" placeholder="Enter your order number" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email" class="form-control" id="email" placeholder="Enter the email used for order" required>
+                                </div>
+                            </div>
+                            <div class="d-grid">
+                                <button type="button" class="btn btn-primary" id="trackButton">Track Order</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Order Tracking Results (Initially Hidden) -->
+                <div id="trackingResults" style="display: none;">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Order #TH-2023-8547</h5>
+                            <span class="badge bg-success">In Progress</span>
+                        </div>
+                        <div class="card-body">
+                            <!-- Order Progress Tracker -->
+                            <div class="tracking-progress">
+                                <div class="tracking-step completed">
+                                    <div class="tracking-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="tracking-text">Order Received</div>
+                                </div>
+                                <div class="tracking-step completed">
+                                    <div class="tracking-icon">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div class="tracking-text">Payment Confirmed</div>
+                                </div>
+                                <div class="tracking-step active">
+                                    <div class="tracking-icon">
+                                        <i class="fas fa-headphones"></i>
+                                    </div>
+                                    <div class="tracking-text">Transcription</div>
+                                </div>
+                                <div class="tracking-step">
+                                    <div class="tracking-icon">
+                                        <i class="fas fa-check-double"></i>
+                                    </div>
+                                    <div class="tracking-text">Quality Check</div>
+                                </div>
+                                <div class="tracking-step">
+                                    <div class="tracking-icon">
+                                        <i class="fas fa-file-alt"></i>
+                                    </div>
+                                    <div class="tracking-text">Delivered</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Details -->
+                            <div class="order-details">
+                                <h6 class="mb-3">Order Details</h6>
+                                <div class="order-details-item">
+                                    <div class="order-details-label">Order Date</div>
+                                    <div class="order-details-value">October 12, 2023</div>
+                                </div>
+                                <div class="order-details-item">
+                                    <div class="order-details-label">Service Type</div>
+                                    <div class="order-details-value">Standard Transcription</div>
+                                </div>
+                                <div class="order-details-item">
+                                    <div class="order-details-label">Audio Duration</div>
+                                    <div class="order-details-value">45 minutes</div>
+                                </div>
+                                <div class="order-details-item">
+                                    <div class="order-details-label">Turnaround Time</div>
+                                    <div class="order-details-value">48 hours</div>
+                                </div>
+                                <div class="order-details-item">
+                                    <div class="order-details-label">Expected Delivery</div>
+                                    <div class="order-details-value">October 14, 2023</div>
+                                </div>
+                                <div class="order-details-item">
+                                    <div class="order-details-label">Total Amount</div>
+                                    <div class="order-details-value">$45.00</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Order Timeline -->
+                            <h6 class="mb-3">Order Timeline</h6>
+                            <div class="tracking-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-date">October 12, 2023 - 10:30 AM</div>
+                                    <div class="timeline-title">Order Received</div>
+                                    <div class="timeline-text">Your order has been successfully received and is being processed.</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">October 12, 2023 - 10:35 AM</div>
+                                    <div class="timeline-title">Payment Confirmed</div>
+                                    <div class="timeline-text">Your payment has been confirmed and your order is now in queue.</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">October 12, 2023 - 2:15 PM</div>
+                                    <div class="timeline-title">Transcription Started</div>
+                                    <div class="timeline-text">Our professional transcriber has started working on your audio file.</div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Current Status</div>
+                                    <div class="timeline-title">Transcription In Progress</div>
+                                    <div class="timeline-text">Your transcription is currently being worked on and is approximately 60% complete.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-4">
+                                <div class="alert alert-info" role="alert">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Your order is on track for delivery by October 14, 2023. You will receive an email notification once your transcription is ready.
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-outline-primary">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    Contact Support
+                                </button>
+                                <button class="btn btn-primary">
+                                    <i class="fas fa-sync-alt me-2"></i>
+                                    Refresh Status
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- FAQ Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Frequently Asked Questions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="accordion" id="trackingFAQ">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                        How long does transcription typically take?
+                                    </button>
+                                </h2>
+                                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#trackingFAQ">
+                                    <div class="accordion-body">
+                                        Our standard turnaround time is 24-48 hours for audio files under 60 minutes. For longer files or expedited service, turnaround times may vary. You can always check the exact delivery time for your specific order on this tracking page.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        What if I can't find my order number?
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#trackingFAQ">
+                                    <div class="accordion-body">
+                                        Your order number was sent to the email address you provided during checkout. If you can't find it, please check your spam folder. Alternatively, you can contact our customer support team with your email address and they will help you retrieve your order information.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingThree">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                        Can I request changes to my transcription after delivery?
+                                    </button>
+                                </h2>
+                                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#trackingFAQ">
+                                    <div class="accordion-body">
+                                        Yes, we offer free revisions within 7 days of delivery. Simply log in to your account, go to your order history, and request a revision for the specific order. Our team will make the necessary changes as per your instructions.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingFour">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                        How will I receive my completed transcription?
+                                    </button>
+                                </h2>
+                                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#trackingFAQ">
+                                    <div class="accordion-body">
+                                        Once your transcription is complete, you will receive an email notification with a link to download your files. You can also log in to your account and access your completed transcriptions from your order history. Files are available in multiple formats including Word, PDF, and plain text.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="footer-heading">TranscribeHub</h5>
+                    <p>Professional transcription services for businesses, researchers, and individuals. Fast, accurate, and secure.</p>
+                    <div class="mt-3">
+                        <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Services</h5>
+                    <a href="#" class="footer-link">Transcription</a>
+                    <a href="#" class="footer-link">Captioning</a>
+                    <a href="#" class="footer-link">Translation</a>
+                    <a href="#" class="footer-link">Subtitling</a>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Company</h5>
+                    <a href="#" class="footer-link">About Us</a>
+                    <a href="#" class="footer-link">Careers</a>
+                    <a href="#" class="footer-link">Blog</a>
+                    <a href="#" class="footer-link">Press</a>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h5 class="footer-heading">Support</h5>
+                    <a href="#" class="footer-link">Help Center</a>
+                    <a href="#" class="footer-link">Contact Us</a>
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms of Service</a>
+                </div>
+                <div class="col-lg-2">
+                    <h5 class="footer-heading">Contact</h5>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i> info@transcribehub.com</p>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i> (123) 456-7890</p>
+                    <p><i class="fas fa-map-marker-alt me-2"></i> 123 Business Ave, Suite 100, City, State 12345</p>
+                </div>
+            </div>
+        </div>
+        <div class="copyright mt-4">
+            <div class="container">
+                <p class="mb-0">&copy; 2023 TranscribeHub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Show tracking results when form is submitted
+        document.getElementById('trackButton').addEventListener('click', function() {
+            document.getElementById('trackingResults').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('trackingResults').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html>

@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - JD Legal Transcripts</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Admin Dashboard - JD Reporting Company</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles-modern.css">
     <style>
         * {
             margin: 0;
@@ -21,13 +22,14 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-purple) 50%, var(--accent-teal) 100%);
             color: white;
             padding: 1rem 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-xl);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 3px solid var(--accent-lighter);
         }
 
         .header-content {
@@ -238,23 +240,27 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-dark) 100%);
             color: white;
         }
 
         .btn-primary:hover {
+            background: linear-gradient(135deg, var(--accent-teal) 0%, var(--accent-dark) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            box-shadow: var(--shadow-xl);
         }
 
         .btn-secondary {
-            background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
+            background: var(--white);
+            color: var(--primary-blue);
+            border: 2px solid var(--primary-blue);
         }
 
         .btn-secondary:hover {
-            background: #e5e7eb;
+            background: var(--primary-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .empty-state {
@@ -329,7 +335,7 @@
     <div class="header">
         <div class="header-content">
             <div class="header-left">
-                <h1><i class="fas fa-microphone-alt"></i> JD Legal Transcripts</h1>
+                <h1><i class="fas fa-microphone-alt"></i> JD Reporting Company</h1>
             </div>
             <div class="header-right">
                 <div class="user-info">
@@ -437,11 +443,34 @@
     <script>
         // Check authentication
         function checkAuth() {
-            const isLoggedIn = localStorage.getItem('adminLoggedIn');
+            const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
             const token = localStorage.getItem('adminToken');
+            const loginTime = localStorage.getItem('adminLoginTime');
             
-            if (!isLoggedIn || !token) {
-                window.location.href = 'admin-login-new.html';
+            // Check if login is valid and not expired (24 hour expiry)
+            const isLoginValid = isLoggedIn && token && loginTime;
+            let isLoginExpired = false;
+            
+            if (loginTime) {
+                const loginDate = new Date(loginTime);
+                const currentDate = new Date();
+                const hoursSinceLogin = (currentDate - loginDate) / (1000 * 60 * 60);
+                isLoginExpired = hoursSinceLogin > 24; // Expire after 24 hours
+            }
+            
+            if (!isLoginValid || isLoginExpired) {
+                console.log('Authentication failed or expired, redirecting to login');
+                // Clear any existing login data
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminToken');
+                localStorage.removeItem('adminUsername');
+                localStorage.removeItem('adminRole');
+                localStorage.removeItem('adminLoginTime');
+                
+                // Prevent redirect loop by checking the current page
+                if (window.location.pathname.includes('admin-dashboard')) {
+                    window.location.href = 'admin-login-new.html';
+                }
                 return false;
             }
             return true;
@@ -470,11 +499,37 @@
             }
         }
 
+        // API Base URL
+        const API_BASE_URL = 'https://jd-transcripts-server-production.railway.app';
+        
         // Load dashboard data
         async function loadDashboardData() {
+            // Check authentication before loading data
+            if (!checkAuth()) {
+                console.log('Authentication check failed, aborting data load');
+                return;
+            }
+            
             try {
-                // Mock data for now - replace with actual API calls
-                const mockData = {
+                // Try to fetch data from API, fallback to mock data if API is not available
+                let dashboardData;
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/admin/dashboard`, {
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        dashboardData = await response.json();
+                    } else {
+                        throw new Error('API request failed');
+                    }
+                } catch (apiError) {
+                    console.log('Using mock data due to API error:', apiError);
+                    // Mock data as fallback
+                    dashboardData = {
                     totalOrders: 156,
                     pendingOrders: 23,
                     processingOrders: 12,
@@ -508,13 +563,13 @@
                 };
 
                 // Update stats
-                document.getElementById('totalOrders').textContent = mockData.totalOrders;
-                document.getElementById('pendingOrders').textContent = mockData.pendingOrders;
-                document.getElementById('processingOrders').textContent = mockData.processingOrders;
-                document.getElementById('completedOrders').textContent = mockData.completedOrders;
+                document.getElementById('totalOrders').textContent = dashboardData.totalOrders;
+                document.getElementById('pendingOrders').textContent = dashboardData.pendingOrders;
+                document.getElementById('processingOrders').textContent = dashboardData.processingOrders;
+                document.getElementById('completedOrders').textContent = dashboardData.completedOrders;
 
                 // Update orders table
-                if (mockData.recentOrders.length > 0) {
+                if (dashboardData.recentOrders.length > 0) {
                     const ordersHTML = `
                         <table class="orders-table">
                             <thead>
@@ -529,7 +584,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${mockData.recentOrders.map(order => `
+                                ${dashboardData.recentOrders.map(order => `
                                     <tr>
                                         <td><strong>${order.id}</strong></td>
                                         <td>${order.customer}</td>
@@ -575,7 +630,29 @@
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', function() {
-            if (checkAuth()) {
+            // Check if we're on the dashboard page
+            if (window.location.pathname.includes('admin-dashboard')) {
+                // Force authentication check
+                const isLoggedIn = localStorage.getItem('adminLoggedIn') === 'true';
+                const token = localStorage.getItem('adminToken');
+                
+                // Always redirect to login page first
+                if (!isLoggedIn || !token) {
+                    console.log('Not logged in, redirecting to login page');
+                    // Clear any existing login data to prevent auto-login issues
+                    localStorage.removeItem('adminLoggedIn');
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminUsername');
+                    localStorage.removeItem('adminRole');
+                    localStorage.removeItem('adminLoginTime');
+                    
+                    // Redirect to login page
+                    window.location.href = 'admin-login-new.html';
+                    return;
+                }
+                
+                // If we're logged in, load the dashboard
+                console.log('User is logged in, loading dashboard');
                 loadUserInfo();
                 loadDashboardData();
             }

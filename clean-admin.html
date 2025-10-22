@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - JD Legal Transcripts</title>
+    <link rel="icon" type="image/png" href="netlify-deploy-package/logo512.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -604,64 +605,9 @@
     </div>
 
     <script>
-        // Sample data
-        const sampleOrders = [
-            {
-                id: 1,
-                orderNumber: 'JD20250001',
-                clientName: 'John Smith',
-                clientEmail: 'john@example.com',
-                service: 'Legal Transcription',
-                status: 'pending',
-                assignedTo: null,
-                dueDate: '2025-01-10',
-                amount: 125.50
-            },
-            {
-                id: 2,
-                orderNumber: 'JD20250002',
-                clientName: 'Sarah Johnson',
-                clientEmail: 'sarah@example.com',
-                service: 'Medical Transcription',
-                status: 'assigned',
-                assignedTo: 'Alice Brown',
-                dueDate: '2025-01-09',
-                amount: 89.25
-            },
-            {
-                id: 3,
-                orderNumber: 'JD20250003',
-                clientName: 'Mike Davis',
-                clientEmail: 'mike@example.com',
-                service: 'Business Meeting',
-                status: 'in-progress',
-                assignedTo: 'Bob Wilson',
-                dueDate: '2025-01-08',
-                amount: 67.75
-            },
-            {
-                id: 4,
-                orderNumber: 'JD20250004',
-                clientName: 'Lisa Chen',
-                clientEmail: 'lisa@example.com',
-                service: 'Academic Research',
-                status: 'completed',
-                assignedTo: 'Carol White',
-                dueDate: '2025-01-07',
-                amount: 156.00
-            },
-            {
-                id: 5,
-                orderNumber: 'JD20250005',
-                clientName: 'David Brown',
-                clientEmail: 'david@example.com',
-                service: 'Legal Transcription',
-                status: 'delivered',
-                assignedTo: 'Alice Brown',
-                dueDate: '2025-01-06',
-                amount: 234.50
-            }
-        ];
+        // Use real API endpoints for orders and authentication
+        let orders = [];
+        let token = localStorage.getItem('token');
 
         // Initialize app
         document.addEventListener('DOMContentLoaded', function() {
@@ -670,10 +616,19 @@
         });
 
         function checkAuthStatus() {
-            const isLoggedIn = sessionStorage.getItem('adminLoggedIn');
-            if (isLoggedIn) {
-                showDashboard();
-                loadOrders();
+            token = localStorage.getItem('token');
+            if (token) {
+                fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data && data.user && data.user.role === 'admin') {
+                            showDashboard();
+                            loadOrders();
+                        } else {
+                            showLogin();
+                        }
+                    })
+                    .catch(() => showLogin());
             } else {
                 showLogin();
             }
@@ -700,99 +655,75 @@
 
         async function handleLogin(e) {
             e.preventDefault();
-            
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
-            
-            // Simulate authentication
             if (username && password) {
-                const userData = {
-                    username: username,
-                    name: username.charAt(0).toUpperCase() + username.slice(1),
-                    role: username === 'admin' ? 'Administrator' : 
-                          username === 'manager' ? 'Manager' : 'Transcriber'
-                };
-                
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                sessionStorage.setItem('adminUser', JSON.stringify(userData));
-                
-                showDashboard();
-                loadOrders();
+                fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.token) {
+                        localStorage.setItem('token', data.token);
+                        token = data.token;
+                        showDashboard();
+                        loadOrders();
+                    } else {
+                        alert('Login failed: ' + (data.message || 'Invalid credentials'));
+                    }
+                })
+                .catch(() => alert('Login failed: Server error'));
             } else {
                 alert('Please enter username and password');
             }
         }
 
         function quickLogin(username, role) {
-            const userData = {
-                username: username,
-                name: role,
-                role: role
-            };
-            
-            sessionStorage.setItem('adminLoggedIn', 'true');
-            sessionStorage.setItem('adminUser', JSON.stringify(userData));
-            
-            showDashboard();
-            loadOrders();
+            document.getElementById('username').value = username;
+            document.getElementById('password').value = username;
         }
 
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
-                sessionStorage.removeItem('adminLoggedIn');
-                sessionStorage.removeItem('adminUser');
+                localStorage.removeItem('token');
                 showLogin();
-                
-                // Clear form
                 document.getElementById('login-form').reset();
             }
         }
 
         function loadOrders() {
             const tbody = document.getElementById('orders-tbody');
-            
-            if (sampleOrders.length === 0) {
-                tbody.innerHTML = `
+            fetch('/api/orders', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                orders = data.data || [];
+                if (!orders.length) {
+                    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-inbox"></i><p>No orders found</p></div></td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = orders.map(order => `
                     <tr>
-                        <td colspan="8">
-                            <div class="empty-state">
-                                <i class="fas fa-inbox"></i>
-                                <p>No orders found</p>
-                            </div>
+                        <td><strong>${order.order_number || order.orderNumber}</strong></td>
+                        <td>
+                            <div>${order.client_name || order.clientName}</div>
+                            <small style="color: var(--gray-500);">${order.client_email || order.clientEmail}</small>
                         </td>
+                        <td>${order.service_type || order.service}</td>
+                        <td><span class="status-badge status-${order.status}">${formatStatus(order.status)}</span></td>
+                        <td>${order.assigned_transcriber_name || order.assignedTo || '<em style="color: var(--gray-400);">Unassigned</em>'}</td>
+                        <td>${formatDate(order.deadline || order.dueDate)}</td>
+                        <td>$${order.estimated_cost ? order.estimated_cost.toFixed(2) : (order.amount ? order.amount.toFixed(2) : '0.00')}</td>
+                        <td><div class="order-actions"><button class="btn btn-secondary btn-sm" onclick="viewOrder('${order.order_number || order.orderNumber}')"><i class="fas fa-eye"></i></button><button class="btn btn-primary btn-sm" onclick="editOrder('${order.order_number || order.orderNumber}')"><i class="fas fa-edit"></i></button></div></td>
                     </tr>
-                `;
-                return;
-            }
-
-            tbody.innerHTML = sampleOrders.map(order => `
-                <tr>
-                    <td><strong>${order.orderNumber}</strong></td>
-                    <td>
-                        <div>${order.clientName}</div>
-                        <small style="color: var(--gray-500);">${order.clientEmail}</small>
-                    </td>
-                    <td>${order.service}</td>
-                    <td>
-                        <span class="status-badge status-${order.status}">
-                            ${formatStatus(order.status)}
-                        </span>
-                    </td>
-                    <td>${order.assignedTo || '<em style="color: var(--gray-400);">Unassigned</em>'}</td>
-                    <td>${formatDate(order.dueDate)}</td>
-                    <td>$${order.amount.toFixed(2)}</td>
-                    <td>
-                        <div class="order-actions">
-                            <button class="btn btn-secondary btn-sm" onclick="viewOrder(${order.id})">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-primary btn-sm" onclick="editOrder(${order.id})">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
+                `).join('');
+            })
+            .catch(() => {
+                tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error loading orders</p></div></td></tr>`;
+            });
         }
 
         function formatStatus(status) {
@@ -811,19 +742,27 @@
             return date.toLocaleDateString();
         }
 
-        function viewOrder(orderId) {
-            const order = sampleOrders.find(o => o.id === orderId);
-            if (order) {
-                alert(`Viewing order: ${order.orderNumber}\nClient: ${order.clientName}\nService: ${order.service}\nStatus: ${formatStatus(order.status)}`);
-            }
+        function viewOrder(orderNumber) {
+            // TODO: Implement modal or page to view order details
+            alert('View order: ' + orderNumber);
         }
-
-        function editOrder(orderId) {
-            const order = sampleOrders.find(o => o.id === orderId);
-            if (order) {
-                alert(`Edit functionality would open for order: ${order.orderNumber}`);
-            }
+        function editOrder(orderNumber) {
+            // TODO: Implement modal or page to edit order
+            alert('Edit order: ' + orderNumber);
         }
+        // Real-time updates (WebSocket)
+        let ws;
+        function connectWebSocket() {
+            ws = new WebSocket('ws://' + window.location.hostname + ':3000');
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'order_update' || data.type === 'new_order') {
+                    loadOrders();
+                }
+            };
+            ws.onclose = () => setTimeout(connectWebSocket, 2000);
+        }
+        connectWebSocket();
     </script>
 </body>
 </html>

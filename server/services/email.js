@@ -3,13 +3,41 @@ const nodemailer = require('nodemailer');
 // Email service for sending notifications
 class EmailService {
   constructor() {
-    this.transporter = nodemailer.createTransporter({
-      service: process.env.EMAIL_SERVICE || 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
-    });
+    // For Gmail or other email service
+    if (process.env.EMAIL_SERVICE === 'gmail') {
+      this.transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+    } 
+    // For testing with Mailtrap (uncomment and configure when testing)
+    /*
+    else if (process.env.EMAIL_SERVICE === 'mailtrap') {
+      this.transporter = nodemailer.createTransport({
+        host: "sandbox.smtp.mailtrap.io",
+        port: 2525,
+        auth: {
+          user: process.env.MAILTRAP_USER,
+          pass: process.env.MAILTRAP_PASS
+        }
+      });
+    }
+    */
+    // Default fallback
+    else {
+      this.transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email", // Ethereal is a fake SMTP service for testing
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+    }
   }
 
   async sendOrderNotification(orderData) {

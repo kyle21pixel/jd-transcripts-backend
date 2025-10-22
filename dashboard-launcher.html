@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Reporting - Dashboard Launcher</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .section h2 {
+            color: #34495e;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-link {
+            display: block;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .dashboard-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .dashboard-link.secondary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .dashboard-link.success {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+
+        .credentials {
+            background: #fff3cd;
+            border-left: 4px solid #f39c12;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-top: 1rem;
+        }
+
+        .credentials h3 {
+            color: #856404;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .credentials p {
+            color: #856404;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+
+        .credentials code {
+            background: rgba(255,255,255,0.5);
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .alert {
+            background: #d1ecf1;
+            border-left: 4px solid #0c5460;
+            color: #0c5460;
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-warning {
+            background: #f8d7da;
+            border-left-color: #721c24;
+            color: #721c24;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: #555;
+        }
+
+        .feature-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 JD Reporting Dashboard Launcher</h1>
+        <p class="subtitle">Enhanced Order Management System</p>
+
+        <div id="xamppCheck" class="alert alert-warning" style="display: none;">
+            ⚠️ <strong>XAMPP Apache not detected!</strong> Please make sure XAMPP Apache server is running.
+        </div>
+
+        <div class="section">
+            <h2>🚀 Access Dashboards</h2>
+            
+            <a href="/jd-3/php_backend/admin/login.php" class="dashboard-link" target="_blank">
+                👨‍💼 Admin Dashboard (Login)
+            </a>
+            
+            <a href="/jd-3/php_backend/transcriber/index.php" class="dashboard-link secondary" target="_blank">
+                👨‍💻 Transcriber Dashboard
+            </a>
+            
+            <a href="/jd-3/order-form.html" class="dashboard-link success" target="_blank">
+                📝 Public Order Form
+            </a>
+        </div>
+
+        <div class="section">
+            <h2>🔧 Utilities</h2>
+            
+            <a href="/jd-3/php_backend/generate_password_hash.php" class="dashboard-link secondary" target="_blank">
+                🔐 Password Hash Generator
+            </a>
+        </div>
+
+        <div class="credentials">
+            <h3>🔑 Default Login Credentials</h3>
+            <p><strong>Admin:</strong> username: <code>admin</code> | password: <code>admin123</code></p>
+            <p><strong>Transcriber:</strong> username: <code>transcriber1</code> | password: <code>trans123</code></p>
+        </div>
+
+        <div class="section">
+            <h2>✨ Features</h2>
+            <ul class="feature-list">
+                <li>Real-time dashboard updates with AJAX</li>
+                <li>Beautiful animations and visual effects</li>
+                <li>Order management system</li>
+                <li>Task assignment for transcribers</li>
+                <li>Browser notifications for new orders</li>
+                <li>Drag & drop file uploads</li>
+                <li>Automatic price calculation</li>
+                <li>Status tracking with history</li>
+            </ul>
+        </div>
+
+        <div class="alert">
+            ℹ️ <strong>Note:</strong> These dashboards require XAMPP with Apache and MySQL running. 
+            Make sure your database is set up according to <code>SETUP_GUIDE.md</code>
+        </div>
+    </div>
+
+    <script>
+        // Check if we can access PHP
+        fetch('/jd-3/php_backend/config/database.php')
+            .then(response => {
+                if (!response.ok) {
+                    document.getElementById('xamppCheck').style.display = 'block';
+                }
+            })
+            .catch(() => {
+                document.getElementById('xamppCheck').style.display = 'block';
+            });
+    </script>
+</body>
+</html>

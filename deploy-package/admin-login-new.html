@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - JD Legal Transcripts</title>
+    <title>Admin Login - JD Reporting Company</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -274,7 +274,7 @@
 
     <div class="login-container">
         <div class="login-header">
-            <h1><i class="fas fa-microphone-alt"></i> JD Legal Transcripts</h1>
+            <h1><i class="fas fa-microphone-alt"></i> JD Reporting Company</h1>
             <p>Admin Dashboard Access</p>
         </div>
 
@@ -326,6 +326,17 @@
     </div>
 
     <script>
+        // Clear any existing login data when the login page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Login page loaded, clearing any existing login data');
+            // Clear all admin-related localStorage items
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminUsername');
+            localStorage.removeItem('adminRole');
+            localStorage.removeItem('adminLoginTime');
+        });
+        
         function togglePassword() {
             const passwordInput = document.getElementById('password');
             const passwordIcon = document.getElementById('passwordIcon');
@@ -383,7 +394,7 @@
         }
 
         function showForgotPassword() {
-            alert('Please contact the system administrator for password reset:\\n\\nEmail: admin@jdlegaltranscripts.com\\nPhone: +1 (555) 123-4567');
+            alert('Please contact the system administrator for password reset:\\n\\nEmail: admin@jdreporting.org\\nPhone: +1 (555) 123-4567');
         }
 
         function quickLogin(username, password) {
@@ -402,9 +413,7 @@
             
             try {
                 // Call the backend API
-                const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                    ? 'http://localhost:5000' 
-                    : 'https://jd-transcripts-backend-production.up.railway.app';
+                const API_BASE_URL = 'https://jd-transcripts-server-production.railway.app';
                 const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: {

@@ -79,9 +79,9 @@ function initOrderForm() {
     const serviceSelect = document.getElementById('service');
     const turnaroundSelect = document.getElementById('turnaround');
     const estimatedCostInput = document.getElementById('estimated-cost');
-    const fileInput = document.getElementById('file');
-    const fileUpload = document.getElementById('file-upload');
-    const filePreview = document.getElementById('file-preview');
+    const fileInput = document.getElementById('file-input');
+    const fileUpload = document.getElementById('file-upload-area');
+    const fileList = document.getElementById('file-list');
 
     // Pricing
     const basePrices = {
@@ -118,6 +118,15 @@ function initOrderForm() {
 
     // File upload
     fileUpload.addEventListener('click', () => fileInput.click());
+
+    // Browse files link
+    const browseLink = document.getElementById('file-upload-link');
+    if (browseLink) {
+        browseLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            fileInput.click();
+        });
+    }
     
     fileUpload.addEventListener('dragover', (e) => {
         e.preventDefault();
@@ -139,14 +148,19 @@ function initOrderForm() {
 
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
-            handleFileSelect(e.target.files[0]);
+            handleFileSelect(e.target.files);
         }
     });
 
-    function handleFileSelect(file) {
-        // Validate file type
-        const allowedTypes = ['audio/', 'video/'];
-        const isValidType = allowedTypes.some(type => file.type.startsWith(type));
+    function handleFileSelect(files) {
+        let fileItems = '';
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+
+            // Validate file type
+            const allowedTypes = ['audio/', 'video/'];
+            const isValidType = allowedTypes.some(type => file.type.startsWith(type));
         
         if (!isValidType) {
             showOrderStatus('Please select an audio or video file.', 'error');
@@ -161,7 +175,7 @@ function initOrderForm() {
         }
 
         // Show file preview
-        filePreview.innerHTML = `
+        fileList.innerHTML = `
             <div class="file-item">
                 <i class="fas fa-file-audio"></i>
                 <div class="file-details">
@@ -173,7 +187,36 @@ function initOrderForm() {
                 </button>
             </div>
         `;
-        filePreview.style.display = 'block';
+        fileList.style.display = 'block';
+    }
+
+    // Helper functions
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    window.removeFile = function(index) {
+        // Remove the file item from the list
+        const fileItems = fileList.querySelectorAll('.file-item');
+        if (fileItems[index]) {
+            fileItems[index].remove();
+        }
+
+        // Hide file list if empty
+        if (fileList.children.length === 0) {
+            fileList.style.display = 'none';
+        }
+
+        // Update file input (remove the specific file from the FileList)
+        const dt = new DataTransfer();
+        const files = Array.from(fileInput.files);
+        files.splice(index, 1);
+        files.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
     }
 
     // Form submission

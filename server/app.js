@@ -1,12 +1,14 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const fileUpload = require('express-fileupload');
 const path = require('path');
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: path.join(__dirname, '.env') });
+
+// MySQL database connection
+const mysql = require('./config/mysql');
 
 const app = express();
 
@@ -30,16 +32,17 @@ app.use(fileUpload({
 // Static files
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Database connection (optional for basic functionality)
-if (process.env.MONGODB_URI) {
-    console.log('🔗 Attempting MongoDB connection...');
-    console.log('🔗 MongoDB URI:', process.env.MONGODB_URI.replace(/\/\/.*:.*@/, '//***:***@'));
-    mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB connected successfully'))
-    .catch(err => console.error('❌ MongoDB connection error:', err));
-} else {
-    console.log('⚠️ No MongoDB URI provided, running without database');
-}
+// Database connections
+console.log('🔗 Initializing database connections...');
+
+// MySQL connection (primary database)
+mysql.testConnection().then(connected => {
+    if (connected) {
+        console.log('✅ MySQL database ready');
+    } else {
+        console.log('❌ MySQL connection failed');
+    }
+});
 
 // Root route
 app.get('/', (req, res) => {
@@ -60,24 +63,42 @@ app.get('/', (req, res) => {
 // Routes
 try {
     app.use('/api/auth', require('./routes/auth'));
-    app.use('/api/orders', require('./routes/order')); // Using the simpler order.js file
-    app.use('/api/transcribers', require('./routes/transcribers'));
+    // Use full-featured orders routes (includes email notifications)
+    app.use('/api/orders', require('./routes/orders'));
     app.use('/api/admin', require('./routes/admin'));
     app.use('/api/careers', require('./routes/careers'));
     app.use('/api/email', require('./routes/email'));
-    app.use('/api/supabase', require('./routes/supabase')); // Supabase integration routes
 } catch (error) {
     console.error('Error loading routes:', error);
 }
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'OK',
-        message: 'JD Reporting Company API is running',
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV || 'development'
-    });
+app.get('/api/health', async (req, res) => {
+    try {
+        // Test MySQL connection
+        const mysqlStatus = await mysql.testConnection() ? 'Connected' : 'Disconnected';
+
+        res.json({
+            status: 'OK',
+            message: 'JD Reporting Company API is running',
+            timestamp: new Date().toISOString(),
+            environment: process.env.NODE_ENV || 'development',
+            databases: {
+                mysql: mysqlStatus
+            },
+            services: {
+                apache: 'Check http://localhost/',
+                phpmyadmin: 'Check http://localhost/phpmyadmin/',
+                frontend: process.env.FRONTEND_URL || 'http://localhost:3000'
+            }
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'ERROR',
+            message: 'Health check failed',
+            error: error.message
+        });
+    }
 });
 
 // Error handling middleware

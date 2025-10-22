@@ -1,6 +1,6 @@
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 console.log('Environment check in controller:', {
   JWT_SECRET: process.env.JWT_SECRET,
@@ -8,11 +8,25 @@ console.log('Environment check in controller:', {
 });
 
 exports.register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, username, phone } = req.body;
+
+  // Split name into first and last name
+  const nameParts = name.split(' ');
+  const first_name = nameParts[0] || '';
+  const last_name = nameParts.slice(1).join(' ') || '';
+
   try {
-    const user = await User.create({ name, email, password });
-    res.status(201).json({ message: 'User registered' });
+    const user = await User.create({
+      username: username || email.split('@')[0],
+      email,
+      password,
+      first_name,
+      last_name,
+      phone: phone || null
+    });
+    res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
+    console.error('Registration error:', err);
     res.status(400).json({ error: err.message });
   }
 };

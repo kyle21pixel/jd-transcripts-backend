@@ -1,56 +1,41 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { query } = require('../config/database');
+const rateLimit = require('express-rate-limit');
 
-// Simple admin users (in production, this would be in database)
-const adminUsers = [
-    {
-        id: 1,
-        username: 'admin',
-        password: '$2b$12$LQv3c1yqBwEHFl5aBusFdOvyNQjrcCzy.XURI.qc6VgRUkbh4/YTi', // admin123
-        role: 'admin',
-        email: 'admin@jdlegaltranscripts.com'
-    },
-    {
-        id: 2,
-        username: 'manager',
-        password: '$2b$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // manager123
-        role: 'manager',
-        email: 'manager@jdlegaltranscripts.com'
-    },
-    {
-        id: 3,
-        username: 'supervisor',
-        password: '$2b$12$Dwt1BjqIBv6VR16ol3Le2.Vx9l8rGXxkJjGwwzFpCPKkQjOmM0.K2', // super123
-        role: 'supervisor',
-        email: 'supervisor@jdlegaltranscripts.com'
-    }
-];
+// Rate limiter for login
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 10, // Limit each IP to 10 requests per windowMs
+    message: 'Too many login attempts, please try again later.'
+});
 
 // @route   POST /api/auth/login
 // @desc    Admin login
 // @access  Public
-router.post('/login', async (req, res) => {
+router.post('/login', loginLimiter, async (req, res) => {
     try {
-        const { username, password } = req.body;
+        const { email, password } = req.body;
 
         // Validate input
-        if (!username || !password) {
+        if (!email || !password) {
             return res.status(400).json({
                 success: false,
-                message: 'Username and password are required'
+                message: 'Email and password are required'
             });
         }
 
-        // Find user
-        const user = adminUsers.find(u => u.username === username);
-        if (!user) {
+        // Find user in database
+        const users = await query('SELECT * FROM users WHERE email = ?', [email]);
+        if (users.length === 0) {
             return res.status(401).json({
                 success: false,
                 message: 'Invalid credentials'
             });
         }
+        const user = users[0];
 
         // Check password
         const isMatch = await bcrypt.compare(password, user.password);
@@ -66,7 +51,8 @@ router.post('/login', async (req, res) => {
             { 
                 id: user.id, 
                 username: user.username, 
-                role: user.role 
+                role: user.role, 
+                email: user.email
             },
             process.env.JWT_SECRET || 'fallback-secret',
             { expiresIn: process.env.JWT_EXPIRE || '7d' }
@@ -110,14 +96,14 @@ router.post('/verify', async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
-        const user = adminUsers.find(u => u.id === decoded.id);
-
-        if (!user) {
+        const users = await query('SELECT * FROM users WHERE id = ?', [decoded.id]);
+        if (users.length === 0) {
             return res.status(401).json({
                 success: false,
                 message: 'Invalid token'
             });
         }
+        const user = users[0];
 
         res.json({
             success: true,
@@ -156,16 +142,14 @@ router.post('/change-password', async (req, res) => {
         }
 
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret');
-        const userIndex = adminUsers.findIndex(u => u.id === decoded.id);
-
-        if (userIndex === -1) {
+        const users = await query('SELECT * FROM users WHERE id = ?', [decoded.id]);
+        if (users.length === 0) {
             return res.status(401).json({
                 success: false,
                 message: 'User not found'
             });
         }
-
-        const user = adminUsers[userIndex];
+        const user = users[0];
 
         // Verify current password
         const isMatch = await bcrypt.compare(currentPassword, user.password);
@@ -180,8 +164,8 @@ router.post('/change-password', async (req, res) => {
         const saltRounds = parseInt(process.env.BCRYPT_ROUNDS) || 12;
         const hashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-        // Update password (in production, this would update the database)
-        adminUsers[userIndex].password = hashedPassword;
+        // Update password in database
+        await query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, user.id]);
 
         res.json({
             success: true,

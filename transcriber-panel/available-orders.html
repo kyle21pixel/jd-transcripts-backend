@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Orders - JD Transcriber Panel</title>
+    <link rel="stylesheet" href="assets/css/transcriber-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <i class="fas fa-headset"></i>
+                    <span>JD Transcriber</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="my-orders.html" class="nav-link">
+                            <i class="fas fa-tasks"></i>
+                            <span>My Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="available-orders.html" class="nav-link active">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Available Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="performance.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Performance</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Back to Website</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 class="page-title">Available Orders</h1>
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary" onclick="loadAvailableOrders()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Available Orders Grid -->
+            <div id="availableOrdersGrid">
+                <p class="text-center">Loading...</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/transcriber-common.js"></script>
+    <script>
+        // Load Available Orders
+        async function loadAvailableOrders() {
+            try {
+                const result = await apiGet('available');
+                if (result.success) {
+                    displayAvailableOrders(result.data || result.orders || []);
+                } else {
+                    showToast('Failed to load available orders', 'error');
+                }
+            } catch (error) {
+                console.error('Error loading available orders:', error);
+            }
+        }
+
+        // Display Available Orders
+        function displayAvailableOrders(orders) {
+            const container = $('availableOrdersGrid');
+
+            if (orders.length === 0) {
+                container.innerHTML = '<div class="card text-center"><h3>No available orders at the moment</h3><p>Check back later for new orders to pick up!</p></div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 24px;">
+                    ${orders.map(order => `
+                        <div class="card">
+                            <div style="margin-bottom: 16px;">
+                                <h3 style="margin-bottom: 8px;">${order.order_number}</h3>
+                                <p style="color: #6B7280; margin-bottom: 12px;">
+                                    <i class="fas fa-user"></i> ${order.client_name}<br>
+                                    <i class="fas fa-envelope"></i> ${order.client_email}
+                                </p>
+                            </div>
+                            
+                            <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-bottom: 16px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="color: #6B7280;">Service:</span>
+                                    <strong>${order.service_type || 'Standard'}</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="color: #6B7280;">Turnaround:</span>
+                                    <strong>${order.turnaround || '24h'}</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="color: #6B7280;">Deadline:</span>
+                                    <strong>${formatDate(order.deadline)}</strong>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                    <span style="color: #6B7280;">Payment:</span>
+                                    <strong style="color: var(--primary); font-size: 1.25rem;">${formatCurrency(order.estimated_cost)}</strong>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" style="width: 100%;" onclick="acceptOrder(${order.id})">
+                                <i class="fas fa-check"></i> Accept Order
+                            </button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Initialize
+        loadAvailableOrders();
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadAvailableOrders, 30000);
+    </script>
+</body>
+</html>

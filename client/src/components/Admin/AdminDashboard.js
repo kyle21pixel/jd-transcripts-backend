@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthContext } from '../Auth/AuthProvider';
-import { useSupabaseQuery } from '../../hooks/useSupabase';
+import { serverAPI } from '../../api/server';
 import UserManagement from './UserManagement';
 import OrderManagement from './OrderManagement';
 import SystemStats from './SystemStats';
@@ -10,11 +10,20 @@ const AdminDashboard = () => {
     const [activeTab, setActiveTab] = useState('stats');
     const [isAdmin, setIsAdmin] = useState(false);
 
-    // Check if user is admin
+    // Check if user is admin and fetch dashboard data
     useEffect(() => {
-        const checkAdminStatus = () => {
-            const userRole = user?.app_metadata?.role || user?.user_metadata?.role;
-            setIsAdmin(userRole === 'admin');
+        const checkAdminStatus = async () => {
+            try {
+                const userRole = user?.app_metadata?.role || user?.user_metadata?.role;
+                setIsAdmin(userRole === 'admin');
+                
+                // If admin, fetch dashboard stats
+                if (userRole === 'admin') {
+                    await serverAPI.getAdminStats();
+                }
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+            }
         };
 
         checkAdminStatus();

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcriber Dashboard | JD Reporting</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body { background: #f5f7fb; }
+        .sidebar { background: linear-gradient(135deg, #3a86ff, #8338ec); color: #fff; min-height: 100vh; }
+        .sidebar .nav-link { color: #fff; }
+        .sidebar .nav-link.active, .sidebar .nav-link:hover { background: #fff; color: #3a86ff; }
+        .dashboard-content { margin-left: 260px; padding: 2rem; }
+        @media (max-width: 991px) { .dashboard-content { margin-left: 0; } .sidebar { min-height: auto; } }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <nav class="sidebar flex-shrink-0 p-3" style="width: 260px;">
+            <a href="/transcriber-dashboard.html" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-4 fw-bold">JD Transcriber</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item"><a href="/transcriber-dashboard.html" class="nav-link active">Dashboard</a></li>
+                <li><a href="#" class="nav-link" id="navTasks">Tasks</a></li>
+                <li><a href="#" class="nav-link" id="navPerformance">Performance</a></li>
+                <li><a href="#" class="nav-link" id="navNotifications">Notifications</a></li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+                    <img src="/images/transcriber-avatar.png" alt="transcriber" width="32" height="32" class="rounded-circle me-2">
+                    <strong>Transcriber</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <li><a class="dropdown-item" href="#" id="logoutBtn">Sign out</a></li>
+                </ul>
+            </div>
+        </nav>
+        <main class="dashboard-content flex-grow-1">
+            <div id="dashboardView">
+                <h2 class="mb-4">My Tasks</h2>
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Assigned Orders</h5>
+                        <button class="btn btn-sm btn-outline-primary" id="refreshTasksBtn">Refresh</button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-striped" id="tasksTable">
+                            <thead>
+                                <tr>
+                                    <th>Order #</th>
+                                    <th>Client</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Deadline</th>
+                                    <th>Upload</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="performanceView" style="display:none;"></div>
+            <div id="notificationsView" style="display:none;"></div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/transcriber-dashboard.js"></script>
+</body>
+</html>

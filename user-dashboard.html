@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcriber Dashboard - JD Legal Transcripts</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .logout-btn {
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+            align-items: stretch;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon.total {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .stat-icon.pending {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .stat-icon.completed {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+        }
+
+        .stat-icon.earnings {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .section {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .section-content {
+            padding: 2rem;
+        }
+
+        .tasks-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tasks-table th,
+        .tasks-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tasks-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-available {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-in-progress {
+            background: #ddd6fe;
+            color: #5b21b6;
+        }
+
+        .status-completed {
+            background: #bfdbfe;
+            color: #1e40af;
+        }
+
+        .status-reviewed {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-success {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #d1d5db;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 2rem;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: #10b981;
+        }
+
+        .tab.active {
+            color: #10b981;
+            border-bottom-color: #10b981;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .close {
+            color: #6b7280;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .close:hover {
+            color: #374151;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
+        }
+
+        .file-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            border: 2px dashed #e5e7eb;
+            border-radius: 0.5rem;
+            background: #f9fafb;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .file-upload:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .file-upload i {
+            font-size: 3rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+        }
+
+        .file-upload p {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .progress-container {
+            width: 100%;
+            background: #e5e7eb;
+            border-radius: 9999px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 0.5rem;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 9999px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .task-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .task-detail-item {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .task-detail-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+
+        .task-detail-value {
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: flex-end;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin: 1.5rem 0;
+        }
+
+        .audio-player audio {
+            width: 100%;
+        }
+
+        .transcription-editor {
+            width: 100%;
+            min-height: 300px;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s;
+        }
+
+        .transcription-editor:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .profile-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+        }
+
+        .profile-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem 0;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-content {
+                padding: 1.5rem 1rem;
+            }
+            
+            .btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <h1><i class="fas fa-headset"></i> Transcriber Portal</h1>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="userInfo">Loading...</span>
+                </div>
+                <a href="#" class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Alert Messages -->
+        <div id="alertContainer"></div>
+
+        <!-- Dashboard Stats -->
+        <div class="dashboard-grid">
+            <div class="stat-card" onclick="showTab('available')">
+                <div class="stat-icon total">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <div class="stat-number" id="totalTasks">0</div>
+                <div class="stat-label">Available Tasks</div>
+            </div>
+            <div class="stat-card" onclick="showTab('in-progress')">
+                <div class="stat-icon pending">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-number" id="inProgressTasks">0</div>
+                <div class="stat-label">In Progress</div>
+            </div>
+            <div class="stat-card" onclick="showTab('completed')">
+                <div class="stat-icon completed">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-number" id="completedTasks">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card" onclick="showTab('earnings')">
+                <div class="stat-icon earnings">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-number" id="totalEarnings">$0</div>
+                <div class="stat-label">Total Earnings</div>
+            </div>
+        </div>
+
+        <!-- Main Content Tabs -->
+        <div class="section">
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('available')">
+                    <i class="fas fa-clipboard-list"></i> Available Tasks
+                </div>
+                <div class="tab" onclick="showTab('in-progress')">
+                    <i class="fas fa-clock"></i> In Progress
+                </div>
+                <div class="tab" onclick="showTab('completed')">
+                    <i class="fas fa-check-circle"></i> Completed
+                </div>
+                <div class="tab" onclick="showTab('profile')">
+                    <i class="fas fa-user"></i> My Profile
+                </div>
+            </div>
+
+            <!-- Available Tasks Tab -->
+            <div id="available-tab" class="tab-content active">
+                <div class="section-header">
+                    <h2 class="section-title">Available Tasks</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshAvailableTasks()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="availableTasksContent">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h3>No Available Tasks</h3>
+                            <p>Check back later for new transcription tasks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Progress Tasks Tab -->
+            <div id="in-progress-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">In Progress Tasks</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshInProgressTasks()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="inProgressTasksContent">
+                        <div class="empty-state">
+                            <i class="fas fa-clock"></i>
+                            <h3>No Tasks In Progress</h3>
+                            <p>You don't have any tasks in progress at the moment.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Tasks Tab -->
+            <div id="completed-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">Completed Tasks</h2>
+                    <div>
+                        <button class="btn btn-secondary" onclick="refreshCompletedTasks()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div id="completedTasksContent">
+                        <div class="empty-state">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>No Completed Tasks</h3>
+                            <p>Your completed tasks will appear here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-content">
+                <div class="section-header">
+                    <h2 class="section-title">My Profile</h2>
+                    <div>
+                        <button class="btn btn-primary" onclick="saveProfile()">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </div>
+                <div class="section-content">
+                    <div class="profile-section">
+                        <div class="profile-image">
+                            <div class="profile-avatar" id="profileAvatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <button class="btn btn-secondary" onclick="document.getElementById('profileImageUpload').click()">
+                                <i class="fas fa-camera"></i> Change Photo
+                            </button>
+                            <input type="file" id="profileImageUpload" accept="image/*" style="display: none;" onchange="previewProfileImage(this)">
+                        </div>
+                        <div class="profile-details">
+                            <div class="form-group">
+                                <label for="profileName">Full Name</label>
+                                <input type="text" id="profileName" placeholder="Your full name">
+                            </div>
+                            <div class="form-group">
+                                <label for="profileEmail">Email Address</label>
+                                <input type="email" id="profileEmail" placeholder="Your email address" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="profilePhone">Phone Number</label>
+                                <input type="tel" id="profilePhone" placeholder="Your phone number">
+                            </div>
+                            <div class="form-group">
+                                <label for="profileLanguages">Languages</label>
+                                <select id="profileLanguages" multiple>
+                                    <option value="english">English</option>
+                                    <option value="spanish">Spanish</option>
+                                    <option value="french">French</option>
+                                    <option value="german">German</option>
+                                    <option value="chinese">Chinese</option>
+                                    <option value="japanese">Japanese</option>
+                                    <option value="arabic">Arabic</option>
+                                    <option value="russian">Russian</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileSpecialties">Specialties</label>
+                                <select id="profileSpecialties" multiple>
+                                    <option value="legal">Legal</option>
+                                    <option value="medical">Medical</option>
+                                    <option value="technical">Technical</option>
+                                    <option value="academic">Academic</option>
+                                    <option value="business">Business</option>
+                                    <option value="general">General</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="profileBio">Bio</label>
+                                <textarea id="profileBio" rows="4" placeholder="Tell us about yourself and your experience"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="profilePassword">Change Password</label>
+                        <input type="password" id="profilePassword" placeholder="Leave blank to keep current password">
+                    </div>
+                    <div class="form-group">
+                        <label for="profileConfirmPassword">Confirm New Password</label>
+                        <input type="password" id="profileConfirmPassword" placeholder="Confirm new password">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Detail Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="taskModalTitle">Task Details</h2>
+                <button class="close" onclick="closeModal('taskModal')">&times;</button>
+            </div>
+            <div id="taskModalContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        let tasks = [];
+        let currentUser = {
+            name: 'John Doe',
+            email: 'john.doe@example.com',
+            phone: '+1 (555) 123-4567',
+            languages: ['english', 'spanish'],
+            specialties: ['legal', 'general'],
+            bio: 'Experienced transcriber with 5+ years in legal and general transcription.',
+            earnings: 1250.75
+        };
+
+        // Check authentication
+        function checkAuth() {
+            const userLoggedIn = localStorage.getItem('userLoggedIn');
+            const userToken = localStorage.getItem('userToken');
+            
+            if (userLoggedIn !== 'true' || !userToken) {
+                window.location.href = 'user-login.html';
+                return false;
+            }
+            
+            // Check token expiration (simplified)
+            const loginTime = new Date(localStorage.getItem('userLoginTime') || 0);
+            const currentTime = new Date();
+            const hoursSinceLogin = (currentTime - loginTime) / (1000 * 60 * 60);
+            
+            if (hoursSinceLogin > 24) {
+                // Token expired after 24 hours
+                logout();
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('userLoggedIn');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userLoginTime');
+            
+            window.location.href = 'user-login.html';
+        }
+
+        // Load user info
+        function loadUserInfo() {
+            const userName = localStorage.getItem('userName') || currentUser.name;
+            document.getElementById('userInfo').textContent = userName;
+            
+            // Load profile data
+            document.getElementById('profileName').value = userName;
+            document.getElementById('profileEmail').value = localStorage.getItem('userEmail') || currentUser.email;
+            document.getElementById('profilePhone').value = currentUser.phone;
+            document.getElementById('profileBio').value = currentUser.bio;
+            
+            // Update earnings display
+            document.getElementById('totalEarnings').textContent = '$' + currentUser.earnings.toFixed(2);
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'info') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} show`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-triangle' : 'info-circle'}"></i>
+                ${message}
+            `;
+            
+            alertContainer.appendChild(alertDiv);
+            
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => alertDiv.remove(), 300);
+            }, 5000);
+        }
+
+        // Tab management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Show selected tab
+            const tabElement = document.querySelector(`.tab[onclick="showTab('${tabName}')"]`);
+            if (tabElement) {
+                tabElement.classList.add('active');
+            }
+            
+            const contentElement = document.getElementById(`${tabName}-tab`);
+            if (contentElement) {
+                contentElement.classList.add('active');
+            }
+            
+            // Load tab-specific data
+            switch(tabName) {
+                case 'available':
+                    loadAvailableTasks();
+                    break;
+                case 'in-progress':
+                    loadInProgressTasks();
+                    break;
+                case 'completed':
+                    loadCompletedTasks();
+                    break;
+                case 'profile':
+                    // Profile data is loaded on page load
+                    break;
+            }
+        }
+
+        // Modal management
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        // Load available tasks
+        function loadAvailableTasks() {
+            // In a real app, this would fetch from an API
+            const availableTasks = [
+                {
+                    id: 'TASK-001',
+                    title: 'Legal Deposition - Johnson vs. Smith',
+                    type: 'Legal',
+                    duration: '45 minutes',
+                    deadline: '2023-06-15',
+                    payment: 35.00,
+                    status: 'available',
+                    description: 'Transcribe a legal deposition for the case Johnson vs. Smith. The audio is clear with 2 speakers.'
+                },
+                {
+                    id: 'TASK-002',
+                    title: 'Medical Conference - Cardiology Panel',
+                    type: 'Medical',
+                    duration: '120 minutes',
+                    deadline: '2023-06-18',
+                    payment: 90.00,
+                    status: 'available',
+                    description: 'Transcribe a cardiology panel discussion from a medical conference. The audio has 4 speakers with some technical terminology.'
+                },
+                {
+                    id: 'TASK-003',
+                    title: 'Corporate Meeting - Q2 Review',
+                    type: 'Business',
+                    duration: '60 minutes',
+                    deadline: '2023-06-20',
+                    payment: 45.00,
+                    status: 'available',
+                    description: 'Transcribe a quarterly review meeting for a corporate client. The audio has 5 speakers discussing financial results.'
+                }
+            ];
+            
+            tasks = [...tasks, ...availableTasks];
+            
+            // Update counter
+            document.getElementById('totalTasks').textContent = availableTasks.length;
+            
+            if (availableTasks.length === 0) {
+                document.getElementById('availableTasksContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h3>No Available Tasks</h3>
+                        <p>Check back later for new transcription tasks.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const tasksHTML = `
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Duration</th>
+                            <th>Deadline</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${availableTasks.map(task => `
+                            <tr>
+                                <td><strong>${task.id}</strong></td>
+                                <td>${task.title}</td>
+                                <td>${task.type}</td>
+                                <td>${task.duration}</td>
+                                <td>${formatDate(task.deadline)}</td>
+                                <td>$${task.payment.toFixed(2)}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="viewTask('${task.id}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-success btn-sm" onclick="acceptTask('${task.id}')">
+                                        <i class="fas fa-check"></i> Accept
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('availableTasksContent').innerHTML = tasksHTML;
+        }
+
+        // Load in-progress tasks
+        function loadInProgressTasks() {
+            // In a real app, this would fetch from an API
+            const inProgressTasks = [
+                {
+                    id: 'TASK-004',
+                    title: 'Academic Interview - Professor Johnson',
+                    type: 'Academic',
+                    duration: '90 minutes',
+                    deadline: '2023-06-17',
+                    payment: 67.50,
+                    status: 'in-progress',
+                    progress: 65,
+                    description: 'Transcribe an academic interview with Professor Johnson about climate science research. The audio has 2 speakers with some technical terminology.'
+                }
+            ];
+            
+            tasks = [...tasks, ...inProgressTasks];
+            
+            // Update counter
+            document.getElementById('inProgressTasks').textContent = inProgressTasks.length;
+            
+            if (inProgressTasks.length === 0) {
+                document.getElementById('inProgressTasksContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clock"></i>
+                        <h3>No Tasks In Progress</h3>
+                        <p>You don't have any tasks in progress at the moment.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const tasksHTML = `
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Progress</th>
+                            <th>Deadline</th>
+                            <th>Payment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${inProgressTasks.map(task => `
+                            <tr>
+                                <td><strong>${task.id}</strong></td>
+                                <td>${task.title}</td>
+                                <td>${task.type}</td>
+                                <td>
+                                    <div class="progress-container">
+                                        <div class="progress-bar" style="width: ${task.progress}%"></div>
+                                    </div>
+                                    <span style="font-size: 0.75rem; color: #6b7280;">${task.progress}%</span>
+                                </td>
+                                <td>${formatDate(task.deadline)}</td>
+                                <td>$${task.payment.toFixed(2)}</td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="continueTask('${task.id}')">
+                                        <i class="fas fa-edit"></i> Continue
+                                    </button>
+                                    <button class="btn btn-success btn-sm" onclick="submitTask('${task.id}')">
+                                        <i class="fas fa-paper-plane"></i> Submit
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('inProgressTasksContent').innerHTML = tasksHTML;
+        }
+
+        // Load completed tasks
+        function loadCompletedTasks() {
+            // In a real app, this would fetch from an API
+            const completedTasks = [
+                {
+                    id: 'TASK-005',
+                    title: 'Legal Hearing - Estate of Williams',
+                    type: 'Legal',
+                    completedDate: '2023-06-01',
+                    payment: 55.00,
+                    status: 'completed',
+                    reviewStatus: 'approved',
+                    description: 'Transcription of a legal hearing regarding the Estate of Williams. The audio had 3 speakers with some legal terminology.'
+                },
+                {
+                    id: 'TASK-006',
+                    title: 'Podcast Interview - Tech Innovations',
+                    type: 'General',
+                    completedDate: '2023-05-25',
+                    payment: 40.00,
+                    status: 'completed',
+                    reviewStatus: 'approved',
+                    description: 'Transcription of a podcast interview about tech innovations. The audio had 2 speakers with clear audio quality.'
+                }
+            ];
+            
+            tasks = [...tasks, ...completedTasks];
+            
+            // Update counter
+            document.getElementById('completedTasks').textContent = completedTasks.length;
+            
+            if (completedTasks.length === 0) {
+                document.getElementById('completedTasksContent').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h3>No Completed Tasks</h3>
+                        <p>Your completed tasks will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const tasksHTML = `
+                <table class="tasks-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Completed Date</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${completedTasks.map(task => `
+                            <tr>
+                                <td><strong>${task.id}</strong></td>
+                                <td>${task.title}</td>
+                                <td>${task.type}</td>
+                                <td>${formatDate(task.completedDate)}</td>
+                                <td>$${task.payment.toFixed(2)}</td>
+                                <td>
+                                    <span class="status-badge ${task.reviewStatus === 'approved' ? 'status-completed' : 'status-reviewed'}">
+                                        ${task.reviewStatus}
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm" onclick="viewTask('${task.id}')">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="btn btn-secondary btn-sm" onclick="downloadTranscript('${task.id}')">
+                                        <i class="fas fa-download"></i> Download
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('completedTasksContent').innerHTML = tasksHTML;
+        }
+
+        // View task details
+        function viewTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            const modalContent = `
+                <div class="task-details">
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Task ID</div>
+                        <div class="task-detail-value">${task.id}</div>
+                    </div>
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Type</div>
+                        <div class="task-detail-value">${task.type}</div>
+                    </div>
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Status</div>
+                        <div class="task-detail-value">
+                            <span class="status-badge ${
+                                task.status === 'available' ? 'status-available' : 
+                                task.status === 'in-progress' ? 'status-in-progress' : 
+                                'status-completed'
+                            }">
+                                ${task.status}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Payment</div>
+                        <div class="task-detail-value">$${task.payment.toFixed(2)}</div>
+                    </div>
+                </div>
+                
+                <h3 style="margin-bottom: 1rem; color: #1f2937;">${task.title}</h3>
+                
+                <p style="margin-bottom: 1.5rem; color: #4b5563;">${task.description}</p>
+                
+                ${task.status === 'available' ? `
+                    <div class="task-detail-item" style="margin-bottom: 1.5rem;">
+                        <div class="task-detail-label">Duration</div>
+                        <div class="task-detail-value">${task.duration}</div>
+                    </div>
+                    <div class="task-detail-item" style="margin-bottom: 1.5rem;">
+                        <div class="task-detail-label">Deadline</div>
+                        <div class="task-detail-value">${formatDate(task.deadline)}</div>
+                    </div>
+                    
+                    <div class="task-actions">
+                        <button class="btn btn-secondary" onclick="closeModal('taskModal')">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                        <button class="btn btn-primary" onclick="acceptTask('${task.id}')">
+                            <i class="fas fa-check"></i> Accept Task
+                        </button>
+                    </div>
+                ` : task.status === 'in-progress' ? `
+                    <div class="task-detail-item" style="margin-bottom: 1.5rem;">
+                        <div class="task-detail-label">Progress</div>
+                        <div class="task-detail-value">
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${task.progress}%"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; color: #6b7280;">${task.progress}%</span>
+                        </div>
+                    </div>
+                    <div class="task-detail-item" style="margin-bottom: 1.5rem;">
+                        <div class="task-detail-label">Deadline</div>
+                        <div class="task-detail-value">${formatDate(task.deadline)}</div>
+                    </div>
+                    
+                    <div class="task-actions">
+                        <button class="btn btn-secondary" onclick="closeModal('taskModal')">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                        <button class="btn btn-primary" onclick="continueTask('${task.id}')">
+                            <i class="fas fa-edit"></i> Continue Task
+                        </button>
+                    </div>
+                ` : `
+                    <div class="task-detail-item" style="margin-bottom: 1.5rem;">
+                        <div class="task-detail-label">Completed Date</div>
+                        <div class="task-detail-value">${formatDate(task.completedDate)}</div>
+                    </div>
+                    <div class="task-detail-item" style="margin-bottom: 1.5rem;">
+                        <div class="task-detail-label">Review Status</div>
+                        <div class="task-detail-value">
+                            <span class="status-badge ${task.reviewStatus === 'approved' ? 'status-completed' : 'status-reviewed'}">
+                                ${task.reviewStatus}
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="task-actions">
+                        <button class="btn btn-secondary" onclick="closeModal('taskModal')">
+                            <i class="fas fa-times"></i> Close
+                        </button>
+                        <button class="btn btn-primary" onclick="downloadTranscript('${task.id}')">
+                            <i class="fas fa-download"></i> Download Transcript
+                        </button>
+                    </div>
+                `}
+            `;
+            
+            document.getElementById('taskModalTitle').textContent = task.title;
+            document.getElementById('taskModalContent').innerHTML = modalContent;
+            openModal('taskModal');
+        }
+
+        // Accept a task
+        function acceptTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            // In a real app, this would call an API
+            task.status = 'in-progress';
+            task.progress = 0;
+            
+            showAlert(`You have accepted the task: ${task.title}`, 'success');
+            closeModal('taskModal');
+            
+            // Refresh task lists
+            loadAvailableTasks();
+            loadInProgressTasks();
+        }
+
+        // Continue working on a task
+        function continueTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            const modalContent = `
+                <div class="task-details">
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Task ID</div>
+                        <div class="task-detail-value">${task.id}</div>
+                    </div>
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Type</div>
+                        <div class="task-detail-value">${task.type}</div>
+                    </div>
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Deadline</div>
+                        <div class="task-detail-value">${formatDate(task.deadline)}</div>
+                    </div>
+                    <div class="task-detail-item">
+                        <div class="task-detail-label">Progress</div>
+                        <div class="task-detail-value">
+                            <div class="progress-container">
+                                <div class="progress-bar" style="width: ${task.progress}%"></div>
+                            </div>
+                            <span style="font-size: 0.75rem; color: #6b7280;">${task.progress}%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 1.5rem 0; color: #1f2937;">${task.title}</h3>
+                
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="sample-audio.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transcriptionText">Transcription</label>
+                    <textarea id="transcriptionText" class="transcription-editor" placeholder="Type your transcription here..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="transcriptionNotes">Notes (optional)</label>
+                    <textarea id="transcriptionNotes" rows="3" placeholder="Add any notes about this transcription..."></textarea>
+                </div>
+                
+                <div class="task-actions">
+                    <button class="btn btn-secondary" onclick="closeModal('taskModal')">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-primary" onclick="saveProgress('${task.id}')">
+                        <i class="fas fa-save"></i> Save Progress
+                    </button>
+                    <button class="btn btn-success" onclick="submitTask('${task.id}')">
+                        <i class="fas fa-paper-plane"></i> Submit Task
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('taskModalTitle').textContent = 'Continue Task: ' + task.title;
+            document.getElementById('taskModalContent').innerHTML = modalContent;
+            openModal('taskModal');
+        }
+
+        // Save task progress
+        function saveProgress(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            // In a real app, this would call an API
+            const transcriptionText = document.getElementById('transcriptionText').value;
+            const transcriptionNotes = document.getElementById('transcriptionNotes').value;
+            
+            // Update progress (simplified)
+            if (transcriptionText.length > 0) {
+                task.progress = Math.min(Math.floor(transcriptionText.length / 100), 99);
+            }
+            
+            showAlert('Progress saved successfully', 'success');
+            closeModal('taskModal');
+            
+            // Refresh task lists
+            loadInProgressTasks();
+        }
+
+        // Submit completed task
+        function submitTask(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            // In a real app, this would call an API
+            task.status = 'completed';
+            task.completedDate = new Date().toISOString().split('T')[0];
+            task.reviewStatus = 'pending';
+            
+            showAlert(`Task "${task.title}" submitted successfully`, 'success');
+            closeModal('taskModal');
+            
+            // Refresh task lists
+            loadInProgressTasks();
+            loadCompletedTasks();
+        }
+
+        // Download transcript
+        function downloadTranscript(taskId) {
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            // In a real app, this would download a file
+            showAlert('Transcript downloaded successfully', 'success');
+        }
+
+        // Save profile changes
+        function saveProfile() {
+            const name = document.getElementById('profileName').value;
+            const phone = document.getElementById('profilePhone').value;
+            const bio = document.getElementById('profileBio').value;
+            const password = document.getElementById('profilePassword').value;
+            const confirmPassword = document.getElementById('profileConfirmPassword').value;
+            
+            if (password && password !== confirmPassword) {
+                showAlert('Passwords do not match', 'error');
+                return;
+            }
+            
+            // In a real app, this would call an API
+            currentUser.name = name;
+            currentUser.phone = phone;
+            currentUser.bio = bio;
+            
+            // Update localStorage
+            localStorage.setItem('userName', name);
+            
+            // Update display
+            document.getElementById('userInfo').textContent = name;
+            
+            showAlert('Profile updated successfully', 'success');
+            
+            // Clear password fields
+            document.getElementById('profilePassword').value = '';
+            document.getElementById('profileConfirmPassword').value = '';
+        }
+
+        // Preview profile image
+        function previewProfileImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const profileAvatar = document.getElementById('profileAvatar');
+                    profileAvatar.innerHTML = `<img src="${e.target.result}" alt="Profile Image">`;
+                }
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Refresh functions
+        function refreshAvailableTasks() {
+            loadAvailableTasks();
+            showAlert('Available tasks refreshed', 'info');
+        }
+
+        function refreshInProgressTasks() {
+            loadInProgressTasks();
+            showAlert('In-progress tasks refreshed', 'info');
+        }
+
+        function refreshCompletedTasks() {
+            loadCompletedTasks();
+            showAlert('Completed tasks refreshed', 'info');
+        }
+
+        // Helper functions
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString('en-US', options);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!checkAuth()) {
+                return;
+            }
+            
+            // Load user info and dashboard data
+            loadUserInfo();
+            
+            // Initialize all data
+            loadAvailableTasks();
+            loadInProgressTasks();
+            loadCompletedTasks();
+        });
+    </script>
+</body>
+</html>

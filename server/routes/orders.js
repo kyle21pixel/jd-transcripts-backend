@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const Order = require('../models/Order');
-const Transcriber = require('../models/Transcriber');
 const emailController = require('../controllers/emailController');
 const auth = require('../middleware/auth');
 
@@ -20,43 +19,74 @@ router.post('/', async (req, res) => {
             instructions
         } = req.body;
 
-        // Calculate due date based on turnaround
-        const dueDate = new Date();
-        const turnaroundHours = parseInt(turnaround.match(/\d+/)[0]);
-        dueDate.setHours(dueDate.getHours() + turnaroundHours);
+        // Input validation
+        if (!clientName || !clientEmail || !serviceType || !turnaround || !estimatedCost) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields: clientName, clientEmail, serviceType, turnaround, estimatedCost'
+            });
+        }
 
-        const order = new Order({
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(clientEmail)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid email format'
+            });
+        }
+
+        // Service type validation
+        const validServiceTypes = ['Legal Transcription', 'Medical Transcription', 'Business Meetings', 'Academic & Research'];
+        if (!validServiceTypes.includes(serviceType)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Invalid service type'
+            });
+        }
+
+        // Calculate due date based on turnaround
+        const turnaroundMatch = turnaround.match(/\d+/);
+        const turnaroundHours = turnaroundMatch ? parseInt(turnaroundMatch[0], 10) : 24;
+        const deadline = new Date();
+        deadline.setHours(deadline.getHours() + turnaroundHours);
+
+        const createdOrder = await Order.create({
+            client_name: clientName,
+            client_email: clientEmail,
+            client_phone: clientPhone,
+            service_type: serviceType,
+            turnaround,
+            estimated_cost: estimatedCost,
+            special_instructions: instructions,
+            deadline,
+            file_name: req.files?.file?.name || null,
+            file_path: req.files?.file ? `uploads/${Date.now()}_${req.files.file.name}` : null,
+            file_size: req.files?.file?.size || null
+        });
+
+        if (req.files?.file) {
+            await req.files.file.mv(createdOrder.file_path);
+        }
+
+        await emailController.sendNewOrderNotification({
+            orderId: createdOrder.order_number,
             clientName,
             clientEmail,
             clientPhone,
             serviceType,
             turnaround,
             estimatedCost,
-            instructions,
-            dueDate
-        });
-
-        await order.save();
-
-        // Send email notification to admin
-        await emailController.sendNewOrderNotification({
-            orderId: order.orderId,
-            clientName: order.clientName,
-            clientEmail: order.clientEmail,
-            clientPhone: order.clientPhone,
-            serviceType: order.serviceType,
-            turnaround: order.turnaround,
-            estimatedCost: order.estimatedCost,
-            instructions: order.instructions
+            instructions
         });
 
         res.status(201).json({
             success: true,
             message: 'Order created successfully',
             data: {
-                orderId: order.orderId,
-                status: order.status,
-                dueDate: order.dueDate
+                orderNumber: createdOrder.order_number,
+                status: createdOrder.status,
+                deadline: createdOrder.deadline
             }
         });
     } catch (error) {
@@ -92,21 +122,35 @@ router.get('/', auth, async (req, res) => {
             ];
         }
 
-        const orders = await Order.find(query)
-            .populate('assignedTo', 'name email specialization')
-            .sort({ createdAt: -1 })
-            .limit(limit * 1)
-            .skip((page - 1) * limit);
+        const filters = {};
+        if (status && status !== 'all') {
+            filters.status = status;
+        }
 
-        const total = await Order.countDocuments(query);
+        const allOrders = await Order.findAll(filters);
+
+        let filteredOrders = allOrders;
+        if (search) {
+            const lowerSearch = search.toLowerCase();
+            filteredOrders = allOrders.filter(order =>
+                order.order_number.toLowerCase().includes(lowerSearch) ||
+                (order.client_name && order.client_name.toLowerCase().includes(lowerSearch)) ||
+                (order.client_email && order.client_email.toLowerCase().includes(lowerSearch))
+            );
+        }
+
+        const pageNum = parseInt(page, 10);
+        const limitNum = parseInt(limit, 10);
+        const startIndex = (pageNum - 1) * limitNum;
+        const paginatedOrders = filteredOrders.slice(startIndex, startIndex + limitNum);
 
         res.json({
             success: true,
-            data: orders,
+            data: paginatedOrders,
             pagination: {
-                current: page,
-                pages: Math.ceil(total / limit),
-                total
+                current: pageNum,
+                pages: Math.ceil(filteredOrders.length / limitNum),
+                total: filteredOrders.length
             }
         });
     } catch (error) {
@@ -119,13 +163,12 @@ router.get('/', auth, async (req, res) => {
     }
 });
 
-// @route   GET /api/orders/:id
-// @desc    Get single order
-// @access  Private
-router.get('/:id', auth, async (req, res) => {
+// @route   GET /api/orders/:orderNumber
+// @desc    Get single order (public for tracking)
+// @access  Public
+router.get('/:orderNumber', async (req, res) => {
     try {
-        const order = await Order.findOne({ orderId: req.params.id })
-            .populate('assignedTo', 'name email specialization hourlyRate');
+        const order = await Order.findByOrderNumber(req.params.orderNumber);
 
         if (!order) {
             return res.status(404).json({
@@ -148,14 +191,14 @@ router.get('/:id', auth, async (req, res) => {
     }
 });
 
-// @route   PUT /api/orders/:id/assign
+// @route   PUT /api/orders/:orderNumber/assign
 // @desc    Assign order to transcriber
 // @access  Private
-router.put('/:id/assign', auth, async (req, res) => {
+router.put('/:orderNumber/assign', auth, async (req, res) => {
     try {
-        const { transcriberID, priority = 'normal', notes = '' } = req.body;
+        const { transcriberId, assignedBy } = req.body;
 
-        const order = await Order.findOne({ orderId: req.params.id });
+        const order = await Order.findByOrderNumber(req.params.orderNumber);
         if (!order) {
             return res.status(404).json({
                 success: false,
@@ -163,65 +206,14 @@ router.put('/:id/assign', auth, async (req, res) => {
             });
         }
 
-        const transcriber = await Transcriber.findOne({ transcriberID });
-        if (!transcriber) {
-            return res.status(404).json({
-                success: false,
-                message: 'Transcriber not found'
-            });
-        }
-
-        // Check if transcriber can take more orders
-        const canTakeMore = await transcriber.canTakeMoreOrders();
-        if (!canTakeMore) {
-            return res.status(400).json({
-                success: false,
-                message: 'Transcriber is not available or has reached maximum concurrent orders'
-            });
-        }
-
-        // Update order
-        order.assignedTo = transcriber._id;
-        order.assignedTranscriberName = transcriber.name;
-        order.status = 'in-progress';
-        order.priority = priority;
-        
-        if (notes) {
-            order.instructions += `\n\nAdmin Notes: ${notes}`;
-        }
-
-        order.timeline.push({
-            action: 'Order Assigned',
-            performedBy: req.user.username,
-            notes: `Assigned to ${transcriber.name} with ${priority} priority`
-        });
-
-        await order.save();
-
-        // Update transcriber statistics
-        transcriber.statistics.totalOrders += 1;
-        await transcriber.save();
-
-        // Send assignment notification to transcriber
-        await emailController.sendAssignmentNotification({
-            orderId: order.orderId,
-            clientName: order.clientName,
-            serviceType: order.serviceType,
-            priority: order.priority,
-            dueDate: order.dueDate.toLocaleDateString(),
-            instructions: order.instructions,
-            estimatedDuration: order.calculateEstimatedDuration() + ' hours'
-        }, {
-            name: transcriber.name,
-            email: transcriber.email
-        });
+        await order.assignTo(transcriberId, assignedBy || req.user.username || req.user.email);
 
         res.json({
             success: true,
             message: 'Order assigned successfully',
             data: {
-                orderId: order.orderId,
-                assignedTo: transcriber.name,
+                orderNumber: order.order_number,
+                assignedTo: order.assigned_to,
                 status: order.status
             }
         });
@@ -235,16 +227,14 @@ router.put('/:id/assign', auth, async (req, res) => {
     }
 });
 
-// @route   PUT /api/orders/:id/status
+// @route   PUT /api/orders/:orderNumber/status
 // @desc    Update order status
 // @access  Private
-router.put('/:id/status', auth, async (req, res) => {
+router.put('/:orderNumber/status', auth, async (req, res) => {
     try {
-        const { status, notes = '' } = req.body;
+        const { status, notes } = req.body;
 
-        const order = await Order.findOne({ orderId: req.params.id })
-            .populate('assignedTo', 'name email');
-
+        const order = await Order.findByOrderNumber(req.params.orderNumber);
         if (!order) {
             return res.status(404).json({
                 success: false,
@@ -252,48 +242,25 @@ router.put('/:id/status', auth, async (req, res) => {
             });
         }
 
-        const oldStatus = order.status;
-        order.status = status;
+        await order.updateStatus(status, req.user.username || req.user.email, notes || null);
 
-        // Set completion date if completed
-        if (status === 'completed' && oldStatus !== 'completed') {
-            order.completedDate = new Date();
-            
-            // Update transcriber statistics
-            if (order.assignedTo) {
-                const transcriber = await Transcriber.findById(order.assignedTo);
-                if (transcriber) {
-                    transcriber.statistics.completedOrders += 1;
-                    await transcriber.updateStatistics();
-                }
-            }
-
-            // Send completion notification to client
+        if (status === 'completed') {
             await emailController.sendCompletionNotification({
-                orderId: order.orderId,
-                serviceType: order.serviceType,
-                transcriberName: order.assignedTranscriberName || 'Our team'
+                orderId: order.order_number,
+                serviceType: order.service_type,
+                transcriberName: order.assigned_transcriber_name || 'Our team'
             }, {
-                name: order.clientName,
-                email: order.clientEmail
+                name: order.client_name,
+                email: order.client_email
             });
         }
-
-        order.timeline.push({
-            action: `Status Changed to ${status}`,
-            performedBy: req.user.username,
-            notes: notes || `Status updated from ${oldStatus} to ${status}`
-        });
-
-        await order.save();
 
         res.json({
             success: true,
             message: 'Order status updated successfully',
             data: {
-                orderId: order.orderId,
-                status: order.status,
-                completedDate: order.completedDate
+                orderNumber: order.order_number,
+                status: order.status
             }
         });
     } catch (error) {

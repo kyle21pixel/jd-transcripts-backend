@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Order API</title>
+</head>
+<body>
+    <h1>Testing Order API</h1>
+    <button onclick="testAPI()">Test POST Request</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function testAPI() {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing...';
+
+            try {
+                const data = {
+                    client_name: 'Test Client',
+                    client_email: 'test@example.com',
+                    client_phone: '555-1234',
+                    service_type: 'legal',
+                    turnaround: '24h',
+                    file_name: 'test.mp3',
+                    special_instructions: 'Test order'
+                };
+
+                output.textContent += '\n\nSending data:\n' + JSON.stringify(data, null, 2);
+
+                const response = await fetch('http://localhost:8080/jd%203/php_backend/api/orders.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                output.textContent += '\n\nResponse status: ' + response.status;
+                output.textContent += '\nResponse headers: ' + JSON.stringify([...response.headers]);
+
+                const text = await response.text();
+                output.textContent += '\n\nResponse body:\n' + text;
+
+                // Try to parse as JSON
+                try {
+                    const json = JSON.parse(text);
+                    output.textContent += '\n\nParsed JSON:\n' + JSON.stringify(json, null, 2);
+                } catch (e) {
+                    output.textContent += '\n\nNot valid JSON!';
+                }
+
+            } catch (error) {
+                output.textContent += '\n\nError: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

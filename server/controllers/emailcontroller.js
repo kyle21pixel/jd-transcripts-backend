@@ -2,17 +2,38 @@ const nodemailer = require('nodemailer');
 
 class EmailController {
     constructor() {
-        this.transporter = nodemailer.createTransporter({
+        if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            console.warn('⚠️ Email credentials not configured. Email functionality will be disabled.');
+            this.transporter = null;
+            return;
+        }
+
+        this.transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER || 'admin@jdlegaltranscripts.com',
-                pass: process.env.EMAIL_PASS || 'your-app-password'
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
+        });
+
+        // Verify connection
+        this.transporter.verify((error, success) => {
+            if (error) {
+                console.error('❌ Email service connection failed:', error.message);
+                this.transporter = null;
+            } else {
+                console.log('✅ Email service connected successfully');
             }
         });
     }
 
     // Send new order notification to admin
     async sendNewOrderNotification(orderData) {
+        if (!this.transporter) {
+            console.warn('Email service not available, skipping notification');
+            return { success: false, error: 'Email service not configured' };
+        }
+
         try {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
@@ -99,6 +120,11 @@ class EmailController {
 
     // Send order assignment notification to transcriber
     async sendAssignmentNotification(orderData, transcriberData) {
+        if (!this.transporter) {
+            console.warn('Email service not available, skipping notification');
+            return { success: false, error: 'Email service not configured' };
+        }
+
         try {
             const mailOptions = {
                 from: process.env.EMAIL_USER,
@@ -198,6 +224,11 @@ class EmailController {
 
     // Send order completion notification to client
     async sendCompletionNotification(orderData, clientData) {
+        if (!this.transporter) {
+            console.warn('Email service not available, skipping notification');
+            return { success: false, error: 'Email service not configured' };
+        }
+
         try {
             const mailOptions = {
                 from: process.env.EMAIL_USER,

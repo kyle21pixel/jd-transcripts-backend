@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JD Reporting Company - Test Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #2563eb;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+            color: #1e293b;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #4b5563;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .test-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .test-section:last-child {
+            border-bottom: none;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .status-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .test-result {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>JD Reporting Company - Test Page</h1>
+        <p>This page allows you to test the functionality of the JD Reporting Company website.</p>
+
+        <div class="test-section">
+            <h2>1. Navigation Test</h2>
+            <p>Test the navigation to different pages:</p>
+            <a href="index.html" class="btn">Home Page</a>
+            <a href="about.html" class="btn">About Page</a>
+            <a href="admin-dashboard-new.html" class="btn">Admin Dashboard</a>
+        </div>
+
+        <div class="test-section">
+            <h2>2. API Connection Test</h2>
+            <p>Test the connection to the API endpoints:</p>
+            <button class="btn" onclick="testOrdersAPI()">Test Orders API</button>
+            <button class="btn" onclick="testAuthAPI()">Test Auth API</button>
+            <div id="api-result" class="test-result">Results will appear here...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>3. Database Connection Test</h2>
+            <p>Test the connection to the database:</p>
+            <button class="btn" onclick="testDatabaseConnection()">Test Database Connection</button>
+            <div id="db-result" class="test-result">Results will appear here...</div>
+        </div>
+
+        <div class="test-section">
+            <h2>4. Form Submission Test</h2>
+            <p>Test the order form submission:</p>
+            <button class="btn" onclick="testOrderForm()">Test Order Form</button>
+            <div id="form-result" class="test-result">Results will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        // Test Orders API
+        async function testOrdersAPI() {
+            const resultElement = document.getElementById('api-result');
+            resultElement.innerHTML = 'Testing Orders API...';
+            
+            try {
+                const response = await fetch('/api/orders');
+                const data = await response.json();
+                
+                resultElement.innerHTML = 'SUCCESS: Orders API is working!\n\nResponse:\n' + JSON.stringify(data, null, 2);
+                resultElement.className = 'test-result status-success';
+            } catch (error) {
+                resultElement.innerHTML = 'ERROR: Orders API test failed!\n\nError:\n' + error.message;
+                resultElement.className = 'test-result status-error';
+            }
+        }
+
+        // Test Auth API
+        async function testAuthAPI() {
+            const resultElement = document.getElementById('api-result');
+            resultElement.innerHTML = 'Testing Auth API...';
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: 'admin',
+                        password: 'password123'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultElement.innerHTML = 'SUCCESS: Auth API is working!\n\nResponse:\n' + JSON.stringify(data, null, 2);
+                resultElement.className = 'test-result status-success';
+            } catch (error) {
+                resultElement.innerHTML = 'ERROR: Auth API test failed!\n\nError:\n' + error.message;
+                resultElement.className = 'test-result status-error';
+            }
+        }
+
+        // Test Database Connection
+        async function testDatabaseConnection() {
+            const resultElement = document.getElementById('db-result');
+            resultElement.innerHTML = 'Testing Database Connection...';
+            
+            try {
+                const response = await fetch('/database/test-connection.php');
+                const data = await response.text();
+                
+                if (data.includes('Connection successful')) {
+                    resultElement.innerHTML = 'SUCCESS: Database connection is working!\n\nResponse:\n' + data;
+                    resultElement.className = 'test-result status-success';
+                } else {
+                    resultElement.innerHTML = 'ERROR: Database connection failed!\n\nResponse:\n' + data;
+                    resultElement.className = 'test-result status-error';
+                }
+            } catch (error) {
+                resultElement.innerHTML = 'ERROR: Database connection test failed!\n\nError:\n' + error.message;
+                resultElement.className = 'test-result status-error';
+            }
+        }
+
+        // Test Order Form
+        async function testOrderForm() {
+            const resultElement = document.getElementById('form-result');
+            resultElement.innerHTML = 'Testing Order Form Submission...';
+            
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        client_name: 'Test User',
+                        client_email: 'test@example.com',
+                        client_phone: '1234567890',
+                        service_type: 'legal',
+                        turnaround: '24h',
+                        duration_minutes: 60,
+                        special_instructions: 'This is a test order'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                resultElement.innerHTML = 'SUCCESS: Order form submission is working!\n\nResponse:\n' + JSON.stringify(data, null, 2);
+                resultElement.className = 'test-result status-success';
+            } catch (error) {
+                resultElement.innerHTML = 'ERROR: Order form submission failed!\n\nError:\n' + error.message;
+                resultElement.className = 'test-result status-error';
+            }
+        }
+    </script>
+</body>
+</html>

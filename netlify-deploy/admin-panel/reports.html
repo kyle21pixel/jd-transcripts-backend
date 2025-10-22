@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - JD Reporting Admin</title>
+    <link rel="stylesheet" href="assets/css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>JD Admin</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="orders.html" class="nav-link">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="transcribers.html" class="nav-link">
+                            <i class="fas fa-users"></i>
+                            <span>Transcribers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link active">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Back to Website</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 class="page-title">Reports & Analytics</h1>
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary" onclick="loadReports()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-success" onclick="exportReport()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">Today's Orders</div>
+                        <div class="stat-value" id="todayOrders">-</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">This Week</div>
+                        <div class="stat-value" id="weekOrders">-</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">This Month</div>
+                        <div class="stat-value" id="monthOrders">-</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon danger">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value" id="totalRevenue">$0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Orders Trend</h2>
+                </div>
+                <canvas id="ordersChart" height="80"></canvas>
+            </div>
+
+            <!-- Status Breakdown -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Order Status Breakdown</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Count</th>
+                                <th>Percentage</th>
+                            </tr>
+                        </thead>
+                        <tbody id="statusBreakdown">
+                            <tr>
+                                <td colspan="3" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="assets/js/admin-common.js"></script>
+    <script>
+        let ordersChart = null;
+
+        // Load Reports
+        async function loadReports() {
+            try {
+                // Load daily stats
+                const daily = await apiGet('/admin/reports/daily');
+                if (daily.success) {
+                    const data = daily.data || {};
+                    $('todayOrders').textContent = data.ordersToday || 0;
+                    $('totalRevenue').textContent = formatCurrency(data.totalRevenue);
+                }
+
+                // Load all orders for analysis
+                const orders = await apiGet('/admin/orders');
+                if (orders.success) {
+                    const ordersList = orders.data || orders.orders || [];
+                    calculateWeeklyMonthly(ordersList);
+                    renderOrdersChart(ordersList);
+                    displayStatusBreakdown(ordersList);
+                }
+            } catch (error) {
+                console.error('Error loading reports:', error);
+            }
+        }
+
+        // Calculate Weekly and Monthly
+        function calculateWeeklyMonthly(orders) {
+            const now = new Date();
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+            const weekOrders = orders.filter(o => new Date(o.created_at) >= weekAgo).length;
+            const monthOrders = orders.filter(o => new Date(o.created_at) >= monthAgo).length;
+
+            $('weekOrders').textContent = weekOrders;
+            $('monthOrders').textContent = monthOrders;
+        }
+
+        // Render Orders Chart
+        function renderOrdersChart(orders) {
+            const last7Days = [];
+            const counts = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                last7Days.push(dateStr);
+                
+                const count = orders.filter(o => {
+                    const orderDate = new Date(o.created_at);
+                    return orderDate.toDateString() === date.toDateString();
+                }).length;
+                counts.push(count);
+            }
+
+            const ctx = $('ordersChart').getContext('2d');
+            
+            if (ordersChart) {
+                ordersChart.destroy();
+            }
+
+            ordersChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last7Days,
+                    datasets: [{
+                        label: 'Orders',
+                        data: counts,
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Display Status Breakdown
+        function displayStatusBreakdown(orders) {
+            const statusCounts = {};
+            const total = orders.length;
+
+            orders.forEach(order => {
+                const status = order.status || 'unknown';
+                statusCounts[status] = (statusCounts[status] || 0) + 1;
+            });
+
+            const tbody = $('statusBreakdown');
+            tbody.innerHTML = Object.entries(statusCounts).map(([status, count]) => {
+                const percentage = ((count / total) * 100).toFixed(1);
+                return `
+                    <tr>
+                        <td>${getStatusBadge(status)}</td>
+                        <td><strong>${count}</strong></td>
+                        <td>${percentage}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Export Report
+        function exportReport() {
+            showToast('Export functionality - Coming soon!', 'info');
+        }
+
+        // Initialize
+        loadReports();
+    </script>
+</body>
+</html>

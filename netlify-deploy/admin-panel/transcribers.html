@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcribers - JD Reporting Admin</title>
+    <link rel="stylesheet" href="assets/css/admin-style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-logo">
+                    <i class="fas fa-microphone-alt"></i>
+                    <span>JD Admin</span>
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="orders.html" class="nav-link">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Orders</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="transcribers.html" class="nav-link active">
+                            <i class="fas fa-users"></i>
+                            <span>Transcribers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="reports.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Reports</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="settings.html" class="nav-link">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="../index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            <span>Back to Website</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <h1 class="page-title">Transcribers Management</h1>
+                <div class="top-bar-actions">
+                    <button class="btn btn-primary" onclick="openAddTranscriberModal()">
+                        <i class="fas fa-user-plus"></i> Add Transcriber
+                    </button>
+                    <button class="btn btn-primary" onclick="loadTranscribers()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Transcribers Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">All Transcribers (<span id="transcriberCount">0</span>)</h2>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Username</th>
+                                <th>Status</th>
+                                <th>Assigned Orders</th>
+                                <th>Completed Orders</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transcribersTable">
+                            <tr>
+                                <td colspan="8" class="text-center">Loading...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Transcriber Modal -->
+    <div id="addTranscriberModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Transcriber</h2>
+                <button class="close-btn" onclick="closeAddTranscriberModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addTranscriberForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone (Optional)</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeAddTranscriberModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Add Transcriber
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/admin-common.js"></script>
+    <script>
+        let transcribers = [];
+
+        // Load Transcribers
+        async function loadTranscribers() {
+            try {
+                const response = await apiGet('/admin/transcribers');
+                if (response.success) {
+                    transcribers = response.data || response.transcribers || [];
+                    displayTranscribers();
+                    await loadOrderCounts();
+                }
+            } catch (error) {
+                console.error('Error loading transcribers:', error);
+            }
+        }
+
+        // Load Order Counts for each transcriber
+        async function loadOrderCounts() {
+            try {
+                const orders = await apiGet('/admin/orders');
+                if (orders.success) {
+                    const ordersList = orders.data || orders.orders || [];
+                    
+                    transcribers.forEach(transcriber => {
+                        const assigned = ordersList.filter(o => o.assigned_to == transcriber.id);
+                        const completed = assigned.filter(o => o.status === 'completed' || o.status === 'delivered');
+                        transcriber.assignedCount = assigned.length;
+                        transcriber.completedCount = completed.length;
+                    });
+                    
+                    displayTranscribers();
+                }
+            } catch (error) {
+                console.error('Error loading order counts:', error);
+            }
+        }
+
+        // Display Transcribers
+        function displayTranscribers() {
+            const tbody = $('transcribersTable');
+            $('transcriberCount').textContent = transcribers.length;
+
+            if (transcribers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center">No transcribers found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = transcribers.map(t => `
+                <tr>
+                    <td><strong>${t.id}</strong></td>
+                    <td>${t.first_name} ${t.last_name}</td>
+                    <td>${t.email}</td>
+                    <td>${t.username}</td>
+                    <td><span class="badge ${t.status === 'active' ? 'badge-completed' : 'badge-cancelled'}">${t.status.toUpperCase()}</span></td>
+                    <td>${t.assignedCount || 0}</td>
+                    <td>${t.completedCount || 0}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="viewTranscriber(${t.id})" title="View Details">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteTranscriber(${t.id}, '${t.first_name} ${t.last_name}')" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // View Transcriber Details
+        function viewTranscriber(id) {
+            showToast('Transcriber details view - Coming soon!', 'info');
+        }
+
+        // Open Add Transcriber Modal
+        function openAddTranscriberModal() {
+            $('addTranscriberModal').style.display = 'flex';
+        }
+
+        // Close Add Transcriber Modal
+        function closeAddTranscriberModal() {
+            $('addTranscriberModal').style.display = 'none';
+            $('addTranscriberForm').reset();
+        }
+
+        // Add Transcriber Form Submit
+        $('addTranscriberForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                first_name: $('firstName').value.trim(),
+                last_name: $('lastName').value.trim(),
+                username: $('username').value.trim(),
+                email: $('email').value.trim(),
+                password: $('password').value,
+                phone: $('phone').value.trim()
+            };
+
+            try {
+                const response = await apiPost('/admin/add-transcriber', formData);
+                
+                if (response.success) {
+                    showToast('Transcriber added successfully!', 'success');
+                    closeAddTranscriberModal();
+                    loadTranscribers();
+                } else {
+                    showToast(response.error || 'Failed to add transcriber', 'error');
+                }
+            } catch (error) {
+                console.error('Error adding transcriber:', error);
+                showToast('Error adding transcriber', 'error');
+            }
+        });
+
+        // Delete Transcriber
+        async function deleteTranscriber(id, name) {
+            if (!confirm(`Are you sure you want to delete transcriber "${name}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+
+            try {
+                const response = await apiDelete(`/admin/delete-transcriber?id=${id}`);
+                
+                if (response.success) {
+                    showToast('Transcriber deleted successfully!', 'success');
+                    loadTranscribers();
+                } else {
+                    showToast(response.error || 'Failed to delete transcriber', 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting transcriber:', error);
+                showToast('Error deleting transcriber', 'error');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = $('addTranscriberModal');
+            if (event.target === modal) {
+                closeAddTranscriberModal();
+            }
+        };
+
+        // Initialize
+        loadTranscribers();
+    </script>
+</body>
+</html>

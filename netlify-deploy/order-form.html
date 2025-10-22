@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Place an Order - JD Reporting Company</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.6s ease-out backwards;
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .file-upload {
+            position: relative;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: #764ba2;
+            transform: scale(1.02);
+        }
+
+        .file-upload.dragover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .file-upload-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .file-name {
+            margin-top: 0.5rem;
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .price-display {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 1.5rem 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .price-display h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-display .amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .service-info {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Place Your Order</h1>
+            <p>Professional transcription services at your fingertips</p>
+        </div>
+
+        <div class="card">
+            <div id="alertContainer"></div>
+            
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="client_name">Full Name *</label>
+                    <input type="text" id="client_name" name="client_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="client_email">Email Address *</label>
+                    <input type="email" id="client_email" name="client_email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="client_phone">Phone Number</label>
+                    <input type="tel" id="client_phone" name="client_phone">
+                </div>
+
+                <div class="form-group">
+                    <label for="service_type">Service Type *</label>
+                    <select id="service_type" name="service_type" required>
+                        <option value="">-- Select Service --</option>
+                        <option value="legal">Legal Transcription</option>
+                        <option value="medical">Medical Transcription</option>
+                        <option value="zoom">Zoom/Video Transcription</option>
+                        <option value="academic">Academic Transcription</option>
+                    </select>
+                    <div id="serviceInfo" class="service-info" style="display: none;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="turnaround">Turnaround Time *</label>
+                    <select id="turnaround" name="turnaround" required>
+                        <option value="">-- Select Turnaround --</option>
+                        <option value="same-day">Same Day (8 hours) - 2.5x price</option>
+                        <option value="24h">24 Hours - 2.0x price</option>
+                        <option value="48h">48 Hours - 1.5x price</option>
+                        <option value="3-5">3-5 Days - Standard price</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Audio/Video File *</label>
+                    <div class="file-upload" id="fileUpload">
+                        <input type="file" id="file" name="file" accept="audio/*,video/*" required>
+                        <div class="file-upload-text">
+                            📁 Drag & drop your file here or click to browse
+                        </div>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="special_instructions">Special Instructions (Optional)</label>
+                    <textarea id="special_instructions" name="special_instructions" 
+                              placeholder="Any specific requirements, timestamps needed, speaker identification, etc."></textarea>
+                </div>
+
+                <div class="price-display" id="priceDisplay" style="display: none;">
+                    <h3>Estimated Cost</h3>
+                    <div class="amount">$<span id="estimatedPrice">0.00</span></div>
+                    <small>Final price may vary based on actual audio length</small>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">
+                    🚀 Submit Order
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Processing your order...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('orderForm');
+        const fileInput = document.getElementById('file');
+        const fileUpload = document.getElementById('fileUpload');
+        const fileName = document.getElementById('fileName');
+        const serviceSelect = document.getElementById('service_type');
+        const turnaroundSelect = document.getElementById('turnaround');
+        const priceDisplay = document.getElementById('priceDisplay');
+        const estimatedPriceEl = document.getElementById('estimatedPrice');
+        const serviceInfo = document.getElementById('serviceInfo');
+
+        // Service descriptions
+        const serviceDescriptions = {
+            legal: 'Professional transcription for legal proceedings, depositions, and court hearings.',
+            medical: 'HIPAA-compliant transcription for medical records and consultations.',
+            zoom: 'Transcription for video conferences, meetings, and webinars.',
+            academic: 'Transcription for lectures, interviews, and research recordings.'
+        };
+
+        // Base prices
+        const basePrices = {
+            legal: 150,
+            medical: 180,
+            zoom: 120,
+            academic: 100
+        };
+
+        // Turnaround multipliers
+        const turnaroundMultipliers = {
+            'same-day': 2.5,
+            '24h': 2.0,
+            '48h': 1.5,
+            '3-5': 1.0
+        };
+
+        // Update service info
+        serviceSelect.addEventListener('change', function() {
+            if (this.value) {
+                serviceInfo.textContent = serviceDescriptions[this.value];
+                serviceInfo.style.display = 'block';
+                calculatePrice();
+            } else {
+                serviceInfo.style.display = 'none';
+            }
+        });
+
+        // Calculate price on turnaround change
+        turnaroundSelect.addEventListener('change', calculatePrice);
+
+        function calculatePrice() {
+            const service = serviceSelect.value;
+            const turnaround = turnaroundSelect.value;
+
+            if (service && turnaround) {
+                const basePrice = basePrices[service];
+                const multiplier = turnaroundMultipliers[turnaround];
+                const estimatedPrice = (basePrice * multiplier).toFixed(2);
+
+                estimatedPriceEl.textContent = estimatedPrice;
+                priceDisplay.style.display = 'block';
+            } else {
+                priceDisplay.style.display = 'none';
+            }
+        }
+
+        // File upload handling
+        fileUpload.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUpload.classList.add('dragover');
+        });
+
+        fileUpload.addEventListener('dragleave', () => {
+            fileUpload.classList.remove('dragover');
+        });
+
+        fileUpload.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUpload.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                updateFileName();
+            }
+        });
+
+        fileInput.addEventListener('change', updateFileName);
+
+        function updateFileName() {
+            if (fileInput.files.length) {
+                const file = fileInput.files[0];
+                const sizeInMB = (file.size / (1024 * 1024)).toFixed(2);
+                fileName.textContent = `✓ ${file.name} (${sizeInMB} MB)`;
+                fileName.style.display = 'block';
+            }
+        }
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('client_name', document.getElementById('client_name').value);
+            formData.append('client_email', document.getElementById('client_email').value);
+            formData.append('client_phone', document.getElementById('client_phone').value);
+            formData.append('service_type', serviceSelect.value);
+            formData.append('turnaround', turnaroundSelect.value);
+            formData.append('special_instructions', document.getElementById('special_instructions').value);
+            
+            if (fileInput.files.length) {
+                formData.append('file', fileInput.files[0]);
+                formData.append('file_name', fileInput.files[0].name);
+            }
+
+            // Show loading
+            form.style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                // Convert FormData to JSON for the API
+                const data = {
+                    client_name: formData.get('client_name'),
+                    client_email: formData.get('client_email'),
+                    client_phone: formData.get('client_phone'),
+                    service_type: formData.get('service_type'),
+                    turnaround: formData.get('turnaround'),
+                    special_instructions: formData.get('special_instructions'),
+                    file_name: formData.get('file_name')
+                };
+
+                const response = await fetch('http://localhost:8080/jd%203/php_backend/api/orders.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Check if response is ok
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Get response text first to see what we're getting
+                const responseText = await response.text();
+                console.log('Server response:', responseText);
+
+                let result;
+                try {
+                    result = JSON.parse(responseText);
+                } catch (e) {
+                    console.error('Failed to parse JSON:', responseText);
+                    throw new Error('Server returned invalid JSON: ' + responseText.substring(0, 100));
+                }
+
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+                form.style.display = 'block';
+
+                if (result.success) {
+                    showAlert('success', `Order submitted successfully! Your order number is: ${result.order.order_number}`);
+                    form.reset();
+                    fileName.style.display = 'none';
+                    priceDisplay.style.display = 'none';
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    showAlert('error', result.error || 'Failed to submit order. Please try again.');
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                form.style.display = 'block';
+                showAlert('error', 'Order submission failed: ' + error.message);
+                console.error('Error:', error);
+            }
+        });
+
+        function showAlert(type, message) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alert);
+
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                alert.style.animation = 'fadeOut 0.5s';
+                setTimeout(() => alert.remove(), 500);
+            }, 10000);
+        }
+    </script>
+</body>
+</html>
